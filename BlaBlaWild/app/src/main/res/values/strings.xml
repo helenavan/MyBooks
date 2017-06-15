@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Bla Bla Wild</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_text">Rechercher</string>
+    <string name="main_text">Rechercher un itinéraire</string>
+    <string name="dest">Destination</string>
+    <string name="date">date</string>
+    <string name="departure">Départ</string>
+</resources>
