@@ -11,3 +11,4 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
     }
 }
+
