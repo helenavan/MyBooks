@@ -11,6 +11,17 @@ public class BookModel {
     private String nameAutor;
     private String lastnameAutor;
     private String code;
+    private String userid;
+
+    public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor, String code, String userid) {
+        this.title = title;
+        this.category = category;
+        this.isbn = isbn;
+        this.nameAutor = nameAutor;
+        this.lastnameAutor = lastnameAutor;
+        this.code = code;
+        this.userid = userid;
+    }
 
     public String getTitle() {
         return title;
@@ -58,5 +69,13 @@ public class BookModel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 }
