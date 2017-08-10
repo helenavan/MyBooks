@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="pink" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
-        <item name="android:colorPrimary">@color/colorAccent</item>
-    </style>
-</resources>
