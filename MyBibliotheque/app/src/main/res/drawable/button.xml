@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke
-        android:width="1dp"
-        android:color="#505050" />
-    <corners android:radius="7dp" />
-
-    <padding
-        android:bottom="1dp"
-        android:left="1dp"
-        android:right="1dp"
-        android:top="1dp" />
-
-    <solid android:color="#3b76ca" />
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_disabled" android:state_enabled="false" />
+    <item android:drawable="@drawable/btn_pressed" android:state_enabled="true" android:state_pressed="true" />
+    <item android:drawable="@drawable/btn_focused" android:state_enabled="true" android:state_focused="true" />
+    <item android:drawable="@drawable/btn_enabled" android:state_enabled="true" />
+</selector>

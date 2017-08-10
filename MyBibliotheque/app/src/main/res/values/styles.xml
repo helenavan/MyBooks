@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:buttonStyle">@style/button</item>
     </style>
 
     <style name="EditTextHint" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,11 +14,10 @@
         <item name="colorControlNormal">@color/Line</item>
         <item name="colorControlActivated">@color/coloractivated</item>
         <item name="colorControlHighlight">@color/Highlight</item>
-        <item name="android:buttonStyle">@style/button</item>
-        <item name="buttonStyle">@style/button</item>
+
     </style>
 
-    <style name="button" parent="@android:style/Widget.Button">
+    <style name="buttonTheme" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">#FFFFFFFF</item>
         <item name="android:shadowColor">#FF000000</item>
@@ -28,9 +26,14 @@
         <item name="android:shadowRadius">0.2</item>
         <item name="android:textSize">16dip</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/btn_sate</item>
+        <item name="android:background">@drawable/button</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>
+
+    <style name="MyTheme" parent="android:style/Theme.NoTitleBar">
+        <item name="android:buttonStyle">@style/buttonTheme</item>
+    </style>
+
 
 </resources>

@@ -10,8 +10,5 @@
         android:left="7dp"
         android:right="7dp"
         android:top="7dp" />
-    <stroke
-        android:width="2dip"
-        android:color="#FFFFFF" />
     <corners android:radius="8dp" />
 </shape>
