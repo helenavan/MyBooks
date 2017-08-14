@@ -11,9 +11,10 @@ public class BookModel {
     private String nameAutor;
     private String lastnameAutor;
     private String code;
-    private String userid;
+    private int userid;
 
-    public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor, String code, String userid) {
+    public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor,
+                     String code, int userid) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
@@ -71,11 +72,11 @@ public class BookModel {
         this.code = code;
     }
 
-    public String getUserid() {
+    public int getUserid() {
         return userid;
     }
 
-    public void setUserid(String userid) {
+    public void setUserid(int userid) {
         this.userid = userid;
     }
 }

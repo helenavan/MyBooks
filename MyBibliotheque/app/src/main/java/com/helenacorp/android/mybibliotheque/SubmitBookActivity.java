@@ -59,7 +59,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("book");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), null, null);
+                lastName.getText().toString(), null, 0);
         ref.push().setValue(bookModel);
     }
 
