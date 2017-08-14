@@ -7,4 +7,9 @@
     <string name="fistname_sub">Entrez le nom de l\'auteur</string>
     <string name="btn_add">envoyer</string>
     <string name="btn_clean">effacer</string>
+    <!--activity_signup-->
+    <string name="btn_creatAccount">créez votre compte</string>
+    <string name="hint_nom">Entrer votre nom ou pseudo</string>
+    <string name="hint_passw">Entrez votre mot de passe</string>
+    <string name="hint_email">Entrez votre email</string>
 </resources>
