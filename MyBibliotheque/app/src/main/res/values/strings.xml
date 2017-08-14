@@ -3,4 +3,8 @@
     <string name="log_btn">connexion</string>
     <string name="log_email">Votre email</string>
     <string name="log_password">Votre mot de passe</string>
+    <string name="title_sub">Entrez le Titre</string>
+    <string name="fistname_sub">Entrez le nom de l\'auteur</string>
+    <string name="btn_add">envoyer</string>
+    <string name="btn_clean">effacer</string>
 </resources>
