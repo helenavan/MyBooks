@@ -47,15 +47,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameAutor_submit" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_photoBook_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:background="@android:drawable/ic_menu_camera"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
 
     <Button
         android:id="@+id/btn_add_submit"
