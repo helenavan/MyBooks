@@ -1,14 +1,89 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-public class AccountActivity extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+public class AccountActivity extends AppCompatActivity implements View.OnClickListener {
+    private Button btnlist;
+    private TextView acc_username, acc_numlist;
+    private String uID, userEmail, userPseudo;
+    private ImageView userPic;
+    private ProgressBar mBar;
+    private StorageReference mStorageRef;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+        btnlist = (Button) findViewById(R.id.user_btnlist);
+        btnlist.setOnClickListener(this);
+
+        acc_username = (TextView) findViewById(R.id.user_name);
+        acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        if (user == null) {
+            // User is signed out
+            finish();
+            Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
+            startActivity(intent);
+
+
+        } else {
+            // User is signed in
+            uID = user.getUid();
+            userPseudo = user.getDisplayName();
+            userEmail = user.getEmail();
+            imageUri = user.getPhotoUrl();
+            acc_username.setText("salut: " + userPseudo);
+            //photoProfil.setImageBitmap(bitmap);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(resultCode, requestCode, data);
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            //photoProfil.setImageURI(imageUri);
+            try {
+                //getting image from gallery
+                //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+
+                //Setting image to ImageView
+                //photoProfil.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btnlist) {
+            Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
+            startActivity(intent);
+        }
     }
 }
