@@ -2,6 +2,8 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.google.firebase.database.Query;
 
@@ -10,6 +12,8 @@ import com.google.firebase.database.Query;
  */
 
 public class BookListAdapter extends FirebaseListAdapter<BookModel> {
+    private TextView txtTitle, txtAutorFirstname, txtAutorLastname;
+    private RatingBar ratingBar;
 
     /**
      * @param mRef        The Firebase location to watch for data changes. Can also be a slice of a location, using some
@@ -19,12 +23,19 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
      *                    instance of the corresponding view with the data from an instance of mModelClass.
      * @param activity    The activity containing the ListView
      */
-    public BookListAdapter(Query mRef, Class<BookModel> mModelClass, int mLayout, Activity activity) {
-        super(mRef, mModelClass, mLayout, activity);
+    public BookListAdapter(Query mRef, int mLayout, Activity activity) {
+        super(mRef, BookModel.class, mLayout, activity);
     }
 
     @Override
     protected void populateView(View v, BookModel model) {
-
+        txtTitle = (TextView) v.findViewById(R.id.title_item);
+        txtTitle.setText(model.getTitle());
+        txtAutorFirstname = (TextView) v.findViewById(R.id.autorName_item);
+        txtAutorFirstname.setText(model.getNameAutor());
+        txtAutorLastname = (TextView) v.findViewById(R.id.autorLastName_item);
+        txtAutorLastname.setText(model.getLastnameAutor());
+        ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
+        ratingBar.setRating(model.getRating());
     }
 }

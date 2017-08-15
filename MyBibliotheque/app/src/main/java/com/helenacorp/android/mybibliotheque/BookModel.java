@@ -12,9 +12,10 @@ public class BookModel {
     private String lastnameAutor;
     private String code;
     private int userid;
+    private float rating;
 
     public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor,
-                     String code, int userid) {
+                     String code, int userid, float rating) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
@@ -22,6 +23,15 @@ public class BookModel {
         this.lastnameAutor = lastnameAutor;
         this.code = code;
         this.userid = userid;
+        this.rating = rating;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     public String getTitle() {

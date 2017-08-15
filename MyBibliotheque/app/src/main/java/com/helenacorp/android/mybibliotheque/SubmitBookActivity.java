@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText titleName, firstName, lastName;
     private Button btnClean, btnAdd, btnPic;
+    private RatingBar ratingBar;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -32,6 +34,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         btnPic = (Button) findViewById(R.id.btn_photoBook_submit);
+        ratingBar = (RatingBar) findViewById(R.id.submit_rating);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -59,7 +62,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("book");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), null, 0);
+                lastName.getText().toString(), null, 0, ratingBar.getNumStars());
         ref.push().setValue(bookModel);
     }
 

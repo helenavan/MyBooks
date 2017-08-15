@@ -75,13 +75,27 @@
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="185dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:text="@string/btn_clean"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <RatingBar
+        android:id="@+id/submit_rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:rating="1"
+        android:stepSize="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add_submit"
-        app:layout_constraintVertical_bias="0.57" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_photoBook_submit" />
 
 </android.support.constraint.ConstraintLayout>
