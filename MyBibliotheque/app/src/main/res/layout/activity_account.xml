@@ -4,14 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="8dp"
     tools:context="com.helenacorp.android.mybibliotheque.AccountActivity">
 
     <ImageView
-        android:id="@+id/imgprofil_account"
+        android:id="@+id/user_pic"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="56dp"
         android:background="@android:drawable/presence_audio_away"
-        android:paddingTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_pic">
+
+        <TextView
+            android:id="@+id/user_bjr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bonjour :" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:text="mon nom" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearnumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearname">
+
+        <TextView
+            android:id="@+id/user_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="J'ai x livres :"
+            app:layout_constraintTop_toBottomOf="@+id/user_bjr" />
+
+        <TextView
+            android:id="@+id/user_numberBooks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2555"
+            app:layout_constraintLeft_toRightOf="@+id/user_book"
+            app:layout_constraintRight_toRightOf="parent" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/user_btnlist"
+        style="@style/buttonTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ma liste"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearnumber"
+        app:layout_constraintVertical_bias="0.647" />
 </android.support.constraint.ConstraintLayout>
