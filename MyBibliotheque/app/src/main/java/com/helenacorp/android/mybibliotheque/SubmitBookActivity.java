@@ -62,17 +62,29 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("book");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), null, 0, ratingBar.getNumStars());
+                lastName.getText().toString(), userName, 0, ratingBar.getNumStars());
         ref.push().setValue(bookModel);
+        finish();
     }
 
     public void clearEditText(EditText editText) {
         editText.setText("");
     }
 
+
     @Override
     public void onClick(View view) {
         if (view == btnAdd) {
+            if (titleName.getText().length() == 0 ||
+                    lastName.getText().length() == 0) {
+                Context context = getApplicationContext();
+                CharSequence text = "Veuillez remplir le formulaire complètement,\nsinon grrr";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            } else {
+                sendBook(view);
+            }
             sendBook(view);
         }
         if (view == btnClean) {

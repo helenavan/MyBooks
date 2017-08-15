@@ -75,7 +75,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                             //Log.d(TAG, "signInWithEmail:success");
                             Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
                             startActivity(intent);
-
+                            messToast.setText("Bienvenue!");
+                            messageToast();
 
                         } else {
                             // If sign in fails, display a message to the user.

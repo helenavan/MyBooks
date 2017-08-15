@@ -10,18 +10,22 @@ public class BookModel {
     private String isbn;
     private String nameAutor;
     private String lastnameAutor;
-    private String code;
+    private String userName;
     private int userid;
     private float rating;
 
+    //bug du constructeur vise
+    BookModel() {
+
+    }
     public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor,
-                     String code, int userid, float rating) {
+                     String userName, int userid, float rating) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
         this.nameAutor = nameAutor;
         this.lastnameAutor = lastnameAutor;
-        this.code = code;
+        this.userName = userName;
         this.userid = userid;
         this.rating = rating;
     }
@@ -75,11 +79,11 @@ public class BookModel {
     }
 
     public String getCode() {
-        return code;
+        return userName;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.userName = code;
     }
 
     public int getUserid() {

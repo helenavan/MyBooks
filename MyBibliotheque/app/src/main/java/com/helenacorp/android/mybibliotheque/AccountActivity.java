@@ -32,11 +32,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        btnlist = (Button) findViewById(R.id.user_btnlist);
-        btnlist.setOnClickListener(this);
-
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
+        btnlist = (Button) findViewById(R.id.user_btnlist);
+        btnlist.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -85,5 +84,8 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
             startActivity(intent);
         }
+
     }
+
+
 }
