@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -25,17 +28,21 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnCreatAccount;
     private String displayName;
     private ProgressBar mProgressBar;
+    private View viewLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        LayoutInflater layoutInflater = getLayoutInflater();
+        viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
+
         authName = (EditText) findViewById(R.id.name_signup);
         authEmail = (EditText) findViewById(R.id.email_signup);
         authPassw = (EditText) findViewById(R.id.password_signup);
         btnCreatAccount = (Button) findViewById(R.id.btn_creatAccount);
-
+        // mProgressBar = (ProgressBar) findViewById(R.id.);
         btnCreatAccount.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
@@ -61,16 +68,20 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                 public void onComplete(@NonNull Task<Void> task) {
                                     Toast.makeText(SignupActivity.this, "mouarf", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
-                                    //finish();
+                                    finish();
                                     startActivity(intent);
                                 }
                             });
 
 
                         } else {
+                            Toast toast1 = Toast.makeText(SignupActivity.this, " ", Toast.LENGTH_SHORT);
+                            toast1.setGravity(Gravity.CENTER, 0, 0);
+                            toast1.setView(viewLayout);
+                            toast1.show();
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(SignupActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(SignupActivity.this, "Authentication failed.",
+                            // Toast.LENGTH_SHORT).show();
 
                         }
 
