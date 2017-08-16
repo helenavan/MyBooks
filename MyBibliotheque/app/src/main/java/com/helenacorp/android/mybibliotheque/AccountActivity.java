@@ -16,7 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button btnlist;
+    private Button btnlist, btndisconnect;
     private TextView acc_username, acc_numlist;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
@@ -36,6 +36,8 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         btnlist = (Button) findViewById(R.id.user_btnlist);
         btnlist.setOnClickListener(this);
+        btndisconnect = (Button) findViewById(R.id.user_disconnect);
+        btndisconnect.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -84,8 +86,80 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
             startActivity(intent);
         }
+        if (view == btndisconnect) {
+            FirebaseAuth.getInstance().signOut();
+            Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
+            startActivity(i);
+        }
+
 
     }
+    /*
+    //download and uploadload photoprofil
+    private void downloadAvatar() {
+        // Create a storage reference from our app
+        StorageReference storageRef = firebaseStorage.getReference();
+
+        storageRef.child("images/" + uId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                progressDialog.dismiss();
+                Glide.with(AccountActivity.this)
+                        .load(uri)
+                        .into(photoProfil);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                progressDialog.dismiss();
+                Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadImage() {
+
+        if (imageUri != null) {
 
 
+            StorageReference storageReference = firebaseStorage.getReference();
+            StorageReference userPicref = storageReference.child("images/" + uId + ".jpg");
+            photoProfil.setDrawingCacheEnabled(true);
+            photoProfil.buildDrawingCache();
+            Bitmap bitmap = photoProfil.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = userPicref.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(AccountActivity.this, "Error : " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
+                    Glide.with(AccountActivity.this)
+                            .load(downloadUrl)
+                            .into(photoProfil);
+                }
+            });
+        } else {
+            progressDialog.dismiss();
+            Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }*/
 }

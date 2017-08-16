@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,16 +20,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private DatabaseReference ref;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText authName, authEmail, authPassw;
     private Button btnCreatAccount;
     private String displayName;
     private ProgressBar mProgressBar;
     private View viewLayout;
+    private TextView messToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         LayoutInflater layoutInflater = getLayoutInflater();
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
+        messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
 
         authName = (EditText) findViewById(R.id.name_signup);
         authEmail = (EditText) findViewById(R.id.email_signup);
@@ -48,6 +53,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         mAuth = FirebaseAuth.getInstance();
     }
 
+    public void validation() {
+        if (authName.getText().length() == 0 ||
+                authEmail.getText().length() == 0 || authPassw.getText().length() == 0) {
+            messToast.setText("tsss tout n'est pas là!!!");
+            messageToast();
+        } else {
+            loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
+        }
+    }
     private void loginAccount(final String name, String email, String password) {
         //showProgressDialog();
         // START create_user_with_email
@@ -57,8 +71,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(SignupActivity.this, "Authentication done.",
-                                    Toast.LENGTH_SHORT).show();
+                            messToast.setText("Authentification réussie!");
+                            messageToast();
                             user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(displayName)
@@ -66,7 +80,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(SignupActivity.this, "mouarf", Toast.LENGTH_SHORT).show();
+                                    messToast.setText("Hey! Bienvenue !!");
+                                    messageToast();
                                     Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
                                     finish();
                                     startActivity(intent);
@@ -75,14 +90,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
 
                         } else {
-                            Toast toast1 = Toast.makeText(SignupActivity.this, " ", Toast.LENGTH_SHORT);
-                            toast1.setGravity(Gravity.CENTER, 0, 0);
-                            toast1.setView(viewLayout);
-                            toast1.show();
+                            messToast.setText("humf! Est-ce bien correcte?");
+                            messageToast();
                             // If sign in fails, display a message to the user.
-                            // Toast.makeText(SignupActivity.this, "Authentication failed.",
-                            // Toast.LENGTH_SHORT).show();
-
                         }
 
                         //hideProgressDialog();
@@ -90,6 +100,14 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
                 });
     }
+
+    public void messageToast() {
+        Toast toast1 = Toast.makeText(SignupActivity.this, " ", Toast.LENGTH_SHORT);
+        toast1.setGravity(Gravity.CENTER, 0, 0);
+        toast1.setView(viewLayout);
+        toast1.show();
+    }
+
 
   /*  @Override
     public void onStop(){
@@ -108,7 +126,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view == btnCreatAccount) {
-            loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
+            validation();
         }
     }
 }

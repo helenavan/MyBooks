@@ -36,8 +36,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnPic = (Button) findViewById(R.id.btn_photoBook_submit);
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
 
-        mAuth = FirebaseAuth.getInstance();
-
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
         btnPic.setOnClickListener(this);
@@ -56,6 +54,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void sendBook(View view) {
+        mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
         //write a message to the database
@@ -71,21 +70,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         editText.setText("");
     }
 
-
     @Override
     public void onClick(View view) {
         if (view == btnAdd) {
-            if (titleName.getText().length() == 0 ||
-                    lastName.getText().length() == 0) {
-                Context context = getApplicationContext();
-                CharSequence text = "Veuillez remplir le formulaire complètement,\nsinon grrr";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            } else {
-                sendBook(view);
-            }
-            sendBook(view);
+            validation();
         }
         if (view == btnClean) {
             clearEditText(titleName);
