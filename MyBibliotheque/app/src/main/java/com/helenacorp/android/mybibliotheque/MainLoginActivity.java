@@ -56,6 +56,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
 
         mAuth = FirebaseAuth.getInstance();
 
+        //to keep connected user
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -66,7 +67,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     startActivity(intent);
                 } else {
                     // User is signed out
-
+                    messToast.setText("Veuillez vous reconnecter");
+                    messageToast();
                 }
                 // ...
             }
@@ -115,6 +117,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                 });
     }
 
+    //keep loginuser connected
     @Override
     public void onStart() {
         super.onStart();

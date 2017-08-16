@@ -10,4 +10,6 @@
     <color name="pressed">#b1bbca</color>
     <color name="focused">#b7e398</color>
     <color name="darkgray1">#3d3d3d</color>
+    <color name="enabled">#4b81ce</color>
+    <color name="focused2">#c6d7f0</color>
 </resources>
