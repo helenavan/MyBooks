@@ -33,7 +33,7 @@
         <activity android:name=".AccountActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".SubmitBookActivity" />
-        <activity android:name=".ViewListBooksActivity"></activity>
+        <activity android:name=".ViewListBooksActivity" />
     </application>
 
 </manifest>

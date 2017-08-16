@@ -12,4 +12,10 @@
     <string name="hint_nom">Entrer votre nom ou pseudo</string>
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
