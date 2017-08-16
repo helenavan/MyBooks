@@ -1,6 +1,8 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -20,6 +22,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainLoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String PREFS_NAME = "preferences";
+    private static final String PREF_UNAME = "Username";
+    private static final String PREF_PASSWORD = "Password";
+
+    private final String DefaultUnameValue = "";
+    private final String DefaultPasswordValue = "";
+    private String UnameValue;
+    private String PasswordValue;
 
     private View viewLayout;
     private Button login;
@@ -98,5 +108,45 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                 validation();
                 break;
         }
+    }
+
+    //keep email and password
+    @Override
+    public void onPause() {
+        super.onPause();
+        savePreference();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPreference();
+    }
+
+    private void savePreference() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        // Edit and commit
+        UnameValue = email_log.getText().toString();
+        PasswordValue = password_log.getText().toString();
+        //System.out.println("onPause save name: " + UnameValue);
+        //System.out.println("onPause save password: " + PasswordValue);
+        editor.putString(PREF_UNAME, UnameValue);
+        editor.putString(PREF_PASSWORD, PasswordValue);
+        editor.commit();
+    }
+
+    private void loadPreference() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        // Get value
+        UnameValue = settings.getString(PREF_UNAME, DefaultUnameValue);
+        PasswordValue = settings.getString(PREF_PASSWORD, DefaultPasswordValue);
+        email_log.setText(UnameValue);
+        password_log.setText(PasswordValue);
+        Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
+        startActivity(intent);
+        //System.out.println("onResume load name: " + UnameValue);
+        // System.out.println("onResume load password: " + PasswordValue);
     }
 }

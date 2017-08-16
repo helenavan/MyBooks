@@ -54,7 +54,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             userPseudo = user.getDisplayName();
             userEmail = user.getEmail();
             imageUri = user.getPhotoUrl();
-            acc_username.setText("salut: " + userPseudo);
+            acc_username.setText(userPseudo);
             //photoProfil.setImageBitmap(bitmap);
         }
     }
