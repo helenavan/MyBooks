@@ -25,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private Button btnlist, btndisconnect;
+    private Button btnphotoUser;
     private TextView acc_username, acc_numlist;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
@@ -43,10 +43,6 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
-        btnlist = (Button) findViewById(R.id.user_btnlist);
-        btnlist.setOnClickListener(this);
-        btndisconnect = (Button) findViewById(R.id.user_disconnect);
-        btndisconnect.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -127,16 +123,17 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_mylist) {
+            Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_disconnect) {
+            FirebaseAuth.getInstance().signOut();
+            Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_send) {
 
         }
@@ -167,16 +164,6 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (view == btnlist) {
-            Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
-            startActivity(intent);
-        }
-        if (view == btndisconnect) {
-            FirebaseAuth.getInstance().signOut();
-            Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
-            startActivity(i);
-        }
-
 
     }
     /*
