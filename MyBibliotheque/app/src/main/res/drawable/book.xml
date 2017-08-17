@@ -19,19 +19,16 @@ C882.7,274.3,881.3,272.9,879.7,272.9 Z" />
         android:pathData="M786.5,272.9 L872.8,272.9 L872.8,572.7 L786.5,572.7 L786.5,272.9 Z" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_1_)"
         android:pathData="M776.6,342.5 L882.7,342.5 L882.7,370.8 L776.6,370.8 L776.6,342.5 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_2_)"
         android:pathData="M776.6,430.5 L882.7,430.5 L882.7,458.8 L776.6,458.8 L776.6,430.5 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_3_)"
         android:pathData="M776.6,518.4 L882.7,518.4 L882.7,546.7 L776.6,546.7 L776.6,518.4 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
@@ -87,21 +84,18 @@ L692.8,176.1 C692.8,174.5,691.5,173.1,689.8,173.1 Z" />
         android:pathData="M616.6,173.1 L682.9,173.1 L682.9,572.9 L616.6,572.9 L616.6,173.1 Z" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_4_)"
         android:pathData="M1271.21,548.977 L1458.26,548.977 L1458.26,610.457 L1271.21,610.457
 L1271.21,548.977 Z"
         android:strokeAlpha="0.2"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_5_)"
         android:pathData="M1271.21,827.05 L1458.26,827.05 L1458.26,888.53 L1271.21,888.53 L1271.21,827.05
 Z"
         android:strokeAlpha="0.2"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_6_)"
         android:pathData="M1271.21,1104.91 L1458.26,1104.91 L1458.26,1166.39 L1271.21,1166.39
 L1271.21,1104.91 Z"
         android:strokeAlpha="0.2"
@@ -135,35 +129,30 @@ C447.2,139.7,445.9,138.3,444.2,138.3 Z" />
 
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_7_)"
         android:pathData="M824.554,455.562 L924.704,455.562 L924.704,517.042 L824.554,517.042
 L824.554,455.562 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_8_)"
         android:pathData="M824.554,620.233 L924.704,620.233 L924.704,681.713 L824.554,681.713
 L824.554,620.233 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_9_)"
         android:pathData="M824.554,785.122 L924.704,785.122 L924.704,846.602 L824.554,846.602
 L824.554,785.122 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_10_)"
         android:pathData="M824.554,950.01 L924.704,950.01 L924.704,1011.49 L824.554,1011.49
 L824.554,950.01 Z"
         android:strokeAlpha="0.4"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.4"
-        android:fillColor="url(#SVGID_11_)"
         android:pathData="M824.554,1114.68 L924.704,1114.68 L924.704,1176.16 L824.554,1176.16
 L824.554,1114.68 Z"
         android:strokeAlpha="0.4"
@@ -196,28 +185,24 @@ C772.8,99.7,771.5,98.3,769.8,98.3 Z" />
         android:pathData="M706.6,98.3 L762.9,98.3 L762.9,568.1 L706.6,568.1 L706.6,98.3 Z" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_12_)"
         android:pathData="M1466.73,357.15 L1632.05,357.15 L1632.05,418.63 L1466.73,418.63 L1466.73,357.15
 Z"
         android:strokeAlpha="0.2"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_13_)"
         android:pathData="M1466.73,605.895 L1632.05,605.895 L1632.05,667.375 L1466.73,667.375
 L1466.73,605.895 Z"
         android:strokeAlpha="0.2"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_14_)"
         android:pathData="M1466.73,854.205 L1632.05,854.205 L1632.05,915.685 L1466.73,915.685
 L1466.73,854.205 Z"
         android:strokeAlpha="0.2"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.2"
-        android:fillColor="url(#SVGID_15_)"
         android:pathData="M1466.73,1103.17 L1632.05,1103.17 L1632.05,1164.65 L1466.73,1164.65
 L1466.73,1103.17 Z"
         android:strokeAlpha="0.2"
@@ -230,21 +215,18 @@ L1466.73,1103.17 Z"
         android:pathData="M461.1,164.7 L541.1,164.7 L541.1,571.7 L461.1,571.7 L461.1,164.7 Z" />
     <path
         android:fillAlpha="0.3"
-        android:fillColor="url(#SVGID_16_)"
         android:pathData="M933.176,584.388 L1150.42,584.388 L1150.42,645.868 L933.176,645.868
 L933.176,584.388 Z"
         android:strokeAlpha="0.3"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.3"
-        android:fillColor="url(#SVGID_17_)"
         android:pathData="M933.176,818.143 L1150.42,818.143 L1150.42,879.623 L933.176,879.623
 L933.176,818.143 Z"
         android:strokeAlpha="0.3"
         android:strokeWidth="1" />
     <path
         android:fillAlpha="0.3"
-        android:fillColor="url(#SVGID_18_)"
         android:pathData="M933.176,1051.9 L1150.42,1051.9 L1150.42,1113.38 L933.176,1113.38
 L933.176,1051.9 Z"
         android:strokeAlpha="0.3"

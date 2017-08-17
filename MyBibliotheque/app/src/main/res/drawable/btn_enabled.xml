@@ -6,7 +6,7 @@
         android:centerColor="#0000CC"
         android:endColor="#00CCFF"
         android:angle="90"/> -->
-    <solid android:color="@color/enabled" />
+    <solid android:color="@color/bleu" />
     <padding
         android:bottom="7dp"
         android:left="7dp"

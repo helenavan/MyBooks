@@ -4,7 +4,7 @@
     <style name="AppThemeBase" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/orange</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -12,9 +12,9 @@
 
     <style name="EditTextHint" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@android:color/white</item>
-        <item name="android:textColorHint">@color/Highlight</item>
+        <item name="android:textColorHint">@color/bleu</item>
         <item name="colorControlNormal">@color/Line</item>
-        <item name="colorControlActivated">@color/coloractivated</item>
+        <item name="colorControlActivated">@color/orange</item>
         <item name="colorControlHighlight">@color/Highlight</item>
 
     </style>
