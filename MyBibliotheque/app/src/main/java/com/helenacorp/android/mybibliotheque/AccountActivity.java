@@ -32,7 +32,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private static final int PICK_IMAGE_REQUEST = 11;
+    private static final int PICK_IMAGE_REQUEST = 111;
+
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private ImageView btnphotoUser;
     private TextView acc_username, acc_numlist;
@@ -149,9 +150,9 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(resultCode, requestCode, data);
-        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
             imageUri = data.getData();
-            userPic.setImageURI(imageUri);
+            //userPic.setImageURI(imageUri);
             try {
                 //getting image from gallery
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
@@ -169,9 +170,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         if (view == btnphotoUser) {
             showFileChooser();
+
         } else {
             uploadImage();
-            downloadAvatar();
+
         }
     }
 
@@ -238,7 +240,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
     private void showFileChooser() {
         Intent intent = new Intent();
-        intent.setType("image/*");
+        intent.setType("images/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }

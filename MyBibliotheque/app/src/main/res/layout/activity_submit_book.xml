@@ -4,20 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
     android:theme="@style/EditTextHint"
     tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/orangeD"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <EditText
         android:id="@+id/title_submit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="56dp"
         android:hint="@string/title_sub"
+
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -38,8 +50,10 @@
         android:id="@+id/autorLastName_submit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="14dp"
         android:hint="@string/fistname_sub"
         app:layout_constraintHorizontal_bias="0.0"
@@ -47,37 +61,35 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameAutor_submit" />
 
-    <Button
-        android:id="@+id/btn_photoBook_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:background="@android:drawable/ic_menu_camera"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
+
 
     <Button
         android:id="@+id/btn_add_submit"
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
         android:text="@string/btn_add"
         app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_photoBook_submit" />
+        app:layout_constraintTop_toBottomOf="@+id/submit_rating" />
 
     <Button
         android:id="@+id/btn_clean_submit"
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="185dp"
+        android:layout_marginBottom="106dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
         android:text="@string/btn_clean"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -89,13 +101,13 @@
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
         android:stepSize="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_photoBook_submit" />
+        app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
 
 </android.support.constraint.ConstraintLayout>
