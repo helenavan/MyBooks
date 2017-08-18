@@ -12,7 +12,9 @@
         android:id="@+id/user_bcrg"
         android:layout_width="0dp"
         android:layout_height="170dp"
+        android:layout_marginTop="-17dp"
         android:background="@color/focused"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,23 +25,31 @@
         android:layout_height="4dp"
         android:background="@color/vert"
         app:layout_constraintBottom_toBottomOf="@+id/user_bcrg"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_bcrg"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
-        android:id="@+id/user_circle"
+        android:id="@+id/user_pic"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:src="@drawable/circles"
-        app:layout_constraintBottom_toBottomOf="@+id/linearname"
+        app:layout_constraintBottom_toBottomOf="@+id/user_circle"
+        app:layout_constraintLeft_toLeftOf="@+id/user_circle"
+        app:layout_constraintRight_toRightOf="@+id/user_circle"
+        app:layout_constraintTop_toTopOf="@+id/user_circle" />
+
+    <ImageView
+        android:id="@+id/user_circle"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="112dp"
+        android:src="@drawable/circles"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/user_bcrg"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintTop_toTopOf="@+id/user_bcrg" />
 
     <LinearLayout
         android:id="@+id/linearname"
@@ -48,7 +58,7 @@
         android:layout_marginTop="59dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_camera">
+        app:layout_constraintTop_toBottomOf="@+id/user_circle">
 
         <TextView
             android:id="@+id/user_bjr"
@@ -92,16 +102,6 @@
             app:layout_constraintRight_toRightOf="parent" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/user_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
-        android:background="@android:drawable/ic_menu_camera"
-        android:backgroundTint="@color/bleu"
-        app:layout_constraintLeft_toLeftOf="@+id/constraint"
-        app:layout_constraintRight_toRightOf="@+id/constraint"
-        app:layout_constraintTop_toBottomOf="@+id/user_circle" />
 
     <include
         layout="@layout/drawer_account"

@@ -18,5 +18,11 @@
     <color name="vert">#98e3c4</color>
     <color name="bleu">#98b7e3</color>
 
+    <color name="bleud">#0443BE</color>
+    <color name="bleuDd">#DAEBF3</color>
+    <color name="vertD">#8BC243</color>
+    <color name="orangeD">#F49D02</color>
+    <color name="rougeD">#F17402</color>
+
     <color name="actionbar">@android:color/transparent</color>
 </resources>

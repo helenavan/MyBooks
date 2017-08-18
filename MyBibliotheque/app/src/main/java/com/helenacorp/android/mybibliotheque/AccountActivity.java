@@ -1,11 +1,12 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,18 +15,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private Button btnphotoUser;
+    private static final int PICK_IMAGE_REQUEST = 11;
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    private ImageView btnphotoUser;
     private TextView acc_username, acc_numlist;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
@@ -34,7 +43,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Uri imageUri;
-
+    private Bitmap bitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,9 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
+        userPic = (ImageView) findViewById(R.id.user_pic);
+        btnphotoUser = (ImageView) findViewById(R.id.user_btnCamera);
+        btnphotoUser.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -62,19 +74,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             userEmail = user.getEmail();
             imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-            //photoProfil.setImageBitmap(bitmap);
+            userPic.setImageBitmap(bitmap);
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -148,13 +151,13 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(resultCode, requestCode, data);
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            //photoProfil.setImageURI(imageUri);
+            userPic.setImageURI(imageUri);
             try {
                 //getting image from gallery
-                //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
                 //Setting image to ImageView
-                //photoProfil.setImageBitmap(bitmap);
+                userPic.setImageBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,28 +167,33 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-
+        if (view == btnphotoUser) {
+            showFileChooser();
+        } else {
+            uploadImage();
+            downloadAvatar();
+        }
     }
-    /*
+
     //download and uploadload photoprofil
     private void downloadAvatar() {
         // Create a storage reference from our app
         StorageReference storageRef = firebaseStorage.getReference();
 
-        storageRef.child("images/" + uId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                progressDialog.dismiss();
+                // progressDialog.dismiss();
                 Glide.with(AccountActivity.this)
                         .load(uri)
-                        .into(photoProfil);
+                        .into(userPic);
             }
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                progressDialog.dismiss();
+                // progressDialog.dismiss();
                 Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -197,10 +205,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
 
             StorageReference storageReference = firebaseStorage.getReference();
-            StorageReference userPicref = storageReference.child("images/" + uId + ".jpg");
-            photoProfil.setDrawingCacheEnabled(true);
-            photoProfil.buildDrawingCache();
-            Bitmap bitmap = photoProfil.getDrawingCache();
+            StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
+            userPic.setDrawingCacheEnabled(true);
+            userPic.buildDrawingCache();
+            Bitmap bitmap = userPic.getDrawingCache();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
@@ -208,22 +216,22 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
+                    // progressDialog.dismiss();
                     Toast.makeText(AccountActivity.this, "Error : " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
+                    // progressDialog.dismiss();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Glide.with(AccountActivity.this)
                             .load(downloadUrl)
-                            .into(photoProfil);
+                            .into(userPic);
                 }
             });
         } else {
-            progressDialog.dismiss();
+            // progressDialog.dismiss();
             Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
         }
     }
@@ -233,5 +241,5 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }*/
+    }
 }
