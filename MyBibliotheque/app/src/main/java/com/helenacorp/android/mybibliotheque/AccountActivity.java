@@ -242,4 +242,5 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
 }

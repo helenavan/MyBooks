@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -15,13 +17,18 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private DatabaseReference mDatabase;
     private BookListAdapter mBookListAdapter;
     private Button btn;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list_books);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("book");
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         mBookListAdapter = new BookListAdapter(mDatabase, R.layout.item_book, this);
         listView = (ListView) this.findViewById(R.id.listView_books);
         listView.setAdapter(mBookListAdapter);

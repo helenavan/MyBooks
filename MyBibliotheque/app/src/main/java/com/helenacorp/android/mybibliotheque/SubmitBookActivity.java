@@ -44,9 +44,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
             Context context = getApplicationContext();
-            CharSequence text = "Ha! N'avez-vous pas oublié quelque chose?";
             int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
+            Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
             toast.show();
         } else {
             sendBook(btnAdd);
@@ -59,10 +58,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         String userName = user.getDisplayName();
         //write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("book");
+        DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
+
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, 0, ratingBar.getNumStars());
+                lastName.getText().toString(), userName, null, ratingBar.getNumStars());
         ref.push().setValue(bookModel);
+        Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
+        toast.show();
         finish();
     }
 
