@@ -5,15 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -27,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_IMAGE_CAPTURE = 111;
+    private static final String SOURCE_SAVED = "saved";
 
     private EditText titleName, firstName, lastName;
     private Button btnClean, btnAdd, btnPic;
@@ -34,6 +34,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private String mSource;
+    private ImageView mImageBook;
+    private Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +49,22 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
-        btnPic = (Button) findViewById(R.id.btn_photoBook_submit);
+        // btnPic = (Button) findViewById(R.id.btn_photoBook_submit);
+
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
-        btnPic.setOnClickListener(this);
-    }
+        //btnPic.setOnClickListener(this);
 
+        // setHasOptionsMenu(true);
+    }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (mSource.equals(SyncStateContract.Constants.SOURCE_SAVED)) {
-            inflater.inflate(R.menu.menu_submit, menu);
-        } else {
-            inflater.inflate(R.menu.menu_submit, menu);
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_submit, menu);
+        return true;
     }
 
     @Override
@@ -76,33 +80,35 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     public void onLaunchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(SubmitBookActivity.this.getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubmitBookActivity.this.RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageLabel.setImageBitmap(imageBitmap);
-            encodeBitmapAndSaveToFirebase(imageBitmap);
+            mImageBook.setImageBitmap(imageBitmap);
+            sendBook();
         }
     }
 
+
     //encodage
-    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+  /*  public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+        BookModel model = new BookModel();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference(SyncStateContract.Constants.FIREBASE_CHILD_RESTAURANTS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(mRestaurant.getPushId())
+                .child(model.getImageUrl())
                 .child("imageUrl");
         ref.setValue(imageEncoded);
-    }
+    }*/
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
@@ -111,20 +117,23 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
             toast.show();
         } else {
-            sendBook(btnAdd);
+            sendBook();
         }
     }
 
-    public void sendBook(View view) {
+    public void sendBook() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         //write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
 
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getNumStars());
+                lastName.getText().toString(), userName, null, ratingBar.getNumStars(), imageEncoded);
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();

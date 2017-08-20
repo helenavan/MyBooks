@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +38,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     private TextView acc_username, acc_numlist;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
-    private ProgressBar mBar;
+    //private ProgressBar mBar;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -56,6 +55,8 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         userPic = (ImageView) findViewById(R.id.user_pic);
         btnphotoUser = (ImageView) findViewById(R.id.user_btnCamera);
         btnphotoUser.setOnClickListener(this);
+        // mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
+
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -156,7 +157,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 //getting image from gallery
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-
+                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                //byte[] bytes = stream.toByteArray();
+                //setresult.putExtra("BMP",bytes);
                 //Setting image to ImageView
                 userPic.setImageBitmap(bitmap);
             } catch (Exception e) {
@@ -170,9 +174,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         if (view == btnphotoUser) {
             showFileChooser();
+            uploadImage();
 
         } else {
-            uploadImage();
+            downloadAvatar();
 
         }
     }
@@ -205,12 +210,11 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         if (imageUri != null) {
 
-
             StorageReference storageReference = firebaseStorage.getReference();
             StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
             userPic.setDrawingCacheEnabled(true);
             userPic.buildDrawingCache();
-            Bitmap bitmap = userPic.getDrawingCache();
+            bitmap = userPic.getDrawingCache();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
@@ -240,7 +244,8 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
     private void showFileChooser() {
         Intent intent = new Intent();
-        intent.setType("images/*");
+        //change intent.setType("images/*") by ("*/*")
+        intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }

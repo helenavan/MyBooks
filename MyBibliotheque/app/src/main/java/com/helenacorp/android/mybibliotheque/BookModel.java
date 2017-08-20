@@ -13,13 +13,15 @@ public class BookModel {
     private String userName;
     private String userid;
     private float rating;
+    private String imageUrl;
 
     //bug du constructeur vise
     BookModel() {
 
     }
+
     public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor,
-                     String userName, String userid, float rating) {
+                     String userName, String userid, float rating, String imageUrl) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
@@ -28,6 +30,23 @@ public class BookModel {
         this.userName = userName;
         this.userid = userid;
         this.rating = rating;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public float getRating() {

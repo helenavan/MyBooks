@@ -7,16 +7,6 @@
     android:theme="@style/EditTextHint"
     tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="@color/orangeD"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     <EditText
         android:id="@+id/title_submit"
         android:layout_width="0dp"
@@ -27,7 +17,6 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="56dp"
         android:hint="@string/title_sub"
-
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +49,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameAutor_submit" />
-
 
 
     <Button
