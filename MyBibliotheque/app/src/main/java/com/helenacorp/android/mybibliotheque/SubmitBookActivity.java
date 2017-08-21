@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.ByteArrayOutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String FIREBASE_CHILD_BOOKS = "users";
     private static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final String SOURCE_SAVED = "saved";
-
     private EditText titleName, firstName, lastName;
     private Button btnClean, btnAdd, btnPic;
     private RatingBar ratingBar;
@@ -49,13 +50,18 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
-        // btnPic = (Button) findViewById(R.id.btn_photoBook_submit);
+        mImageBook = (ImageView) findViewById(R.id.submit_photoView);
+        btnPic = (Button) findViewById(R.id.submit_btn_photoChoice);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
-        //btnPic.setOnClickListener(this);
+        btnPic.setOnClickListener(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setSubtitle("Yeah!");
 
         // setHasOptionsMenu(true);
     }
@@ -75,7 +81,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             default:
                 break;
         }
-        return false;
+        return true;
     }
 
     public void onLaunchCamera() {
@@ -89,26 +95,30 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubmitBookActivity.this.RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageBook.setImageBitmap(imageBitmap);
-            sendBook();
+            try {
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                mImageBook.setImageBitmap(imageBitmap);
+                encodeBitmapAndSaveToFirebase(imageBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     //encodage
-  /*  public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         BookModel model = new BookModel();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference(SyncStateContract.Constants.FIREBASE_CHILD_RESTAURANTS)
+                .getReference(FIREBASE_CHILD_BOOKS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(model.getImageUrl())
                 .child("imageUrl");
         ref.setValue(imageEncoded);
-    }*/
+    }
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
@@ -125,15 +135,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        // String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         //write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
-
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getNumStars(), imageEncoded);
+                lastName.getText().toString(), userName, null, ratingBar.getNumStars(), null);
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();

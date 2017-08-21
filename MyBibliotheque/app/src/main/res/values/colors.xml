@@ -21,7 +21,7 @@
     <color name="bleud">#0443BE</color>
     <color name="bleuDd">#DAEBF3</color>
     <color name="vertD">#8BC243</color>
-    <color name="orangeD">#F49D02</color>
+    <color name="orangeD">#f49d02</color>
     <color name="rougeD">#F17402</color>
 
     <color name="actionbar">@android:color/transparent</color>

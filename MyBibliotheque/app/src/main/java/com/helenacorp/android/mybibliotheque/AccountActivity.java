@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +36,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private ImageView btnphotoUser;
-    private TextView acc_username, acc_numlist;
+    private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
-    //private ProgressBar mBar;
+    private ProgressBar mBar;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -52,10 +53,12 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
+        btn_upload = (TextView) findViewById(R.id.user_upload_pic);
+        btn_upload.setOnClickListener(this);
         userPic = (ImageView) findViewById(R.id.user_pic);
         btnphotoUser = (ImageView) findViewById(R.id.user_btnCamera);
         btnphotoUser.setOnClickListener(this);
-        // mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
+        mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -84,7 +87,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -163,6 +166,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 //setresult.putExtra("BMP",bytes);
                 //Setting image to ImageView
                 userPic.setImageBitmap(bitmap);
+                // uploadImage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -174,11 +178,13 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         if (view == btnphotoUser) {
             showFileChooser();
-            uploadImage();
+        }
+        if (view == btn_upload) {
+            if (userPic == null) {
 
-        } else {
-            downloadAvatar();
-
+            } else {
+                uploadImage();
+            }
         }
     }
 
@@ -229,6 +235,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // progressDialog.dismiss();
+                    mBar.setVisibility(View.VISIBLE);
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Glide.with(AccountActivity.this)
@@ -237,7 +244,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            // progressDialog.dismiss();
+
             Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
         }
     }
