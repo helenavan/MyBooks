@@ -26,9 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.ByteArrayOutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String FIREBASE_CHILD_BOOKS = "users";
+
     private static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final String SOURCE_SAVED = "saved";
+
     private EditText titleName, firstName, lastName;
     private Button btnClean, btnAdd, btnPic;
     private RatingBar ratingBar;
@@ -37,8 +38,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private FirebaseUser user;
     private String mSource;
     private ImageView mImageBook;
-    private Bitmap bitmap;
-
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
-        btnPic = (Button) findViewById(R.id.submit_btn_photoChoice);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
@@ -69,7 +68,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
-        btnPic.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
         setSupportActionBar(toolbar);
@@ -107,7 +105,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubmitBookActivity.this.RESULT_OK) {
             Bundle extras = data.getExtras();
             try {
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                imageBitmap = (Bitmap) extras.get("data");
                 mImageBook.setImageBitmap(imageBitmap);
                 encodeBitmapAndSaveToFirebase(imageBitmap);
             } catch (Exception e) {
@@ -126,8 +124,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(model.getImageUrl())
-                .child("books");
+                .child("books")
+                .child(model.getImageUrl());
         ref.setValue(imageEncoded);
     }
 
@@ -146,6 +144,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
+
         // ByteArrayOutputStream baos = new ByteArrayOutputStream();
         //bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
         // String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
@@ -153,7 +152,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getRating(), null);
+                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageBitmap.toString());
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();
@@ -173,9 +172,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             clearEditText(titleName);
             clearEditText(firstName);
             clearEditText(lastName);
-        }
-        if (view == btnPic) {
-
         }
     }
 
