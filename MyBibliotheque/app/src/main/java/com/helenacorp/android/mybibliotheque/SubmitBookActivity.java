@@ -54,6 +54,18 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnPic = (Button) findViewById(R.id.submit_btn_photoChoice);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
+        ratingBar.getNumStars();
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), Float.toString(rating), Toast.LENGTH_LONG).show();
+
+            }
+
+        });
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
@@ -63,7 +75,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle("Yeah!");
 
-        // setHasOptionsMenu(true);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,13 +121,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         BookModel model = new BookModel();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference(FIREBASE_CHILD_BOOKS)
+                .getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(model.getImageUrl())
-                .child("imageUrl");
+                .child("books");
         ref.setValue(imageEncoded);
     }
 
@@ -142,7 +153,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getNumStars(), null);
+                lastName.getText().toString(), userName, null, ratingBar.getRating(), null);
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();
