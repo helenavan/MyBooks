@@ -30,6 +30,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="56dp"
         android:hint="@string/title_sub"
+        android:maxLines="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +45,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="14dp"
         android:hint="@string/fistname_sub"
+        android:maxLines="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_submit" />
@@ -58,6 +60,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="14dp"
         android:hint="@string/fistname_sub"
+        android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -110,8 +113,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
-
-
 
     <ImageView
         android:id="@+id/submit_photoView"

@@ -107,14 +107,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             try {
                 imageBitmap = (Bitmap) extras.get("data");
                 mImageBook.setImageBitmap(imageBitmap);
-                encodeBitmapAndSaveToFirebase(imageBitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-
+/*
     //encodage
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         BookModel model = new BookModel();
@@ -127,7 +126,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 .child("books")
                 .child(model.getImageUrl());
         ref.setValue(imageEncoded);
-    }
+    }*/
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
@@ -145,14 +144,16 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
 
-        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        // String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
         //write a message to the database
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageBitmap.toString());
+                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageEncoded.toString());
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();
