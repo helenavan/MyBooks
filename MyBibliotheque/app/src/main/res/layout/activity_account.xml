@@ -40,17 +40,25 @@
         app:layout_constraintTop_toTopOf="@+id/user_bcrg"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ImageView
-        android:id="@+id/user_pic"
+    <com.helenacorp.android.mybibliotheque.RoundedCornerLayout
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:src="@drawable/acc_profil"
         app:layout_constraintBottom_toBottomOf="@+id/user_circle"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/user_circle"
         app:layout_constraintRight_toRightOf="@+id/user_circle"
-        app:layout_constraintTop_toTopOf="@+id/user_circle"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/user_circle">
+
+        <ImageView
+            android:id="@+id/user_pic"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/circles"
+            app:layout_constraintBottom_toBottomOf="@+id/user_circle"
+            app:layout_constraintLeft_toLeftOf="@+id/user_circle"
+            app:layout_constraintRight_toRightOf="@+id/user_circle"
+            app:layout_constraintTop_toTopOf="@+id/user_circle" />
+    </com.helenacorp.android.mybibliotheque.RoundedCornerLayout>
+
 
     <ImageView
         android:id="@+id/user_circle"

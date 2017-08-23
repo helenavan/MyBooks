@@ -37,7 +37,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
-    private ImageView userPic;
+    private ImageView userPic, userRounded;
     private ProgressBar mBar;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
@@ -53,6 +53,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
+
+        userRounded = (ImageView) findViewById(R.id.user_pic);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
 
