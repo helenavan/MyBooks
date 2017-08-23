@@ -4,7 +4,8 @@
     <string name="log_email">Votre email</string>
     <string name="log_password">Votre mot de passe</string>
     <string name="title_sub">Entrez le Titre</string>
-    <string name="fistname_sub">Entrez le nom de l\'auteur</string>
+    <string name="fistname_sub">Entrez le prénom de l\'auteur</string>
+    <string name="lastname_sub">Entrez le nom</string>
     <string name="btn_add">envoyer</string>
     <string name="btn_clean">effacer</string>
     <!--activity_signup-->

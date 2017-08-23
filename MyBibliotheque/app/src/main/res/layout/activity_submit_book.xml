@@ -30,6 +30,8 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:hint="@string/title_sub"
+        android:inputType="text"
+        android:lines="1"
         android:maxLines="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -45,6 +47,8 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="14dp"
         android:hint="@string/fistname_sub"
+        android:inputType="text"
+        android:lines="1"
         android:maxLines="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -59,7 +63,9 @@
         android:layout_marginRight="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="14dp"
-        android:hint="@string/fistname_sub"
+        android:hint="@string/lastname_sub"
+        android:inputType="text"
+        android:lines="1"
         android:maxLines="1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -76,21 +82,20 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="24dp"
         android:text="@string/btn_add"
         android:textColor="@color/bleud"
         app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit_photoView"
-        app:layout_constraintVertical_bias="0.728" />
+        app:layout_constraintTop_toBottomOf="@+id/submit_photoView" />
 
     <Button
         android:id="@+id/btn_clean_submit"
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="57dp"
+        android:layout_marginBottom="111dp"
         android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -98,9 +103,9 @@
         android:text="@string/btn_clean"
         android:textColor="@color/bleud"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_submit" />
 
     <RatingBar
         android:id="@+id/submit_rating"
