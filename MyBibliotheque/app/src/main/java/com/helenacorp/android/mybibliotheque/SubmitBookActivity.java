@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.ByteArrayOutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -144,16 +141,18 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         user = mAuth.getCurrentUser();
         String userName = user.getDisplayName();
 
+      /*  imageBitmap = ((BitmapDrawable) mImageBook.getDrawable()).getBitmap();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);*/
 
         //write a message to the database
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageEncoded.toString());
+                lastName.getText().toString(), userName, null, ratingBar.getRating(), null);
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();
