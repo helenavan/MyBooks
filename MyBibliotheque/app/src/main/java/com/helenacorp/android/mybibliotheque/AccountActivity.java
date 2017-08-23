@@ -31,11 +31,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-public class AccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int PICK_IMAGE_REQUEST = 111;
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    private ImageView btnphotoUser;
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
     private ImageView userPic;
@@ -53,11 +52,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
-        btn_upload = (TextView) findViewById(R.id.user_upload_pic);
-        btn_upload.setOnClickListener(this);
         userPic = (ImageView) findViewById(R.id.user_pic);
-        btnphotoUser = (ImageView) findViewById(R.id.user_btnCamera);
-        btnphotoUser.setOnClickListener(this);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
 
@@ -135,7 +130,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-
+            showFileChooser();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_disconnect) {
@@ -156,7 +151,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(resultCode, requestCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
             imageUri = data.getData();
-            //userPic.setImageURI(imageUri);
+            // userPic.setImageURI(imageUri);
             try {
                 //getting image from gallery
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
@@ -166,25 +161,11 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 //setresult.putExtra("BMP",bytes);
                 //Setting image to ImageView
                 userPic.setImageBitmap(bitmap);
-                // uploadImage();
+                uploadImage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == btnphotoUser) {
-            showFileChooser();
-        }
-        if (view == btn_upload) {
-            if (userPic == null) {
-
-            } else {
-                uploadImage();
-            }
         }
     }
 
