@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
+
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 111;
@@ -33,7 +36,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String mSource;
+    private String imageEncoded;
     private ImageView mImageBook;
     private Bitmap imageBitmap;
 
@@ -57,7 +60,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
                 // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), Float.toString(rating), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), Float.toString(rating), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -101,29 +104,32 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubmitBookActivity.this.RESULT_OK) {
             Bundle extras = data.getExtras();
+
             try {
                 imageBitmap = (Bitmap) extras.get("data");
                 mImageBook.setImageBitmap(imageBitmap);
+                encodeBitmapAndSaveToFirebase(imageBitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-/*
+
     //encodage
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         BookModel model = new BookModel();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(user.getUid())
                 .child("books")
                 .child(model.getImageUrl());
-        ref.setValue(imageEncoded);
-    }*/
+
+        ref.push().setValue(imageEncoded);
+    }
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
@@ -148,11 +154,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);*/
 
         //write a message to the database
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
         BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getRating(), null);
+                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageEncoded);
         ref.push().setValue(bookModel);
         Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
         toast.show();

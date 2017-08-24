@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -157,11 +158,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             try {
                 //getting image from gallery
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                //byte[] bytes = stream.toByteArray();
-                //setresult.putExtra("BMP",bytes);
-                //Setting image to ImageView
                 userPic.setImageBitmap(bitmap);
                 uploadImage();
             } catch (Exception e) {
@@ -240,4 +236,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    //to complete
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+    }
 }
