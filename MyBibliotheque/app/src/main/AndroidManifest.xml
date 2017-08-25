@@ -37,7 +37,16 @@
         <activity android:name=".AccountActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".SubmitBookActivity" />
-        <activity android:name=".ViewListBooksActivity" />
+        <activity
+            android:name=".ViewListBooksActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable">
+
+            </meta-data>
+        </activity>
+
     </application>
 
 </manifest>

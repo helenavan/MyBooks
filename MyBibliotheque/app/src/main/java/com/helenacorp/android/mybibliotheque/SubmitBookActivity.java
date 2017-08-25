@@ -120,7 +120,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         BookModel model = new BookModel();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
         imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("users")
