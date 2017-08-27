@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by helena on 09/08/2017.
@@ -48,9 +49,9 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
 
 
         // progressDialog.dismiss();
-        /*Picasso.with(v.getContext())
-                .load(uri)
-                .into(pic);*/
+        Picasso.with(v.getContext())
+                .load(model.getImageUrl())
+                .into(pic);
     }
 
 
