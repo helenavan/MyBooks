@@ -30,23 +30,22 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     private EditText titleName, firstName, lastName;
-    private Button btnClean, btnAdd, btnPic;
+    private Button btnClean, btnAdd;
     private RatingBar ratingBar;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String imageEncoded, idUser;
     private ImageView mImageBook;
     private Bitmap imageBitmap;
     private Uri imguri;
     private DatabaseReference databaseReference;
-    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +115,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                //imageBitmap = (Bitmap) extras.get("data");
+                imageCompress(imageBitmap);
                 mImageBook.setImageBitmap(imageBitmap);
-                // encodeBitmapAndSaveToFirebase(imageBitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -137,24 +135,27 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    public void imageCompress(Bitmap bitmap) {
+        OutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+    }
+
     public void sendBookcover() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        idUser = user.getUid();
         final String userName = user.getDisplayName();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
-        StorageReference userPic = storageReference.child("couvertures/" + idUser + titleName.getText().toString() + ".jpg");
-
+        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + ".jpg");
         // Get the data from an ImageView as bytes
-        mImageBook.setDrawingCacheEnabled(true);
+     /*   mImageBook.setDrawingCacheEnabled(true);
         mImageBook.buildDrawingCache();
         imageBitmap = mImageBook.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
         byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = userPic.putBytes(data);
+        UploadTask uploadTask = userPic.putBytes(data);*/
         userPic.putFile(imguri).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
