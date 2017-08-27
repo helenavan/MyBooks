@@ -3,11 +3,12 @@ package com.helenacorp.android.mybibliotheque;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,17 +19,21 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 111;
-    private static final String SOURCE_SAVED = "saved";
 
     private EditText titleName, firstName, lastName;
     private Button btnClean, btnAdd, btnPic;
@@ -36,9 +41,12 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String imageEncoded;
+    private String imageEncoded, idUser;
     private ImageView mImageBook;
     private Bitmap imageBitmap;
+    private Uri imguri;
+    private DatabaseReference databaseReference;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle("Yeah!");
 
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,50 +95,36 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                onLaunchCamera();
+                shooseToCamera();
             default:
                 break;
         }
         return true;
     }
 
-    public void onLaunchCamera() {
+  /*  public void onLaunchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(SubmitBookActivity.this.getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubmitBookActivity.this.RESULT_OK) {
-            Bundle extras = data.getExtras();
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            imguri = data.getData();
 
             try {
-                imageBitmap = (Bitmap) extras.get("data");
+                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
+                //imageBitmap = (Bitmap) extras.get("data");
                 mImageBook.setImageBitmap(imageBitmap);
-                encodeBitmapAndSaveToFirebase(imageBitmap);
+                // encodeBitmapAndSaveToFirebase(imageBitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-
-    //encodage
-    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
-        BookModel model = new BookModel();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-        imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(user.getUid())
-                .child("books")
-                .child(model.getImageUrl());
-
-        ref.push().setValue(imageEncoded);
-    }
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0) {
@@ -138,29 +133,46 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
             toast.show();
         } else {
-            sendBook();
+            sendBookcover();
         }
     }
 
-    public void sendBook() {
+    public void sendBookcover() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        String userName = user.getDisplayName();
+        idUser = user.getUid();
+        final String userName = user.getDisplayName();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        StorageReference userPic = storageReference.child("couvertures/" + idUser + titleName.getText().toString() + ".jpg");
 
-      /*  imageBitmap = ((BitmapDrawable) mImageBook.getDrawable()).getBitmap();
-
+        // Get the data from an ImageView as bytes
+        mImageBook.setDrawingCacheEnabled(true);
+        mImageBook.buildDrawingCache();
+        imageBitmap = mImageBook.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);*/
+        byte[] data = baos.toByteArray();
 
-        //write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users").child(user.getUid()).child("books");
-        BookModel bookModel = new BookModel(titleName.getText().toString(), null, null, firstName.getText().toString(),
-                lastName.getText().toString(), userName, null, ratingBar.getRating(), imageEncoded);
-        ref.push().setValue(bookModel);
-        Toast toast = Toast.makeText(SubmitBookActivity.this, "envoyé!", Toast.LENGTH_SHORT);
-        toast.show();
+        UploadTask uploadTask = userPic.putBytes(data);
+        userPic.putFile(imguri).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Getting image name from EditText and store into string variable.
+                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, null, firstName.getText().toString(),
+                        lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
+                //Save image info in to firebase database
+                String uploadId = databaseReference.push().getKey();
+                databaseReference.child(uploadId).setValue(bookModel);
+                Toast.makeText(SubmitBookActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
         finish();
     }
 
@@ -180,4 +192,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    public void shooseToCamera() {
+       /* Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        Intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+        startActivityForResult(intent, 0);*/
+        Intent intent = new Intent();
+        //change intent.setType("images/*") by ("*/*")
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
+    }
 }

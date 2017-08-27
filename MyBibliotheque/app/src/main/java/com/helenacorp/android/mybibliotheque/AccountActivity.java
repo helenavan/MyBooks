@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -90,6 +90,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -176,7 +177,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             @Override
             public void onSuccess(Uri uri) {
                 // progressDialog.dismiss();
-                Glide.with(AccountActivity.this)
+                Picasso.with(AccountActivity.this)
                         .load(uri)
                         .into(userPic);
             }
@@ -217,7 +218,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                     mBar.setVisibility(View.VISIBLE);
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
-                    Glide.with(AccountActivity.this)
+                    Picasso.with(AccountActivity.this)
                             .load(downloadUrl)
                             .into(userPic);
                 }

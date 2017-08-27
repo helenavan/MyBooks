@@ -6,10 +6,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Query;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by helena on 09/08/2017.
@@ -19,8 +17,8 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
     private TextView txtTitle, txtAutorFirstname, txtAutorLastname;
     private RatingBar ratingBar;
     private ImageView pic;
-    private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private String idUser;
 
     /**
      * @param mRef        The Firebase location to watch for data changes. Can also be a slice of a location, using some
@@ -35,7 +33,7 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
     }
 
     @Override
-    protected void populateView(View v, BookModel model) {
+    protected void populateView(final View v, BookModel model) {
         txtTitle = (TextView) v.findViewById(R.id.title_item);
         txtTitle.setText(model.getTitle());
         txtAutorFirstname = (TextView) v.findViewById(R.id.autorName_item);
@@ -45,10 +43,18 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
         ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
         ratingBar.setRating(model.getRating());
         pic = (ImageView) v.findViewById(R.id.pic_item);
-//to verify
-        Picasso.with(v.getContext())
-                .load(model.getImageUrl())
-                .into(pic);
+//to verify;
+        // Create a storage reference from our app
+
+
+        // progressDialog.dismiss();
+        /*Picasso.with(v.getContext())
+                .load(uri)
+                .into(pic);*/
     }
 
+
 }
+
+
+
