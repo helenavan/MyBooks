@@ -8,22 +8,25 @@
 
     <ImageView
         android:id="@+id/pic_item"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/space"
+        android:layout_width="50dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toLeftOf="@+id/autorName_item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/title_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
+        android:layout_marginStart="41dp"
         android:text="title"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/space"
-        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintBottom_toTopOf="@+id/autorName_item"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/pic_item"
         app:layout_constraintRight_toLeftOf="@+id/ratingbar"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,32 +44,39 @@
         android:id="@+id/autorName_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="41dp"
         android:text="prenom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/autorLastName_item"
-        app:layout_constraintTop_toBottomOf="@+id/space" />
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintLeft_toRightOf="@+id/pic_item"
+        app:layout_constraintRight_toLeftOf="@+id/autorLastName_submit"
+        app:layout_constraintTop_toBottomOf="@+id/title_item" />
 
     <TextView
         android:id="@+id/autorLastName_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="8dp"
         android:text="nomdefamille"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/autorName_item"
-        app:layout_constraintTop_toBottomOf="@+id/space" />
+        app:layout_constraintRight_toLeftOf="@+id/category_item"
+        app:layout_constraintTop_toBottomOf="@+id/space"
+        app:layout_constraintVertical_bias="0.125" />
 
     <TextView
         android:id="@+id/category_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="0dp"
         android:text="category"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space" />
+        app:layout_constraintTop_toBottomOf="@+id/space"
+        app:layout_constraintVertical_bias="0.343" />
 
     <RatingBar
         android:id="@+id/ratingbar"
