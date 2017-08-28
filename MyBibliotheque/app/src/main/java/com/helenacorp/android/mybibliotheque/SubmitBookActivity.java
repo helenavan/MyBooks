@@ -146,7 +146,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         final String userName = user.getDisplayName();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
-        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + ".jpg");
+        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + firstName.getText().toString() + ".jpg");
         // Get the data from an ImageView as bytes
      /*   mImageBook.setDrawingCacheEnabled(true);
         mImageBook.buildDrawingCache();
