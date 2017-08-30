@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @param <T> The class type to use as a model for the data contained in the children of the given Firebase location
+ //* @param <T> The class type to use as a model for the data contained in the children of the given Firebase location
  * @author greg
  * @since 6/21/13
  * <p>
@@ -26,14 +26,16 @@ import java.util.List;
  * instance of your list item mLayout and an instance your class that holds your data. Simply populate the view however
  * you like and this class will handle updating the list as the data changes.
  */
-public abstract class FirebaseListAdapter<T> extends BaseAdapter {
+public abstract class FirebaseListAdapter<BookModel> extends BaseAdapter {
     private Query mRef;
     private Class<BookModel> mModelClass;
     private int mLayout;
     private LayoutInflater mInflater;
     private List<BookModel> mModels;
+    private List<BookModel> mModelsCopy;
     private List<String> mKeys;
     private ChildEventListener mListener;
+
 
 
     /**
@@ -50,6 +52,7 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
         this.mLayout = mLayout;
         mInflater = activity.getLayoutInflater();
         mModels = new ArrayList<BookModel>();
+        mModelsCopy = new ArrayList<BookModel>();
         mKeys = new ArrayList<String>();
         // Look for all child events. We will then map them to our own internal ArrayList, which backs ListView
         mListener = this.mRef.addChildEventListener(new ChildEventListener() {
@@ -62,15 +65,18 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
                 // Insert into the correct location, based on previousChildName
                 if (previousChildName == null) {
                     mModels.add(0, model);
+                    mModelsCopy.add(0, model);
                     mKeys.add(0, key);
                 } else {
                     int previousIndex = mKeys.indexOf(previousChildName);
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mModels.size()) {
                         mModels.add(model);
+                        mModelsCopy.add(model);
                         mKeys.add(key);
                     } else {
                         mModels.add(nextIndex, model);
+                        mModelsCopy.add(nextIndex, model);
                         mKeys.add(nextIndex, key);
                     }
                 }
@@ -81,26 +87,28 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 // One of the mModels changed. Replace it in our list and name mapping
-             /*   String key = dataSnapshot.getKey();
-                ItineraryModel newModel = dataSnapshot.getValue(FirebaseListAdapter.this.mModelClass);
+                String key = dataSnapshot.getKey();
+                BookModel newModel = dataSnapshot.getValue(FirebaseListAdapter.this.mModelClass);
                 int index = mKeys.indexOf(key);
 
                 mModels.set(index, newModel);
+                mModelsCopy.set(index, newModel);
 
-                notifyDataSetChanged();*/
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-/*
+
                 // A model was removed from the list. Remove it from our list and the name mapping
                 String key = dataSnapshot.getKey();
                 int index = mKeys.indexOf(key);
 
                 mKeys.remove(index);
                 mModels.remove(index);
+                mModelsCopy.remove(index);
 
-                notifyDataSetChanged();*/
+                notifyDataSetChanged();
             }
 
             @Override
@@ -114,15 +122,18 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
                 mKeys.remove(index);
                 if (previousChildName == null) {
                     mModels.add(0, newModel);
+                    mModelsCopy.add(0, newModel);
                     mKeys.add(0, key);
                 } else {
                     int previousIndex = mKeys.indexOf(previousChildName);
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mModels.size()) {
                         mModels.add(newModel);
+                        mModelsCopy.add(newModel);
                         mKeys.add(key);
                     } else {
                         mModels.add(nextIndex, newModel);
+                        mModelsCopy.add(nextIndex, newModel);
                         mKeys.add(nextIndex, key);
                     }
                 }
@@ -141,6 +152,7 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
         // We're being destroyed, let go of our mListener and forget about all of the mModels
         mRef.removeEventListener(mListener);
         mModels.clear();
+        mModelsCopy.clear();
         mKeys.clear();
     }
 
@@ -171,6 +183,20 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
         return view;
     }
 
+    public void filter(String text) {
+        mModels.clear();
+        if (text.isEmpty()) {
+            mModels.addAll(mModelsCopy);
+        } else {
+            text = text.toLowerCase();
+            for (BookModel bookModel : mModelsCopy) {
+                if (bookModel.toString().contains(text)) {
+                    mModels.add(bookModel);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
     /**
      * Each time the data at the given Firebase location changes, this method will be called for each item that needs
      * to be displayed. The arguments correspond to the mLayout and mModelClass given to the constructor of this class.
@@ -181,4 +207,5 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
      * @param model The object containing the data used to populate the view
      */
     protected abstract void populateView(View v, BookModel model);
+    // public abstract void filter(String text);
 }

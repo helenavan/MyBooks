@@ -125,7 +125,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
 
     public void validation() {
-        if (titleName.getText().length() == 0 || firstName.length() == 0) {
+        if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBook.getDrawable() == null) {
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
