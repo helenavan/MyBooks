@@ -38,21 +38,17 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".SubmitBookActivity" />
 
-        <meta-data
-            android:name="android.app.default_searchable"
-            android:value=".ViewListBooksActivity" />
         <activity
             android:name=".ViewListBooksActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
 
         </activity>
 

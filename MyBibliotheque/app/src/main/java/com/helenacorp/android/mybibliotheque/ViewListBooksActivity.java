@@ -22,7 +22,7 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
     public static List<BookModel> listBook = new ArrayList<BookModel>();
     private ListView listView;
     private DatabaseReference mDatabase;
@@ -112,14 +112,4 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
 }
