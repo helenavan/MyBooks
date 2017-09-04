@@ -52,7 +52,6 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
         Picasso.with(v.getContext())
                 .load(model.getImageUrl())
                 .into(pic);
-
     }
    /* @Override
      public void filter(String s){

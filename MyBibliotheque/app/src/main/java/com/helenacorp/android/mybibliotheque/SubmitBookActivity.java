@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,8 +36,9 @@ import java.io.OutputStream;
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 111;
-
+    String result;
     private EditText titleName, firstName, lastName;
+    private TextView isbn;
     private Button btnClean, btnAdd;
     private RatingBar ratingBar;
     private ProgressBar progressBar;
@@ -58,6 +60,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
+        isbn = (TextView) findViewById(R.id.isbn);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
@@ -94,7 +97,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                shooseToCamera();
+                // shooseToCamera();
+                scanBarcode();
             default:
                 break;
         }
@@ -112,11 +116,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imguri = data.getData();
+            result = data.getDataString();
+
 
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                 imageCompress(imageBitmap);
                 mImageBook.setImageBitmap(imageBitmap);
+                isbn.setText(result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -202,5 +209,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
+    }
+
+    public void scanBarcode() {
+        Intent i = new Intent(this, SimpleScannerActivity.class);
+        startActivityForResult(i, 1);
     }
 }

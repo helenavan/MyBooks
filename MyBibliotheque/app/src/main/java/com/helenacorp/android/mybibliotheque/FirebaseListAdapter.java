@@ -185,7 +185,7 @@ public abstract class FirebaseListAdapter<BookModel> extends BaseAdapter {
 
     public void filter(String text) {
         mModels.clear();
-        if (text.isEmpty()) {
+        if (text.length() == 0) {
             mModels.addAll(mModelsCopy);
         } else {
             text = text.toLowerCase();

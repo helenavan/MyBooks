@@ -33,14 +33,9 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:11.0.2'
     compile 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compile 'me.dm7.barcodescanner:zxing:1.9.8'
+    compile 'me.dm7.barcodescanner:zbar:1.9.8'
     testCompile 'junit:junit:4.12'
 }
-
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'

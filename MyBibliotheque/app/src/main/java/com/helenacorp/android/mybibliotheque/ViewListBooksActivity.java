@@ -17,22 +17,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
-    public static List<BookModel> listBook = new ArrayList<BookModel>();
     private ListView listView;
     private DatabaseReference mDatabase;
     private BookListAdapter mBookListAdapter;
     private Button btn;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private MenuItem searchMenuItem;
-    private SearchView searchView;
-    private Query query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +34,9 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        BookModel mBooks = new BookModel();
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         mBookListAdapter = new BookListAdapter(mDatabase, R.layout.item_book, this);
+
         listView = (ListView) this.findViewById(R.id.listView_books);
         listView.setAdapter(mBookListAdapter);
 
@@ -57,14 +49,14 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_view, menu);
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQuery("", false);
+        // searchView.setQuery("", false);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -88,6 +80,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         });
 
         return true;
+
     }
 
     @Override
