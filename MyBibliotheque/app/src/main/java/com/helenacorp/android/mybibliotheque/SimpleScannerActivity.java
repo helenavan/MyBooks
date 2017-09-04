@@ -2,24 +2,22 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import me.dm7.barcodescanner.zbar.Result;
-import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
  * Created by helena on 04/09/2017.
  */
 
-public class SimpleScannerActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler {
-    private static final String TAG = " SimpleScannerActivity";
-    private ZBarScannerView mScannerView;
+public class SimpleScannerActivity extends BaseScannerActivity implements ZXingScannerView.ResultHandler {
+    private ZXingScannerView mScannerView;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
+        setContentView(R.layout.activity_simple_scanner);
+        mScannerView = new ZXingScannerView(this);    // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
     }
 
@@ -36,10 +34,9 @@ public class SimpleScannerActivity extends AppCompatActivity implements ZBarScan
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
-
     @Override
-    public void handleResult(Result rawResult) {
-        Toast.makeText(this, "Contents = " + rawResult.toString() +
+    public void handleResult(com.google.zxing.Result rawResult) {
+        Toast.makeText(this, "Contents = " + rawResult.getText() +
                 ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
         // Note:

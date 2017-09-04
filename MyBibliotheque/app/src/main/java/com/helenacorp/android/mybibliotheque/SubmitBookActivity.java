@@ -1,12 +1,16 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,7 +40,10 @@ import java.io.OutputStream;
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 111;
+    private static final int ZXING_CAMERA_PERMISSION = 1;
+
     String result;
+    private Class<?> mClss;
     private EditText titleName, firstName, lastName;
     private TextView isbn;
     private Button btnClean, btnAdd;
@@ -98,7 +105,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         switch (item.getItemId()) {
             case R.id.action_photo:
                 // shooseToCamera();
-                scanBarcode();
+                launchSimpleActivity(mImageBook);
             default:
                 break;
         }
@@ -214,5 +221,37 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void scanBarcode() {
         Intent i = new Intent(this, SimpleScannerActivity.class);
         startActivityForResult(i, 1);
+    }
+
+    public void launchSimpleActivity(View v) {
+        launchActivity(SimpleScannerActivity.class);
+    }
+
+    public void launchActivity(Class<?> clss) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            mClss = clss;
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
+        } else {
+            Intent intent = new Intent(this, clss);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case ZXING_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (mClss != null) {
+                        Intent intent = new Intent(this, mClss);
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
+                }
+                return;
+        }
     }
 }
