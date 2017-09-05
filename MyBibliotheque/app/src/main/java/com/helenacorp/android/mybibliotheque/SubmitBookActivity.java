@@ -69,6 +69,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
         isbn = (TextView) findViewById(R.id.isbn);
 
+        txtIsbn();
+
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -85,11 +87,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
+        mImageBook.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle("Yeah!");
-
 
     }
     @Override
@@ -104,8 +106,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                // shooseToCamera();
-                launchSimpleActivity(mImageBook);
+                //shooseToCamera();
+                launchSimpleActivity();
             default:
                 break;
         }
@@ -121,22 +123,23 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imguri = data.getData();
-            result = data.getDataString();
 
 
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                 imageCompress(imageBitmap);
                 mImageBook.setImageBitmap(imageBitmap);
-                isbn.setText(result);
+                mImageBook.setMaxHeight(50);
+                mImageBook.setMaxWidth(50);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBook.getDrawable() == null) {
@@ -161,15 +164,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + firstName.getText().toString() + ".jpg");
-        // Get the data from an ImageView as bytes
-     /*   mImageBook.setDrawingCacheEnabled(true);
-        mImageBook.buildDrawingCache();
-        imageBitmap = mImageBook.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = userPic.putBytes(data);*/
         userPic.putFile(imguri).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -179,7 +174,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Getting image name from EditText and store into string variable.
-                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, null, firstName.getText().toString(),
+                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
                 //Save image info in to firebase database
                 String uploadId = databaseReference.push().getKey();
@@ -205,6 +200,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             clearEditText(firstName);
             clearEditText(lastName);
         }
+        if (view == mImageBook) {
+            shooseToCamera();
+        }
     }
 
     public void shooseToCamera() {
@@ -218,12 +216,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
     }
 
-    public void scanBarcode() {
-        Intent i = new Intent(this, SimpleScannerActivity.class);
-        startActivityForResult(i, 1);
-    }
-
-    public void launchSimpleActivity(View v) {
+    public void launchSimpleActivity() {
         launchActivity(SimpleScannerActivity.class);
     }
 
@@ -253,5 +246,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 }
                 return;
         }
+    }
+
+    public void txtIsbn() {
+        Intent it = getIntent();
+        String barcode = it.getStringExtra("barcode");
+        isbn.setText(barcode);
     }
 }

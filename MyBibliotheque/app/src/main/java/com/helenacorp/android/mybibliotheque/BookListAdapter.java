@@ -19,7 +19,7 @@ import java.util.List;
 
 public class BookListAdapter extends FirebaseListAdapter<BookModel> {
     CustomFilter customFilter;
-    private TextView txtTitle, txtAutorFirstname, txtAutorLastname;
+    private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbn;
     private RatingBar ratingBar;
     private ImageView pic;
     private List<BookModel> arraylist = new ArrayList<BookModel>();
@@ -44,6 +44,8 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
         txtAutorFirstname.setText(model.getNameAutor());
         txtAutorLastname = (TextView) v.findViewById(R.id.autorLastName_item);
         txtAutorLastname.setText(model.getLastnameAutor());
+        isbn = (TextView) v.findViewById(R.id.isbn);
+        isbn.setText(model.getIsbn());
         ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
         ratingBar.setRating(model.getRating());
         pic = (ImageView) v.findViewById(R.id.pic_item);

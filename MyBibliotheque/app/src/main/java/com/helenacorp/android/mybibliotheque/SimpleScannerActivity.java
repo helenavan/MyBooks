@@ -1,5 +1,6 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
     @Override
     public void handleResult(com.google.zxing.Result rawResult) {
         Toast.makeText(this, "Contents = " + rawResult.getText() +
-                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
+                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_LONG).show();
 
         // Note:
         // * Wait 2 seconds to resume the preview.
@@ -50,5 +51,14 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
                 mScannerView.resumeCameraPreview(SimpleScannerActivity.this);
             }
         }, 2000);
+        returnIsbn(rawResult);
+
+    }
+
+    public void returnIsbn(com.google.zxing.Result raw) {
+        Intent returnI = new Intent(SimpleScannerActivity.this, SubmitBookActivity.class);
+        returnI.putExtra("barcode", raw.getText().toString());
+        startActivity(returnI);
+        finish();
     }
 }

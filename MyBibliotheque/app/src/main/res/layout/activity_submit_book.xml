@@ -111,8 +111,8 @@
         android:id="@+id/isbn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:text="isbn"
-        app:layout_constraintBottom_toTopOf="@+id/submit_rating"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
@@ -121,21 +121,24 @@
         android:id="@+id/submit_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="23dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
         android:stepSize="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
+        app:layout_constraintTop_toBottomOf="@+id/isbn" />
 
     <ImageView
         android:id="@+id/submit_photoView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="26dp"
-        android:background="@color/bleuDd"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/ic_camera_alt_yellow_700_24dp"
+        android:clickable="true"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submit_rating" />
