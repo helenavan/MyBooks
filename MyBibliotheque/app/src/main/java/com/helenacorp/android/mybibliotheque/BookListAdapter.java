@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by helena on 09/08/2017.
@@ -19,11 +16,9 @@ import java.util.List;
 
 public class BookListAdapter extends FirebaseListAdapter<BookModel> {
     CustomFilter customFilter;
-    private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbn;
+    private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbnNumber;
     private RatingBar ratingBar;
     private ImageView pic;
-    private List<BookModel> arraylist = new ArrayList<BookModel>();
-    private List<BookModel> booknameArrayList = new ArrayList<BookModel>();
 
     /**
      * @param mRef        The Firebase location to watch for data changes. Can also be a slice of a location, using some
@@ -44,8 +39,8 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
         txtAutorFirstname.setText(model.getNameAutor());
         txtAutorLastname = (TextView) v.findViewById(R.id.autorLastName_item);
         txtAutorLastname.setText(model.getLastnameAutor());
-        isbn = (TextView) v.findViewById(R.id.isbn);
-        isbn.setText(model.getIsbn());
+        isbnNumber = (TextView) v.findViewById(R.id.isbn_item);
+        isbnNumber.setText(model.getIsbn());
         ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
         ratingBar.setRating(model.getRating());
         pic = (ImageView) v.findViewById(R.id.pic_item);

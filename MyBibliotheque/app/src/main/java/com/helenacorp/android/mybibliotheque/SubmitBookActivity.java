@@ -67,7 +67,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
-        isbn = (TextView) findViewById(R.id.isbn);
+        isbn = (TextView) findViewById(R.id.submit_isbn);
 
         txtIsbn();
 
@@ -174,7 +174,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Getting image name from EditText and store into string variable.
-                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
+                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
                 //Save image info in to firebase database
                 String uploadId = databaseReference.push().getKey();
