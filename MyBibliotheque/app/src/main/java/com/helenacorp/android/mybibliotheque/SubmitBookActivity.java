@@ -56,6 +56,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private Uri imguri;
     private DatabaseReference databaseReference;
 
+    public static void clearBitmap(Bitmap bm) {
+        bm.recycle();
+        System.gc();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +74,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
         isbn = (TextView) findViewById(R.id.submit_isbn);
 
-        txtIsbn();
+        Intent it = getIntent();
+        String barcode = it.getStringExtra("barcode");
+        isbn.setText(barcode);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
@@ -94,6 +101,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setSubtitle("Yeah!");
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -101,6 +109,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         getMenuInflater().inflate(R.menu.menu_submit, menu);
         return true;
     }
+
+  /*  public void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(SubmitBookActivity.this.getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -114,26 +129,17 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-  /*  public void onLaunchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(SubmitBookActivity.this.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }*/
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imguri = data.getData();
 
-
             try {
+
                 imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                 imageCompress(imageBitmap);
                 mImageBook.setImageBitmap(imageBitmap);
-                mImageBook.setMaxHeight(50);
-                mImageBook.setMaxWidth(50);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -174,7 +180,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Getting image name from EditText and store into string variable.
-                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.toString(), firstName.getText().toString(),
+                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
                 //Save image info in to firebase database
                 String uploadId = databaseReference.push().getKey();
@@ -249,8 +255,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void txtIsbn() {
-        Intent it = getIntent();
-        String barcode = it.getStringExtra("barcode");
-        isbn.setText(barcode);
+
     }
+
 }
