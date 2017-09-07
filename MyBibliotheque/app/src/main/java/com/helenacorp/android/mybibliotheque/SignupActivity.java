@@ -47,7 +47,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         authEmail = (EditText) findViewById(R.id.email_signup);
         authPassw = (EditText) findViewById(R.id.password_signup);
         btnCreatAccount = (Button) findViewById(R.id.btn_creatAccount);
-        // mProgressBar = (ProgressBar) findViewById(R.id.);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar2);
         btnCreatAccount.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
@@ -64,6 +64,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     }
     private void loginAccount(final String name, String email, String password) {
         //showProgressDialog();
+        mProgressBar.setVisibility(View.VISIBLE);
         // START create_user_with_email
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

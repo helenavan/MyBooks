@@ -1,6 +1,7 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,7 +47,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private Class<?> mClss;
     private EditText titleName, firstName, lastName;
     private TextView isbn;
-    private Button btnClean, btnAdd;
+    private Button btnClean, btnAdd, btnIsbn;
     private RatingBar ratingBar;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
@@ -66,17 +67,18 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_book);
 
+        progressBar = (ProgressBar) findViewById(R.id.submit_progressBar);
         titleName = (EditText) findViewById(R.id.title_submit);
         firstName = (EditText) findViewById(R.id.nameAutor_submit);
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
+        btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
         isbn = (TextView) findViewById(R.id.submit_isbn);
 
-        Intent it = getIntent();
-        String barcode = it.getStringExtra("barcode");
-        isbn.setText(barcode);
+        Intent intent1 = new Intent(this, SimpleScannerActivity.class);
+        startActivityForResult(intent1, 1);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
@@ -94,6 +96,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
+        btnIsbn.setOnClickListener(this);
         mImageBook.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
@@ -122,7 +125,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         switch (item.getItemId()) {
             case R.id.action_photo:
                 //shooseToCamera();
-                launchSimpleActivity();
             default:
                 break;
         }
@@ -132,7 +134,29 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                imguri = data.getData();
+                try {
+
+                    imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
+                    imageCompress(imageBitmap);
+                    mImageBook.setImageBitmap(imageBitmap);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String returnValue = data.getStringExtra("barcode");
+                isbn.setText(returnValue);
+
+            }
+        }
+    }
+     /*   if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imguri = data.getData();
 
             try {
@@ -144,8 +168,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
+        }*/
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBook.getDrawable() == null) {
@@ -179,6 +202,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
                 // Getting image name from EditText and store into string variable.
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
@@ -189,6 +213,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+        progressBar.setVisibility(View.GONE);
         finish();
     }
 
@@ -208,6 +233,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
         if (view == mImageBook) {
             shooseToCamera();
+        }
+        if (view == btnIsbn) {
+            launchSimpleActivity();
         }
     }
 
@@ -254,8 +282,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void txtIsbn() {
-
+    public void displayIsbn() {
+        Intent it = getIntent();
+        String barcode = it.getStringExtra("barcode");
+        isbn.setText(barcode);
     }
 
 }

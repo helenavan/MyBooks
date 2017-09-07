@@ -1,5 +1,6 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,7 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
     public void returnIsbn(com.google.zxing.Result raw) {
         Intent returnI = new Intent(SimpleScannerActivity.this, SubmitBookActivity.class);
         returnI.putExtra("barcode", raw.getText().toString());
-        startActivity(returnI);
+        setResult(Activity.RESULT_OK, returnI);
         finish();
     }
 }
