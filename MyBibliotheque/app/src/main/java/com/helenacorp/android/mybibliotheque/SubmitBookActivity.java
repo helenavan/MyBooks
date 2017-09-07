@@ -77,8 +77,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
         isbn = (TextView) findViewById(R.id.submit_isbn);
 
-        Intent intent1 = new Intent(this, SimpleScannerActivity.class);
-        startActivityForResult(intent1, 1);
 
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
@@ -202,7 +200,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressBar.setVisibility(View.VISIBLE);
+                //progressBar.setVisibility(View.VISIBLE);
                 // Getting image name from EditText and store into string variable.
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
@@ -213,7 +211,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        progressBar.setVisibility(View.GONE);
+        // progressBar.setVisibility(View.GONE);
         finish();
     }
 
@@ -236,6 +234,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
         if (view == btnIsbn) {
             launchSimpleActivity();
+            Intent intent1 = new Intent(SubmitBookActivity.this, SimpleScannerActivity.class);
+            startActivityForResult(intent1, 1);
+
         }
     }
 
