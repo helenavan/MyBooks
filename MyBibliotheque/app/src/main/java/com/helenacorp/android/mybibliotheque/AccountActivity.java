@@ -81,7 +81,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             userEmail = user.getEmail();
             imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-            // userPic.setImageBitmap(bitmap);
+            //userPic.setImageBitmap(bitmap);
             //sharedpreference
             if (sp.contains(USER_PIC)) {
                 userPic.setImageBitmap(bitmap);
@@ -219,7 +219,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // progressDialog.dismiss();
-                    Toast.makeText(AccountActivity.this, "Error : " + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

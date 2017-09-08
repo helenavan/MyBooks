@@ -57,11 +57,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private Uri imguri;
     private DatabaseReference databaseReference;
 
-    public static void clearBitmap(Bitmap bm) {
-        bm.recycle();
-        System.gc();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,23 +146,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             if (resultCode == Activity.RESULT_OK) {
                 String returnValue = data.getStringExtra("barcode");
                 isbn.setText(returnValue);
-                return;
             }
+            return;
         }
     }
-     /*   if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            imguri = data.getData();
-
-            try {
-
-                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                imageCompress(imageBitmap);
-                mImageBook.setImageBitmap(imageBitmap);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
 
     public void validation() {
         if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBook.getDrawable() == null) {
@@ -235,8 +217,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
         if (view == btnIsbn) {
             launchSimpleActivity();
-            Intent intent1 = new Intent(SubmitBookActivity.this, SimpleScannerActivity.class);
-            startActivityForResult(intent1, 1);
+            hidePicBarcode(isbn);
 
         }
     }
@@ -254,6 +235,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     public void launchSimpleActivity() {
         launchActivity(SimpleScannerActivity.class);
+        Intent intent1 = new Intent(SubmitBookActivity.this, SimpleScannerActivity.class);
+        startActivityForResult(intent1, 1);
     }
 
     public void launchActivity(Class<?> clss) {
@@ -269,7 +252,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case ZXING_CAMERA_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -284,10 +267,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void displayIsbn() {
-        Intent it = getIntent();
-        String barcode = it.getStringExtra("barcode");
-        isbn.setText(barcode);
+    public void hidePicBarcode(View view) {
+        if (view != null) {
+            btnIsbn.setVisibility(View.GONE);
+            view.setVisibility(View.VISIBLE);
+        }
     }
 
 }
