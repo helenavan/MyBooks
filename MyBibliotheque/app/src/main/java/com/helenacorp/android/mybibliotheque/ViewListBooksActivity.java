@@ -15,8 +15,11 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,7 +44,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         listView = (ListView) this.findViewById(R.id.listView_books);
         listView.setAdapter(mBookListAdapter);
 
-        countItems(listView);
+
 
         btn = (Button) findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
@@ -49,6 +52,21 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle("Yeah!");
+
+        //cont number of books in listview firebase
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Intent intentV = new Intent(ViewListBooksActivity.this, AccountActivity.class);
+                intentV.putExtra("listItems", String.valueOf(dataSnapshot.getChildrenCount()));
+                setResult(AccountActivity.RESULT_OK, intentV);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -106,12 +124,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             Intent intent = new Intent(ViewListBooksActivity.this, SubmitBookActivity.class);
             startActivity(intent);
         }
-    }
-
-    public void countItems(ListView listv) {
-        Intent intentV = new Intent(ViewListBooksActivity.this, AccountActivity.class);
-        intentV.putExtra("listItems", String.valueOf(listv.getAdapter().getCount()));
-        setResult(AccountActivity.RESULT_OK, intentV);
     }
 
 }
