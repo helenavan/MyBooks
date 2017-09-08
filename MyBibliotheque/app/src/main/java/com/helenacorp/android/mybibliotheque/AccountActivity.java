@@ -1,6 +1,7 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,8 +35,10 @@ import java.io.ByteArrayOutputStream;
 
 public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int PICK_IMAGE_REQUEST = 111;
+    private static final String USER_PIC = "USER_PIC";
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
     private ImageView userPic, userRounded;
@@ -44,7 +47,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Uri imageUri;
-    private Bitmap bitmap = null;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         userRounded = (ImageView) findViewById(R.id.user_pic);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
+        sp = getBaseContext().getSharedPreferences(USER_PIC, MODE_PRIVATE);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -77,7 +81,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             userEmail = user.getEmail();
             imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-            userPic.setImageBitmap(bitmap);
+            // userPic.setImageBitmap(bitmap);
+            //sharedpreference
+            if (sp.contains(USER_PIC)) {
+                userPic.setImageBitmap(bitmap);
+            } else {
+                downloadAvatar();
+            }
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -216,11 +226,11 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // progressDialog.dismiss();
                     mBar.setVisibility(View.VISIBLE);
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                  /*  Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Picasso.with(AccountActivity.this)
                             .load(downloadUrl)
-                            .into(userPic);
+                            .into(userPic);*/
                 }
             });
         } else {

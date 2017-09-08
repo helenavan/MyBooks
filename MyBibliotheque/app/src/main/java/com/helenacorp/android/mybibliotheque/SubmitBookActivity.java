@@ -144,13 +144,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                return;
             }
         }
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String returnValue = data.getStringExtra("barcode");
                 isbn.setText(returnValue);
-
+                return;
             }
         }
     }
