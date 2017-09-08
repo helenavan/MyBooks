@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
+
     private ListView listView;
     private DatabaseReference mDatabase;
     private BookListAdapter mBookListAdapter;
@@ -39,6 +40,8 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
         listView = (ListView) this.findViewById(R.id.listView_books);
         listView.setAdapter(mBookListAdapter);
+
+        countItems(listView);
 
         btn = (Button) findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
@@ -103,6 +106,12 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             Intent intent = new Intent(ViewListBooksActivity.this, SubmitBookActivity.class);
             startActivity(intent);
         }
+    }
+
+    public void countItems(ListView listv) {
+        Intent intentV = new Intent(ViewListBooksActivity.this, AccountActivity.class);
+        intentV.putExtra("listItems", String.valueOf(listv.getAdapter().getCount()));
+        setResult(AccountActivity.RESULT_OK, intentV);
     }
 
 }

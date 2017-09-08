@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -61,6 +60,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         userRounded = (ImageView) findViewById(R.id.user_pic);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
+        displayListBooks();
+
         sp = getBaseContext().getSharedPreferences(USER_PIC, MODE_PRIVATE);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -84,7 +85,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             //userPic.setImageBitmap(bitmap);
             //sharedpreference
             if (sp.contains(USER_PIC)) {
-                userPic.setImageBitmap(bitmap);
+                userPic.isShown();
+
             } else {
                 downloadAvatar();
             }
@@ -163,19 +165,38 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(resultCode, requestCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                imageUri = data.getData();
+                try {
+                    //getting image from gallery
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                    userPic.setImageBitmap(bitmap);
+                    uploadImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (requestCode == 1) {
+            if (resultCode == AccountActivity.RESULT_OK) {
+                String returnValue = data.getStringExtra("listItems");
+                acc_numlist.setText(returnValue);
+            }
+        }
+      /*  if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
             imageUri = data.getData();
             // userPic.setImageURI(imageUri);
             try {
                 //getting image from gallery
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 userPic.setImageBitmap(bitmap);
                 uploadImage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }
+        }*/
     }
 
     //download and uploadload photoprofil
@@ -226,11 +247,11 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // progressDialog.dismiss();
                     mBar.setVisibility(View.VISIBLE);
-                  /*  Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Picasso.with(AccountActivity.this)
                             .load(downloadUrl)
-                            .into(userPic);*/
+                            .into(userPic);
                 }
             });
         } else {
@@ -247,10 +268,14 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    //to complete
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void displayListBooks() {
+
+        //retrieve count of books from listview
+        Intent intent2 = new Intent(AccountActivity.this, ViewListBooksActivity.class);
+        Bundle myData = new Bundle();
+        intent2.putExtras(myData);
+        startActivityForResult(intent2, 1);
 
     }
+
 }

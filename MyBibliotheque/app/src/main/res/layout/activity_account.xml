@@ -52,7 +52,6 @@
             android:id="@+id/user_pic"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:src="@drawable/circles"
             app:layout_constraintBottom_toBottomOf="@+id/user_circle"
             app:layout_constraintLeft_toLeftOf="@+id/user_circle"
             app:layout_constraintRight_toRightOf="@+id/user_circle"

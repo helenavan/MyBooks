@@ -235,6 +235,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     public void launchSimpleActivity() {
         launchActivity(SimpleScannerActivity.class);
+        //retrieve String isbn from scanner
         Intent intent1 = new Intent(SubmitBookActivity.this, SimpleScannerActivity.class);
         startActivityForResult(intent1, 1);
     }
