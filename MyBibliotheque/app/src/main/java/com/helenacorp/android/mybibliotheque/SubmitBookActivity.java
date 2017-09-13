@@ -36,7 +36,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -133,7 +132,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
 
                     imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                    imageCompress(imageBitmap);
+                    imageCompress(imageBitmap, mImageBook);
                     mImageBook.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
@@ -162,15 +161,22 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void imageCompress(Bitmap bitmap) {
-        OutputStream baos = new ByteArrayOutputStream();
+    public void imageCompress(Bitmap bitmap, ImageView img) {
+
+        // bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        img.setDrawingCacheEnabled(true);
+        img.buildDrawingCache();
+        bitmap = img.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
     }
 
     public void sendBookcover() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         final String userName = user.getDisplayName();
+
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + firstName.getText().toString() + ".jpg");
@@ -184,7 +190,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 //progressBar.setVisibility(View.VISIBLE);
-                // Getting image name from EditText and store into string variable.
+
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
                 //Save image info in to firebase database

@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by helena on 09/08/2017.
@@ -19,6 +21,8 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
     private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbnNumber;
     private RatingBar ratingBar;
     private ImageView pic;
+    private ArrayList<BookModel> modelArrayList = new ArrayList<>();
+    private ArrayList<BookModel> modelArrayListCopy = new ArrayList<>();
 
     /**
      * @param mRef        The Firebase location to watch for data changes. Can also be a slice of a location, using some
@@ -73,6 +77,34 @@ public class BookListAdapter extends FirebaseListAdapter<BookModel> {
         }
         notifyDataSetChanged();
     }*/
+  /* public Filter getFilter(){
+       return  new Filter() {
+           @Override
+           protected FilterResults performFiltering(CharSequence charSequence) {
+               String charString = charSequence.toString();
+               if ( charString.isEmpty()){
+                   modelArrayList = modelArrayListCopy;
+               }else {
+                   ArrayList<BookModel> filteredList = new ArrayList<>();
+                   for ( BookModel bookModel : modelArrayListCopy){
+                       if(bookModel.getTitle().toString().toLowerCase().contains(charString)){
+                           filteredList.add(bookModel);
+                       }
+                   }
+                   modelArrayList = filteredList;
+               }
+               FilterResults filterResults = new FilterResults();
+               filterResults.values = modelArrayList;
+               return filterResults;
+           }
+
+           @Override
+           protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+               modelArrayList = (ArrayList<BookModel>) filterResults.values;
+               notifyDataSetChanged();
+           }
+       };
+   }*/
 }
 
 

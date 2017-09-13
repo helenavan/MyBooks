@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ListView listView;
@@ -29,6 +31,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private Button btn;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private ArrayList<BookModel> booksList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +47,10 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         listView = (ListView) this.findViewById(R.id.listView_books);
         listView.setAdapter(mBookListAdapter);
 
-
-
         btn = (Button) findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
+
+        booksList = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
@@ -57,9 +60,24 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Intent intentV = new Intent(ViewListBooksActivity.this, AccountActivity.class);
-                intentV.putExtra("listItems", String.valueOf(dataSnapshot.getChildrenCount()));
-                setResult(AccountActivity.RESULT_OK, intentV);
+                Intent intentV = new Intent();
+                intentV.putExtra(AccountActivity.LIST_BOOKS, String.valueOf(dataSnapshot.getChildrenCount()));
+                setResult(RESULT_OK, intentV);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //count number of books in listview
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshoot : dataSnapshot.getChildren()) {
+                    BookModel data = dataSnapshoot.getValue(BookModel.class);
+                    booksList.add(data);
+                }
             }
 
             @Override
@@ -78,8 +96,13 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         MenuItem menuItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         // searchView.setQuery("", false);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        search(searchView);
+        return true;
 
+    }
+
+    private void search(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -88,7 +111,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mBookListAdapter.filter(newText);
+                mBookListAdapter.getFilter().filter(newText);
                 return true;
             }
         });
@@ -99,9 +122,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
                 return false;
             }
         });
-
-        return true;
-
     }
 
     @Override

@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_camera_alt_yellow_700_24dp"
             android:title="Ma photo" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_countBooks"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="publier sur Facebook" />
+            android:title="nombre de livres" />
 
     </group>
 

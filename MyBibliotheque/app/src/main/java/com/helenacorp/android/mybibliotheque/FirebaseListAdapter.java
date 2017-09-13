@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -183,6 +184,35 @@ public abstract class FirebaseListAdapter<BookModel> extends BaseAdapter {
         return view;
     }
 
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    mModels = mModelsCopy;
+                } else {
+                    ArrayList<BookModel> filteredList = new ArrayList<>();
+                    for (BookModel bookModel : mModelsCopy) {
+                        if (bookModel.toString().toLowerCase().contains(charString)) {
+                            filteredList.add(bookModel);
+                        }
+                    }
+                    mModels = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mModels;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mModels = (ArrayList<BookModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+    /*
     public void filter(String text) {
         mModels.clear();
         if (text.length() == 0) {
@@ -196,7 +226,7 @@ public abstract class FirebaseListAdapter<BookModel> extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
-    }
+    }*/
     /**
      * Each time the data at the given Firebase location changes, this method will be called for each item that needs
      * to be displayed. The arguments correspond to the mLayout and mModelClass given to the constructor of this class.

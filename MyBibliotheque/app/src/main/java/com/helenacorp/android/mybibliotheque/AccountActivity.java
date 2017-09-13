@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -33,11 +34,12 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 
 public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String LIST_BOOKS = "listItems";
+    public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
     private static final String USER_PIC = "USER_PIC";
-
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    SharedPreferences sp;
+    private SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
     private ImageView userPic, userRounded;
@@ -60,9 +62,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         userRounded = (ImageView) findViewById(R.id.user_pic);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
-        displayListBooks();
 
-        sp = getBaseContext().getSharedPreferences(USER_PIC, MODE_PRIVATE);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -82,14 +82,26 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             userEmail = user.getEmail();
             imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-            //userPic.setImageBitmap(bitmap);
-            //sharedpreference
-            if (sp.contains(USER_PIC)) {
-                userPic.isShown();
+            userPic.setImageURI(imageUri);
 
+            //sharedpreference
+            sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sp.edit();
+
+            if (sp.contains(USER_PIC)) {
+                userPic.setImageURI(imageUri);
             } else {
                 downloadAvatar();
             }
+            if (LIST_BOOKS.isEmpty()) {
+                sp = getPreferences(MODE_PRIVATE);
+            } else {
+                editor.putString(LIST_BOOKS, String.valueOf(MODE_PRIVATE));
+
+            }
+
+            editor.commit();
+
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -147,8 +159,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
             showFileChooser();
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_countBooks) {
+            displayListBooks();
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
@@ -171,16 +183,16 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 try {
                     //getting image from gallery
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                    userPic.setImageBitmap(bitmap);
                     uploadImage();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        if (requestCode == 1) {
-            if (resultCode == AccountActivity.RESULT_OK) {
-                String returnValue = data.getStringExtra("listItems");
+        if (requestCode == LIST_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String returnValue = data.getStringExtra(LIST_BOOKS);
                 acc_numlist.setText(returnValue);
             }
         }
@@ -231,9 +243,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
             userPic.setDrawingCacheEnabled(true);
             userPic.buildDrawingCache();
-            bitmap = userPic.getDrawingCache();
+            Bitmap bitmap2 = userPic.getDrawingCache();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            bitmap2.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
             UploadTask uploadTask = userPicref.putBytes(data);
             uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -247,11 +259,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // progressDialog.dismiss();
                     mBar.setVisibility(View.VISIBLE);
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
-                    Picasso.with(AccountActivity.this)
-                            .load(downloadUrl)
-                            .into(userPic);
+                    downloadAvatar();
+
                 }
             });
         } else {
@@ -272,9 +282,12 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         //retrieve count of books from listview
         Intent intent2 = new Intent(AccountActivity.this, ViewListBooksActivity.class);
-        Bundle myData = new Bundle();
-        intent2.putExtras(myData);
-        startActivityForResult(intent2, 1);
+        startActivityForResult(intent2, LIST_REQUEST);
+      /*  Intent extras = this.getIntent();
+        if(extras != null){
+            String values = extras.getStringExtra("list");
+            acc_numlist.setText(values);
+        }*/
 
     }
 
