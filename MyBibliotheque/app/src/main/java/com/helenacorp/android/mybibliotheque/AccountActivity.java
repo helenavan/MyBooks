@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -260,7 +261,12 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                     // progressDialog.dismiss();
                     mBar.setVisibility(View.VISIBLE);
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
-                    downloadAvatar();
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    //sendMsg("" + downloadUrl, 2);
+                    Picasso.with(AccountActivity.this)
+                            .load(downloadUrl)
+                            .into(userPic);
+                    Log.d("downloadUrl-->", "" + downloadUrl);
 
                 }
             });
