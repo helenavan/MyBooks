@@ -1,7 +1,6 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
             String key = dataSnapshot.getKey();
 
-            if (!mKeys.contains(key)) {
                 BookModel item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mModelClass);
                 // BookModel item = getConvertedObject(dataSnapshot);
                 int insertedPosition;
@@ -51,7 +49,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 }
                 notifyItemInserted(insertedPosition);
                 itemAdded(item, key, insertedPosition);
-            }
+
         }
 
         @Override
@@ -122,19 +120,15 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
     };
 
-    /**
-     * @param mQuery      The Firebase location to watch for data changes.
-     *                    Can also be a slice of a location, using some combination of
-     *                    <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
-     * @param mModelClass
-     * @param mLayout
-     * @param activity
-     */
     public FirebaseRecyclerAdapter(Query mQuery, Class<BookModel> mModelClass, int mLayout, Activity activity) {
         this.mQuery = mQuery;
         this.mModelClass = mModelClass;
         this.mLayout = mLayout;
         mInflater = activity.getLayoutInflater();
+        mItems = new ArrayList<BookModel>();
+        mKeys = new ArrayList<String>();
+
+        mQuery.addChildEventListener(mListener);
 
         /**
          * @param query The Firebase location to watch for data changes.
@@ -149,11 +143,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
          *              configuration change (e.g.: reloading the adapter after a device rotation).
          *              Be careful: items must be coherent with this list.
          */
-
-
     }
 
-    public FirebaseRecyclerAdapter(Query mQuery,
+
+
+  /*  public FirebaseRecyclerAdapter(Query mQuery,
                                    @Nullable ArrayList<BookModel> items,
                                    @Nullable ArrayList<String> keys) {
         this.mQuery = mQuery;
@@ -165,7 +159,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
             mKeys = new ArrayList<String>();
         }
         mQuery.addChildEventListener(mListener);
-    }
+    }*/
 
     @Override
     public abstract ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);

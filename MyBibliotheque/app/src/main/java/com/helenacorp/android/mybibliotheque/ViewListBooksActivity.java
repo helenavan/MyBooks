@@ -46,15 +46,20 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list_books);
 
-        handleInstanceState(savedInstanceState);
+        // handleInstanceState(savedInstanceState);
         // setupFirebase();
-        setupRecyclerview();
+
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
+
+        bookListAdapter = new BookListAdapter(mDatabase, R.layout.item_book, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(bookListAdapter);
         //  mBookListAdapter  = new BookListAdapter(mDatabase, R.layout.item_book, this);
 
         // listView = (ListView) this.findViewById(R.id.listView_books);
@@ -95,34 +100,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             mAdapterKeys = new ArrayList<String>();
         }
     }
-
-     /*   private void setupFirebase() {
-            Firebase.setAndroidContext(this);
-            String firebaseLocation = getResources().getString(R.string.firebase_location);
-            mQuery = new Firebase(firebaseLocation);
-        }*/
-
-    private void setupRecyclerview() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        bookListAdapter = new BookListAdapter(mDatabase, R.layout.item_book, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(bookListAdapter);
-    }
-       /*
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshoot : dataSnapshot.getChildren()) {
-                    BookModel data = dataSnapshoot.getValue(BookModel.class);
-                    booksList.add(data);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
 
 
     @Override
