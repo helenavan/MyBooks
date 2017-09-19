@@ -43,7 +43,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
-    private ImageView userPic, userRounded;
+    private ImageView userPic;
     private ProgressBar mBar;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
@@ -60,10 +60,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
 
-        userRounded = (ImageView) findViewById(R.id.user_pic);
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
-
-
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -84,7 +81,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
             userPic.setImageURI(imageUri);
-
             //sharedpreference
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sp.edit();
@@ -244,9 +240,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
             userPic.setDrawingCacheEnabled(true);
             userPic.buildDrawingCache();
-            Bitmap bitmap2 = userPic.getDrawingCache();
+            bitmap = userPic.getDrawingCache();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap2.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
             UploadTask uploadTask = userPicref.putBytes(data);
             uploadTask.addOnFailureListener(new OnFailureListener() {

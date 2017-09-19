@@ -60,10 +60,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         bookListAdapter = new BookListAdapter(mDatabase, R.layout.item_book, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
-        //  mBookListAdapter  = new BookListAdapter(mDatabase, R.layout.item_book, this);
-
-        // listView = (ListView) this.findViewById(R.id.listView_books);
-        //  listView.setAdapter(mBookListAdapter);
 
         btn = (Button) findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
