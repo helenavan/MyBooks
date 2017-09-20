@@ -13,22 +13,20 @@ import android.widget.TextView;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 
 /**
  * Created by helena on 09/08/2017.
  */
 
 public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel> {
-    private List<String> values;
+
     public BookListAdapter(Query query, int mLayout,
                            Activity activity) {
         super(query, BookModel.class, mLayout, activity);
     }
 
     @Override
-    public BookListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_book, parent, false);
         return new ViewHolder(view);

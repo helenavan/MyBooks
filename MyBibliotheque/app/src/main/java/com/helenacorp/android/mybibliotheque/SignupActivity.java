@@ -56,7 +56,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     public void validation() {
         if (authName.getText().length() == 0 ||
                 authEmail.getText().length() == 0 || authPassw.getText().length() == 0) {
-            messToast.setText("tsss tout n'est pas là!!!");
+            messToast.setText(R.string.mlog_tss);
             messageToast();
         } else {
             loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
@@ -72,7 +72,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            messToast.setText("Authentification réussie!");
+                            messToast.setText(R.string.mlog_bvn);
                             messageToast();
                             user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -81,7 +81,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    messToast.setText("Hey! Bienvenue !!");
+                                    messToast.setText(R.string.mlog_bvn);
                                     messageToast();
                                     Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
                                     finish();
@@ -91,7 +91,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
 
                         } else {
-                            messToast.setText("humf! Est-ce bien correcte?");
+                            messToast.setText(R.string.mlog_signup);
                             messageToast();
                             // If sign in fails, display a message to the user.
                         }
@@ -109,8 +109,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         toast1.show();
     }
 
-
-  /*  @Override
+/*
+    @Override
     public void onStop(){
         super.onStop();
         if (mAuthListener != null) {

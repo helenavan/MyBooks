@@ -10,7 +10,7 @@ import java.util.List;
  * Created by helena on 28/08/2017.
  */
 
-public class CustomFilter extends Filter {
+class CustomFilter extends Filter {
 
     private BookListAdapter adapter;
     private List<BookModel> filterList = new ArrayList<>();

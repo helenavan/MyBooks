@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -55,7 +56,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintLeft_toRightOf="@+id/pic_item"
-            app:layout_constraintRight_toLeftOf="@+id/autorLastName_submit"
             app:layout_constraintTop_toBottomOf="@+id/title_item" />
 
         <TextView
@@ -69,7 +69,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toRightOf="@+id/autorName_item"
             app:layout_constraintTop_toBottomOf="@+id/space"
-            app:layout_constraintVertical_bias="0.125" />
+            app:layout_constraintVertical_bias="0.125"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/isbn_item"

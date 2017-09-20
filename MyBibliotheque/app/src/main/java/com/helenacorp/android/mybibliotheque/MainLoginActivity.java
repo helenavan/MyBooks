@@ -31,7 +31,6 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     private String PasswordValue;
 
     private View viewLayout;
-    private Button login;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private EditText email_log, password_log;
@@ -53,7 +52,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         email_log = (EditText) findViewById(R.id.log_email);
         password_log = (EditText) findViewById(R.id.log_password);
 
-        login = (Button) findViewById(R.id.log_btn);
+        Button login = (Button) findViewById(R.id.log_btn);
         login.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
@@ -69,7 +68,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     startActivity(intent);
                 } else {
                     // User is signed out
-                    messToast.setText("Veuillez vous reconnecter");
+                    messToast.setText(R.string.mlog_count);
                     messageToast();
                 }
                 // ...
@@ -81,7 +80,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     public void validation() {
         if (email_log.getText().length() == 0 ||
                 password_log.getText().length() == 0) {
-            messToast.setText("tsss tout n'est pas là!!!");
+            messToast.setText(R.string.mlog_tss);
             messageToast();
         } else {
             sigIn(email_log.getText().toString(), password_log.getText().toString());
@@ -104,14 +103,14 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                             // Sign in success, update UI with the signed-in user's information
                             Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
                             startActivity(intent);
-                            messToast.setText("Bienvenue!");
+                            messToast.setText(R.string.mlog_bvn);
                             messageToast();
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
                             startActivity(intent);
-                            messToast.setText("Avez-vous bien un compte?");
+                            messToast.setText(R.string.mlog_count);
                             messageToast();
                         }
 

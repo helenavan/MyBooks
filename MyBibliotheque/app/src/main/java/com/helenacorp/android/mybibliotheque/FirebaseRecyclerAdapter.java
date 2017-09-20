@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -15,12 +17,13 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 
 
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> {
+public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
 
     private Query mQuery;
     private int mLayout;
     private Class<BookModel> mModelClass;
     private ArrayList<BookModel> mItems;
+    private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
     private LayoutInflater mInflater;
     private ChildEventListener mListener = new ChildEventListener() {
@@ -126,6 +129,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         this.mLayout = mLayout;
         mInflater = activity.getLayoutInflater();
         mItems = new ArrayList<BookModel>();
+        mItemsCopy = new ArrayList<BookModel>();
         mKeys = new ArrayList<String>();
 
         mQuery.addChildEventListener(mListener);
@@ -178,6 +182,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      */
     public void destroy() {
         mQuery.removeEventListener(mListener);
+        mItems.clear();
     }
 
     /**
@@ -301,4 +306,45 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     private Class<BookModel> getGenericClass() {
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
+
+    @Override
+    public Filter getFilter() {
+
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()) {
+
+                    mItemsCopy = mItems;
+                } else {
+
+                    ArrayList<BookModel> filteredList = new ArrayList<>();
+
+                    for (BookModel androidVersion : mItems) {
+
+                        if (androidVersion.toString().toLowerCase().contains(charString)) {
+
+                            filteredList.add(androidVersion);
+                        }
+                    }
+
+                    mItemsCopy = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mItemsCopy;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mItemsCopy = (ArrayList<BookModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 }

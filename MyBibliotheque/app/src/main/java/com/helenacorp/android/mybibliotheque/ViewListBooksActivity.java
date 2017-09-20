@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -126,7 +127,13 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         super.onDestroy();
         bookListAdapter.destroy();
     }
-/*
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bookListAdapter.destroy();
+    }
+
     private void search(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -136,7 +143,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mBookListAdapter.getFilter().filter(newText);
+                bookListAdapter.getFilter().filter(newText);
 
                 return true;
             }
@@ -148,7 +155,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
                 return false;
             }
         });
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

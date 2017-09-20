@@ -131,14 +131,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 imguri = data.getData();
                 try {
 
-                    imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                    imageCompress(imageBitmap, mImageBook);
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
+                    imageCompress(mImageBook);
                     mImageBook.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return;
+
             }
         }
         if (requestCode == 1) {
@@ -146,7 +146,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 String returnValue = data.getStringExtra("barcode");
                 isbn.setText(returnValue);
             }
-            return;
         }
     }
 
@@ -161,15 +160,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void imageCompress(Bitmap bitmap, ImageView img) {
+    public void imageCompress(ImageView img) {
 
         // bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         img.setDrawingCacheEnabled(true);
         img.buildDrawingCache();
-        bitmap = img.getDrawingCache();
+        Bitmap bitmap = img.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] data = baos.toByteArray();
     }
 
     public void sendBookcover() {
@@ -222,7 +220,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             shooseToCamera();
         }
         if (view == btnIsbn) {
-            launchSimpleActivity();
+            launchActivity(SimpleScannerActivity.class);
+            //launchSimpleActivity();
             hidePicBarcode(isbn);
 
         }
@@ -239,13 +238,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
     }
 
-    public void launchSimpleActivity() {
-        launchActivity(SimpleScannerActivity.class);
-        //retrieve String isbn from scanner
-        Intent intent1 = new Intent(SubmitBookActivity.this, SimpleScannerActivity.class);
-        startActivityForResult(intent1, 1);
-    }
-
     public void launchActivity(Class<?> clss) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -254,7 +246,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                     new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
         } else {
             Intent intent = new Intent(this, clss);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -270,7 +262,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
                 }
-                return;
         }
     }
 

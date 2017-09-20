@@ -39,7 +39,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
     private static final String USER_PIC = "USER_PIC";
-    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
     private String uID, userEmail, userPseudo;
@@ -97,7 +97,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
             }
 
-            editor.commit();
+            editor.apply();
 
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -280,7 +280,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    public void displayListBooks() {
+    private void displayListBooks() {
 
         //retrieve count of books from listview
         Intent intent2 = new Intent(AccountActivity.this, ViewListBooksActivity.class);
@@ -293,4 +293,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     }
 
+    public void onClick(android.view.View view) {
+    }
 }

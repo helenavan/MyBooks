@@ -53,13 +53,13 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
             }
         }, 2000);
         returnIsbn(rawResult);
-        finish();
+
     }
 
     public void returnIsbn(com.google.zxing.Result raw) {
         Intent returnI = new Intent(SimpleScannerActivity.this, SubmitBookActivity.class);
         returnI.putExtra("barcode", raw.getText().toString());
         setResult(Activity.RESULT_OK, returnI);
-
+        finish();
     }
 }
