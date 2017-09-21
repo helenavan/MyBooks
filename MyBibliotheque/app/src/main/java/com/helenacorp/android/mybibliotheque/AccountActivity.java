@@ -293,6 +293,4 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     }
 
-    public void onClick(android.view.View view) {
-    }
 }

@@ -52,7 +52,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private ImageView mImageBook;
-    private Bitmap imageBitmap;
     private Uri imguri;
     private DatabaseReference databaseReference;
 
@@ -132,7 +131,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
 
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                    imageCompress(mImageBook);
                     mImageBook.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
@@ -160,26 +158,22 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void imageCompress(ImageView img) {
-
-        // bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        img.setDrawingCacheEnabled(true);
-        img.buildDrawingCache();
-        Bitmap bitmap = img.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-    }
-
     public void sendBookcover() {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         final String userName = user.getDisplayName();
+        mImageBook.setDrawingCacheEnabled(true);
+        mImageBook.buildDrawingCache();
+        Bitmap bitmap = mImageBook.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + firstName.getText().toString() + ".jpg");
-
-        userPic.putFile(imguri).addOnFailureListener(new OnFailureListener() {
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = userPic.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
@@ -187,7 +181,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
@@ -198,7 +192,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        // progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         finish();
     }
 

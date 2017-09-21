@@ -40,18 +40,20 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         holder.txtAutorLastname.setText(model.getLastnameAutor());
         holder.isbnNumber.setText(model.getIsbn());
         holder.ratingBar.setRating(model.getRating());
-        Context context = holder.pic.getContext();
+        holder.pic.getContext();
 
-        Picasso.with(context)
+        //Picasso p = new Picasso.Builder(context) .memoryCache(new LruCache(24000)) .build();
+        Picasso.with(holder.context)
                 .load(model.getImageUrl())
                 .into(holder.pic);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbnNumber;
         private RatingBar ratingBar;
         private ImageView pic;
+        private Context context;
 
         public ViewHolder(View v) {
             super(v);
@@ -66,6 +68,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
 
             pic = (ImageView) v.findViewById(R.id.pic_item);
+
+            context = pic.getContext();
 
             // progressDialog.dismiss();
 

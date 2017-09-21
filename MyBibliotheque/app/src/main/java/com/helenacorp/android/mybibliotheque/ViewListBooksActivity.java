@@ -134,6 +134,12 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         bookListAdapter.destroy();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bookListAdapter.destroy();
+    }
+
     private void search(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
