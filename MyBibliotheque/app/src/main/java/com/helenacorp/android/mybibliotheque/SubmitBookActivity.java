@@ -51,7 +51,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private ImageView mImageBook;
+    private ImageView mImageBook, mImageBookVisible;
     private Uri imguri;
     private DatabaseReference databaseReference;
 
@@ -67,6 +67,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
+        mImageBookVisible = (ImageView) findViewById(R.id.submit_viewpic);
         btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
         isbn = (TextView) findViewById(R.id.submit_isbn);
 
@@ -131,7 +132,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
 
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                    mImageBook.setImageBitmap(imageBitmap);
+                    mImageBook.setVisibility(View.INVISIBLE);
+                    mImageBookVisible.setImageBitmap(imageBitmap);
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -148,7 +151,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void validation() {
-        if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBook.getDrawable() == null) {
+        if (titleName.getText().length() == 0 || firstName.length() == 0 || mImageBookVisible.getDrawable() == null) {
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
@@ -162,11 +165,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         final String userName = user.getDisplayName();
-        mImageBook.setDrawingCacheEnabled(true);
-        mImageBook.buildDrawingCache();
-        Bitmap bitmap = mImageBook.getDrawingCache();
+        mImageBookVisible.setDrawingCacheEnabled(true);
+        mImageBookVisible.buildDrawingCache();
+        Bitmap bitmap = mImageBookVisible.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
