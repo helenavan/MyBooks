@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -23,6 +22,7 @@ import android.widget.FrameLayout;
 
 public class RoundedCornerLayout extends FrameLayout {
     private final static float CORNER_RADIUS = 55.0f;
+    private final static int CIRCLE_CORNER = 3;
 
     private Bitmap maskBitmap;
     private Paint paint, maskPaint;
@@ -41,10 +41,6 @@ public class RoundedCornerLayout extends FrameLayout {
     public RoundedCornerLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
-    }
-
-    public RoundedCornerLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
@@ -84,7 +80,7 @@ public class RoundedCornerLayout extends FrameLayout {
         canvas.drawRect(0, 0, width, height, paint);
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        canvas.drawRoundRect(new RectF(0, 0, width, height), cornerRadius, cornerRadius, paint);
+        canvas.drawRoundRect(new RectF(CIRCLE_CORNER, CIRCLE_CORNER, width - CIRCLE_CORNER, height - CIRCLE_CORNER), cornerRadius, cornerRadius, paint);
 
         return mask;
     }

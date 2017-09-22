@@ -39,24 +39,27 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_bcrg"
         app:layout_constraintVertical_bias="1.0" />
-
-    <com.helenacorp.android.mybibliotheque.RoundedCornerLayout
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        app:layout_constraintBottom_toBottomOf="@+id/user_circle"
-        app:layout_constraintLeft_toLeftOf="@+id/user_circle"
-        app:layout_constraintRight_toRightOf="@+id/user_circle"
-        app:layout_constraintTop_toTopOf="@+id/user_circle">
-
-        <ImageView
-            android:id="@+id/user_pic"
+    <!--
+        <com.helenacorp.android.mybibliotheque.RoundedCornerLayout
             android:layout_width="110dp"
             android:layout_height="110dp"
             app:layout_constraintBottom_toBottomOf="@+id/user_circle"
             app:layout_constraintLeft_toLeftOf="@+id/user_circle"
             app:layout_constraintRight_toRightOf="@+id/user_circle"
-            app:layout_constraintTop_toTopOf="@+id/user_circle" />
-    </com.helenacorp.android.mybibliotheque.RoundedCornerLayout>
+            app:layout_constraintTop_toTopOf="@+id/user_circle"> -->
+
+    <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/user_pic"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+        android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/user_circle"
+            app:layout_constraintLeft_toLeftOf="@+id/user_circle"
+            app:layout_constraintRight_toRightOf="@+id/user_circle"
+        app:layout_constraintTop_toTopOf="@+id/user_circle"
+        app:riv_border_color="@color/bleuDd"
+        app:riv_corner_radius="55dp"
+        app:riv_oval="true" />
 
 
     <ImageView

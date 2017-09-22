@@ -71,7 +71,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
         isbn = (TextView) findViewById(R.id.submit_isbn);
 
-
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

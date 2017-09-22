@@ -22,8 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
@@ -85,19 +83,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    // Restoring the item list and the keys of the items: they will be passed to the adapter
-    private void handleInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null &&
-                savedInstanceState.containsKey(SAVED_ADAPTER_ITEMS) &&
-                savedInstanceState.containsKey(SAVED_ADAPTER_KEYS)) {
-            mAdapterItems = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_ADAPTER_ITEMS));
-            mAdapterKeys = savedInstanceState.getStringArrayList(SAVED_ADAPTER_KEYS);
-        } else {
-            mAdapterItems = new ArrayList<BookModel>();
-            mAdapterKeys = new ArrayList<String>();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -114,24 +99,22 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    // Saving the list of items and keys of the items on rotation
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_ADAPTER_ITEMS, Parcels.wrap(bookListAdapter.getItems()));
-        outState.putStringArrayList(SAVED_ADAPTER_KEYS, bookListAdapter.getKeys());
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bookListAdapter.destroy();
+        if (bookListAdapter != null) {
+            bookListAdapter.destroy();
+            bookListAdapter = null;
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        bookListAdapter.destroy();
+        if (bookListAdapter != null) {
+            bookListAdapter.destroy();
+            bookListAdapter = null;
+        }
     }
 
     @Override

@@ -45,6 +45,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         //Picasso p = new Picasso.Builder(context) .memoryCache(new LruCache(24000)) .build();
         Picasso.with(holder.context)
                 .load(model.getImageUrl())
+                .resize(100, 100)
                 .into(holder.pic);
     }
 

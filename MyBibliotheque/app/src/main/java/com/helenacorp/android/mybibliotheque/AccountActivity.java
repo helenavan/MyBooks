@@ -180,6 +180,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 try {
                     //getting image from gallery
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                    userPic.setImageBitmap(bitmap);
                     uploadImage();
 
                 } catch (Exception e) {
