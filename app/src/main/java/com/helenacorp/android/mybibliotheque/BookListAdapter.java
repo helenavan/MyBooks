@@ -75,7 +75,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                         .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //retrieve the title from detail item and delete it
+                                //retrieve the path of title from detail item and delete it
                                 booksQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
