@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">MyBibliotheque</string>
+    <string name="log_btn">connexion</string>
+    <string name="log_email">Votre email</string>
+    <string name="log_password">Votre mot de passe</string>
+    <string name="title_sub">Entrez le Titre</string>
+    <string name="fistname_sub">Entrez le prénom de l\'auteur</string>
+    <string name="lastname_sub">Entrez le nom</string>
+    <string name="btn_add">envoyer</string>
+    <string name="btn_clean">effacer</string>
+    <!--activity_signup-->
+    <string name="btn_creatAccount">créez votre compte</string>
+    <string name="hint_nom">Entrer votre nom ou pseudo</string>
+    <string name="hint_passw">Entrez votre mot de passe</string>
+    <string name="hint_email">Entrez votre email</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- activity_account -->
+    <string name="acc_upload">upload</string>
+    <string name="acc_bjr">Bonjour : </string>
+    <string name="acc_nom">Mon nom : </string>
+    <string name="acc_books">Nombre de livres : </string>
+    <string name="acc_nbr">mon nombre</string>
+
+    <!-- activity_main_drawer -->
+    <string name="drawer_liste">Ma liste de livres</string>
+    <string name="drawer_photo">Ma photo</string>
+    <string name="drawer_livres">Mon nombre de livres</string>
+    <string name="drawer_deco">Déconnexion</string>
+    <string name="drawer_send">Envoyé</string>
+
+    <!-- MainLoginActivity -->
+    <string name="mlog_deco">Veuillez vous reconnecter</string>
+    <string name="mlog_tss">tsss tout n\'est pas là!!!</string>
+    <string name="mlog_bvn">Bienvenue</string>
+    <string name="mlog_count">Avez-vous bien un compte?</string>
+
+    <string name="mlog_ok">Authentification réussie</string>
+    <string name="mlog_signup">Est-ce bien correcte?</string>
+
+</resources>
