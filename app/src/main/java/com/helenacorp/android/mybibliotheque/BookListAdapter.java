@@ -104,17 +104,18 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 dialog.show();
             }
         });
-
     }
 
     @Override
     protected void itemAdded(BookModel item, String key, int position) {
         Log.d("MyAdapter", "Added a new item to the adapter.");
+        notifyDataSetChanged();
     }
 
     @Override
     protected void itemChanged(BookModel item, BookModel newItem, String key, int position) {
         Log.d("MyAdapter", "Changed an item.");
+        notifyDataSetChanged();
     }
 
     @Override

@@ -51,12 +51,12 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys);
-        // recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
-        // bookListAdapter.notifyDataSetChanged();
-        // recyclerView.invalidate();
+        recyclerView.setHasFixedSize(true);
+        bookListAdapter.notifyDataSetChanged();
+        recyclerView.invalidate();
 
         btn = (Button) findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
