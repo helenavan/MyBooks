@@ -1,4 +1,4 @@
-package com.helenacorp.android.mybibliotheque;
+package com.helenacorp.android.mybibliotheque.UI;
 
 import android.content.Context;
 import android.graphics.Bitmap;

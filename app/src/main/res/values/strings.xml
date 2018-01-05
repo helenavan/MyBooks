@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyBibliotheque</string>
+    <string name="app_name">MyBooks</string>
     <string name="log_btn">connexion</string>
     <string name="log_email">Votre email</string>
     <string name="log_password">Votre mot de passe</string>

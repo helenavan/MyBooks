@@ -17,6 +17,9 @@
     <color name="rose">#e398b7</color>
     <color name="vert">#98e3c4</color>
     <color name="bleu">#98b7e3</color>
+    <color name="bleu_gray">#a7bfc1</color>
+
+    <color name="bckg_card">#ecf1f2</color>
 
     <color name="bleud">#0443BE</color>
     <color name="bleuDd">#DAEBF3</color>

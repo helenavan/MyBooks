@@ -39,14 +39,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_bcrg"
         app:layout_constraintVertical_bias="1.0" />
-    <!--
-        <com.helenacorp.android.mybibliotheque.RoundedCornerLayout
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            app:layout_constraintBottom_toBottomOf="@+id/user_circle"
-            app:layout_constraintLeft_toLeftOf="@+id/user_circle"
-            app:layout_constraintRight_toRightOf="@+id/user_circle"
-            app:layout_constraintTop_toTopOf="@+id/user_circle"> -->
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/user_pic"
@@ -85,7 +77,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_bcrg"
-        app:layout_constraintVertical_bias="0.863" />
+        app:layout_constraintVertical_bias="0.863"
+        tools:ignore="OnClick" />
 
     <LinearLayout
         android:id="@+id/linearname"

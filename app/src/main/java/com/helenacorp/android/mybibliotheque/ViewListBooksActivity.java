@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +29,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
     // private BookListAdapter mBookListAdapter;
-    private Button btn;
+    private FloatingActionButton btn;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Query mQuery;
@@ -49,16 +49,15 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-
+        recyclerView.setHasFixedSize(true);
         bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
-        recyclerView.setHasFixedSize(true);
+
         bookListAdapter.notifyDataSetChanged();
         recyclerView.invalidate();
 
-        btn = (Button) findViewById(R.id.btn_listbookcreat);
+        btn = findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);

@@ -21,7 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 
@@ -55,9 +57,17 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         holder.ratingBar.setRating(model.getRating());
         holder.pic.getContext();
 
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(R.color.bleu_gray)
+                .borderWidthDp(3)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
         Picasso.with(holder.context)
                 .load(model.getImageUrl())
-                .resize(100, 100)
+                .fit()
+                .transform(transformation)
                 .into(holder.pic);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

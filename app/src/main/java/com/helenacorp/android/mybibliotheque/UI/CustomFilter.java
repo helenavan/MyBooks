@@ -1,6 +1,9 @@
-package com.helenacorp.android.mybibliotheque;
+package com.helenacorp.android.mybibliotheque.UI;
 
 import android.widget.Filter;
+
+import com.helenacorp.android.mybibliotheque.BookListAdapter;
+import com.helenacorp.android.mybibliotheque.BookModel;
 
 import java.util.ArrayList;
 import java.util.List;
