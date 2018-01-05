@@ -115,7 +115,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.e("FirebaseListAdapter", "Listen was cancelled, no more updates will occur.");
+            Log.e("", "Listen was cancelled, no more updates will occur.");
         }
 
     };
