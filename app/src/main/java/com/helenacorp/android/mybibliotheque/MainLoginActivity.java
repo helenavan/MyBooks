@@ -3,6 +3,8 @@ package com.helenacorp.android.mybibliotheque;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -10,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +34,10 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     private View viewLayout;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private EditText email_log, password_log;
+    private TextInputEditText email_log, password_log;
+    private TextInputLayout email_log_parent, password_log_parent;
     private TextView messToast;
+    private Button login, auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +52,15 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
         messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
 
-        email_log = (EditText) findViewById(R.id.log_email);
-        password_log = (EditText) findViewById(R.id.log_password);
+        email_log =  findViewById(R.id.log_email);
+        password_log =  findViewById(R.id.log_password);
+        email_log_parent = findViewById(R.id.log_email_parent);
+        password_log_parent = findViewById(R.id.log_password_parent);
 
-        Button login = (Button) findViewById(R.id.log_btn);
+        login = (Button) findViewById(R.id.log_btn);
         login.setOnClickListener(this);
+        auth = findViewById(R.id.log_sign_btn);
+        auth.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,7 +78,6 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     messToast.setText(R.string.mlog_count);
                     messageToast();
                 }
-                // ...
             }
         };
 
@@ -138,6 +144,10 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.log_btn:
                 validation();
+                break;
+            case R.id.log_sign_btn:
+                Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
+                startActivity(intent);
                 break;
         }
     }

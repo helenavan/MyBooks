@@ -6,6 +6,7 @@
     <string name="title_sub">Entrez le Titre</string>
     <string name="fistname_sub">Entrez le prénom de l\'auteur</string>
     <string name="lastname_sub">Entrez le nom</string>
+    <string name="isbn">Entrez n° isbn ou scannez</string>
     <string name="btn_add">envoyer</string>
     <string name="btn_clean">effacer</string>
     <!--activity_signup-->

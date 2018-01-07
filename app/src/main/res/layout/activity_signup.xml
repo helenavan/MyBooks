@@ -7,46 +7,78 @@
     android:theme="@style/EditTextHint"
     tools:context="com.helenacorp.android.mybibliotheque.SignupActivity">
 
-
-    <EditText
-        android:id="@+id/name_signup"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/txt_signup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="100dp"
-        android:hint="@string/hint_nom"
-        android:inputType="textPersonName"
+        android:layout_marginTop="50dp"
+        android:text="MyBooks"
+        android:textSize="40sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/email_signup"
-        android:layout_width="0dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/name_singup_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginTop="50dp"
+        app:errorEnabled="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_signup">
 
-        app:layout_constraintTop_toBottomOf="@+id/name_signup" />
+        <EditText
+            android:id="@+id/name_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:hint="@string/hint_nom"
+            android:inputType="textPersonName"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/password_signup"
-        android:layout_width="0dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/email_signup_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:hint="@string/hint_passw"
-        android:inputType="textPassword"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:errorEnabled="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_signup" />
+        app:layout_constraintTop_toBottomOf="@+id/name_singup_parent">
+
+        <EditText
+            android:id="@+id/email_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/password_signup_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_signup_parent">
+
+        <EditText
+            android:id="@+id/password_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:hint="@string/hint_passw"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btn_creatAccount"
@@ -55,19 +87,7 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_creatAccount"
         android:textColor="@color/bleud"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_signup" />
-
-    <ProgressBar
-        android:id="@+id/progressBar2"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
-        android:indeterminate="true"
-        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/password_signup_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

@@ -65,7 +65,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/isbn_item"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/autorName_item" />
+            app:layout_constraintStart_toEndOf="@+id/autorName_item"
+            android:layout_marginRight="23dp"
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/isbn_item"

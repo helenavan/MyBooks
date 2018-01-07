@@ -8,16 +8,6 @@
     android:layout_height="match_parent"
     tools:context="com.helenacorp.android.mybibliotheque.AccountActivity">
 
-    <ProgressBar
-        android:id="@+id/simpleProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:max="100"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
     <ImageView
         android:id="@+id/user_bcrg"
         android:layout_width="0dp"
@@ -119,7 +109,7 @@
             android:id="@+id/user_book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/acc_nbr"
+            android:text="@string/acc_nom"
             app:layout_constraintTop_toBottomOf="@+id/user_bjr" />
 
         <TextView

@@ -20,17 +20,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,10 +47,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     String result;
     private Class<?> mClss;
     private EditText titleName, firstName, lastName;
-    private TextView isbn;
+    private EditText isbn;
+    private String isbnId;
     private Button btnClean, btnAdd, btnIsbn;
     private RatingBar ratingBar;
-    private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private ImageView mImageBook, mImageBookVisible;
@@ -60,7 +62,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_book);
 
-        progressBar = (ProgressBar) findViewById(R.id.submit_progressBar);
         titleName = (EditText) findViewById(R.id.title_submit);
         firstName = (EditText) findViewById(R.id.nameAutor_submit);
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
@@ -69,8 +70,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
         mImageBookVisible = (ImageView) findViewById(R.id.submit_viewpic);
         btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
-        isbn = (TextView) findViewById(R.id.submit_isbn);
+        isbn = findViewById(R.id.isbn);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         ratingBar = (RatingBar) findViewById(R.id.submit_rating);
         ratingBar.getNumStars();
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -78,7 +81,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
-                // TODO Auto-generated method stub
+
                 Toast.makeText(getApplicationContext(), Float.toString(rating), Toast.LENGTH_SHORT).show();
 
             }
@@ -113,13 +116,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_photo:
-                //shooseToCamera();
-            default:
-                break;
-        }
-        return true;
+      return true ;
     }
 
     @Override
@@ -148,21 +145,47 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
-
+    //validate label from autor and title
     public void validation() {
-        if (titleName.getText().length() == 0 || firstName.length() == 0) {
-            Context context = getApplicationContext();
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
-            toast.show();
-        } else {
+        if (titleName.getText().length() == 0 || firstName.length() == 0 || validationIsbn()) {
+            if(titleName.getText().length() == 0 || firstName.length() == 0) {
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
+                toast.show();
+            }
+        }
+        else {
             sendBookcover();
         }
     }
-
-    public void sendBookcover() {
+    //if isbn of book exist
+    public boolean validationIsbn(){
+        String isbnId = isbn.getText().toString();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        Query isbnQuery = ref.orderByChild("isbn").equalTo(isbnId);
+        isbnQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               if( dataSnapshot.exists()){
+                   Toast.makeText(SubmitBookActivity.this, "ce livre est déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show();
+               }else{
+                   sendBookcover();
+               }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return true;
+    }
+
+    public void sendBookcover() {
+
         final String userName = user.getDisplayName();
         mImageBookVisible.setDrawingCacheEnabled(true);
         mImageBookVisible.buildDrawingCache();
@@ -183,7 +206,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressBar.setVisibility(View.VISIBLE);
 
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
@@ -195,10 +217,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        progressBar.setVisibility(View.GONE);
-        finish();
     }
-
     public void clearEditText(EditText editText) {
         editText.setText("");
     }
@@ -212,6 +231,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             clearEditText(titleName);
             clearEditText(firstName);
             clearEditText(lastName);
+            clearEditText(isbn);
         }
         if (view == mImageBook) {
             shooseToCamera();
@@ -219,7 +239,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         if (view == btnIsbn) {
             launchActivity(SimpleScannerActivity.class);
             //launchSimpleActivity();
-            hidePicBarcode(isbn);
+            //hidePicBarcode(isbn);
 
         }
     }
