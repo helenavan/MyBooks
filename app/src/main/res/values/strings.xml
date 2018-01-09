@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_key">AIzaSyDfQzOdJ7RLXAnhOh6OcW1R0Uv5hvNxV24</string>
     <string name="app_name">MyBooks</string>
     <string name="log_btn">connexion</string>
     <string name="log_email">Votre email</string>

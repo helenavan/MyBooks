@@ -17,25 +17,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
-    private final static String SAVED_ADAPTER_ITEMS = "SAVED_ADAPTER_ITEMS";
-    private final static String SAVED_ADAPTER_KEYS = "SAVED_ADAPTER_KEYS";
 
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
-    // private BookListAdapter mBookListAdapter;
     private FloatingActionButton btn;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private Query mQuery;
     private BookListAdapter bookListAdapter;
-    private ArrayList<BookModel> mAdapterItems;
-    private ArrayList<String> mAdapterKeys;
+    private ArrayList<BookModel> mAdapterItems = new ArrayList<>();
+    private ArrayList<String> mAdapterKeys = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +48,13 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(ViewListBooksActivity.this));
         bookListAdapter.notifyDataSetChanged();
-        recyclerView.invalidate();
+        //recyclerView.invalidate();
 
         btn = findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
+        bookListAdapter.notifyDataSetChanged();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
@@ -71,6 +67,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
                 Intent intentV = new Intent();
                 intentV.putExtra(AccountActivity.LIST_BOOKS, String.valueOf(dataSnapshot.getChildrenCount()));
                 setResult(RESULT_OK, intentV);
+
             }
 
             @Override
@@ -78,19 +75,12 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+        bookListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_view, menu);
-
-     /*   SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        // searchView.setQuery("", false);
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        search(searchView);*/
         return true;
 
     }
@@ -98,19 +88,11 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (bookListAdapter != null) {
-            bookListAdapter.destroy();
-            bookListAdapter = null;
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (bookListAdapter != null) {
-            bookListAdapter.destroy();
-            bookListAdapter = null;
-        }
     }
 
     @Override

@@ -28,7 +28,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
             String key = dataSnapshot.getKey();
 
             if (!mKeys.contains(key)) {
-                //BookModel item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mModelClass);
+               // BookModel item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mModelClass);
                 BookModel item = getConvertedObject(dataSnapshot);
                 int insertedPosition;
                 if (previousChildName == null) {
@@ -49,6 +49,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 }
                 notifyItemInserted(insertedPosition);
                 itemAdded(item, key, insertedPosition);
+                notifyDataSetChanged();
             }
         }
 
@@ -249,7 +250,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      * @param position Position of the added item in the adapter
      */
     protected void itemAdded(BookModel item, String key, int position) {
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -261,7 +262,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      * @param position Position of the changed item in the adapter
      */
     protected void itemChanged(BookModel oldItem, BookModel newItem, String key, int position) {
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -284,7 +285,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      * @param newPosition New position of the changed item in the adapter
      */
     protected void itemMoved(BookModel item, String key, int oldPosition, int newPosition) {
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -305,6 +306,5 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
     }
-
 
 }

@@ -27,6 +27,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,20 +44,21 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
     private static final String USER_PIC = "USER_PIC";
+
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
-    private String uID, userEmail, userPseudo;
+    private String uID, userEmail, userPseudo, nbrBooks;
     private ImageView userPic;
     private ProgressBar mBar;
-    private StorageReference mStorageRef;
+    private DatabaseReference mStorageRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Uri imageUri;
     private Bitmap bitmap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
@@ -62,9 +68,23 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
+        // retrieve number of books in listview firebase
+        mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        mStorageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                nbrBooks = String.valueOf(dataSnapshot.getChildrenCount());
+                acc_numlist.setText(nbrBooks);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         if (user == null) {
             // User is signed out
@@ -94,12 +114,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 sp = getPreferences(MODE_PRIVATE);
             } else {
                 editor.putString(LIST_BOOKS, String.valueOf(MODE_PRIVATE));
-
             }
-
             editor.apply();
-
         }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -137,12 +155,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -194,19 +210,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 acc_numlist.setText(returnValue);
             }
         }
-      /*  if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            // userPic.setImageURI(imageUri);
-            try {
-                //getting image from gallery
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                userPic.setImageBitmap(bitmap);
-                uploadImage();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }*/
     }
 
     //download and uploadload photoprofil

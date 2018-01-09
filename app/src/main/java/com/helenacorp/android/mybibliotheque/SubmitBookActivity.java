@@ -116,7 +116,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-      return true ;
+        return true;
     }
 
     @Override
@@ -145,22 +145,23 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
+
     //validate label from autor and title
     public void validation() {
-        if (titleName.getText().length() == 0 || firstName.length() == 0 || validationIsbn()) {
-            if(titleName.getText().length() == 0 || firstName.length() == 0) {
+        if (titleName.getText().length() == 0 || lastName.length() == 0 || validationIsbn()) {
+            if (titleName.getText().length() == 0 || lastName.length() == 0) {
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
                 toast.show();
             }
-        }
-        else {
+        } else {
             sendBookcover();
         }
     }
+
     //if isbn of book exist
-    public boolean validationIsbn(){
+    public boolean validationIsbn() {
         String isbnId = isbn.getText().toString();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -169,11 +170,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         isbnQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               if( dataSnapshot.exists()){
-                   Toast.makeText(SubmitBookActivity.this, "ce livre est déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show();
-               }else{
-                   sendBookcover();
-               }
+                if (dataSnapshot.exists()) {
+                    Toast.makeText(SubmitBookActivity.this, "ce livre est déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendBookcover();
+                }
             }
 
             @Override
@@ -211,13 +212,12 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
                 //Save image info in to firebase database
                 String uploadId = databaseReference.push().getKey();
-                // databaseReference.child(bookModel.getUserid()).setValue(bookModel);
                 databaseReference.child(uploadId).setValue(bookModel);
-                Toast.makeText(SubmitBookActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     public void clearEditText(EditText editText) {
         editText.setText("");
     }
@@ -238,9 +238,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }
         if (view == btnIsbn) {
             launchActivity(SimpleScannerActivity.class);
-            //launchSimpleActivity();
-            //hidePicBarcode(isbn);
-
         }
     }
 
@@ -281,12 +278,4 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 }
         }
     }
-
-    public void hidePicBarcode(View view) {
-        if (view != null) {
-            btnIsbn.setVisibility(View.GONE);
-            view.setVisibility(View.VISIBLE);
-        }
-    }
-
 }
