@@ -45,4 +45,6 @@
     <string name="mlog_ok">Authentification réussie</string>
     <string name="mlog_signup">Est-ce bien correcte?</string>
 
+    <string name="transition">transit</string>
+
 </resources>

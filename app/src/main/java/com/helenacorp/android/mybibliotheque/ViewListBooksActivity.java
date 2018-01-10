@@ -1,8 +1,13 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener {
+public class ViewListBooksActivity extends AppCompatActivity implements View.OnClickListener, BookItemListener {
+    public static final String EXTRA_BOOK_ITEM = "animal_image_url";
+    public static final String EXTRA_BOOK_IMAGE_TRANSITION_NAME = "animal_image_transition_name";
 
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
@@ -31,6 +39,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private BookListAdapter bookListAdapter;
     private ArrayList<BookModel> mAdapterItems = new ArrayList<>();
     private ArrayList<String> mAdapterKeys = new ArrayList<>();
+    private BookItemListener bookItemListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +54,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
-        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys);
+        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, bookItemListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewListBooksActivity.this));
@@ -76,6 +85,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             }
         });
         bookListAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -124,4 +134,18 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void onAnimalItemClick(int pos, BookModel bookModel, ImageView shareImageView) {
+        Intent intent =new Intent(ViewListBooksActivity.this, BookItemListener.class);
+        intent.putExtra(EXTRA_BOOK_ITEM, (Parcelable) bookModel);
+        intent.putExtra(EXTRA_BOOK_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(shareImageView));
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                ViewListBooksActivity.this,
+                shareImageView,
+                ViewCompat.getTransitionName(shareImageView));
+
+        startActivity(intent, options.toBundle());
+    }
 }

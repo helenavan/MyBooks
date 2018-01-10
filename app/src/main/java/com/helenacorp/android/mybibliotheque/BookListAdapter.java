@@ -3,6 +3,7 @@ package com.helenacorp.android.mybibliotheque;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,9 +36,11 @@ import java.util.ArrayList;
 public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel> {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private final BookItemListener bookItemListener;
 
-    public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys) {
+    public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys, BookItemListener bookItemListener) {
         super(query, bookModelArrayList, keys);
+        this.bookItemListener = bookItemListener;
     }
 
     @Override
@@ -69,10 +72,10 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 .fit()
                 .transform(transformation)
                 .into(holder.pic);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        ViewCompat.setTransitionName(holder.pic, model.getNameAutor());
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(final View view) {
+            public boolean onLongClick(final View view) {
                 mAuth = FirebaseAuth.getInstance();
                 user = mAuth.getCurrentUser();
                 final String idBooks = holder.txtTitle.getText().toString();
@@ -112,8 +115,16 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 AlertDialog dialog = builder.create();
                 dialog.setTitle("Confirmer");
                 dialog.show();
+                return false;
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookItemListener.onAnimalItemClick(holder.getAdapterPosition(),model, holder.pic);
+            }
+        });
+
     }
 
     @Override
