@@ -31,6 +31,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private BookListAdapter bookListAdapter;
     private ArrayList<BookModel> mAdapterItems = new ArrayList<>();
     private ArrayList<String> mAdapterKeys = new ArrayList<>();
+    private OnBookItemClick mOnBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
-        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys);
+        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, mOnBook);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewListBooksActivity.this));
@@ -58,7 +59,8 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setSubtitle("Yeah!");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        bookListAdapter.notifyDataSetChanged();
 
         // retrieve number of books in listview firebase
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,7 +69,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
                 Intent intentV = new Intent();
                 intentV.putExtra(AccountActivity.LIST_BOOKS, String.valueOf(dataSnapshot.getChildrenCount()));
                 setResult(RESULT_OK, intentV);
-
             }
 
             @Override
@@ -76,6 +77,13 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             }
         });
         bookListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ViewListBooksActivity.this, AccountActivity.class);
+        startActivity(intent);
+        // moveTaskToBack(true);
     }
 
     @Override

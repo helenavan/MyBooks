@@ -10,6 +10,8 @@
     android:orientation="vertical">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        android:transitionName="profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bckg_card"

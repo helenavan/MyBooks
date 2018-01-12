@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/orangeD</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="EditTextHint" parent="Theme.AppCompat.Light.NoActionBar">

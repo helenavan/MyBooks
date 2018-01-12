@@ -121,7 +121,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
     };
 
-    public FirebaseRecyclerAdapter(Query query) {
+    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
         this(query, null, null);
     }
 

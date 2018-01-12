@@ -285,10 +285,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     }
 
     private void displayListBooks() {
-
         //retrieve count of books from listview
-        Intent intent2 = new Intent(AccountActivity.this, ViewListBooksActivity.class);
-        startActivityForResult(intent2, LIST_REQUEST);
+        Intent intent2 = new Intent(AccountActivity.this, SubmitBookActivity.class);
+        startActivity(intent2);
       /*  Intent extras = this.getIntent();
         if(extras != null){
             String values = extras.getStringExtra("list");

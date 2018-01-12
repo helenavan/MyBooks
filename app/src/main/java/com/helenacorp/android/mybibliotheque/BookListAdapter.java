@@ -1,8 +1,15 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.transition.Scene;
+import android.support.transition.TransitionInflater;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,9 +42,14 @@ import java.util.ArrayList;
 public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel> {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private TransitionManager mTransitionManager;
+    private Scene mScene1;
+    private Scene mScene2;
+    private OnBookItemClick onBookItemClick;
 
-    public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys) {
-        super(query, bookModelArrayList, keys);
+    public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
+                           OnBookItemClick bookItemClick) {
+        super(query, bookModelArrayList, keys, bookItemClick);
     }
 
     @Override
@@ -70,15 +82,16 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 .transform(transformation)
                 .into(holder.pic);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        final String idBooks = holder.txtTitle.getText().toString();
+        Log.e("tag", idBooks);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        final Query booksQuery = databaseReference.child("books").orderByChild("title").equalTo(idBooks);
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(final View view) {
-                mAuth = FirebaseAuth.getInstance();
-                user = mAuth.getCurrentUser();
-                final String idBooks = holder.txtTitle.getText().toString();
-                Log.e("tag", idBooks);
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-                final Query booksQuery = databaseReference.child("books").orderByChild("title").equalTo(idBooks);
+            public boolean onLongClick(final View view) {
+
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.context);
                 builder.setMessage("Voulez-vous supprimer ?").setCancelable(false)
@@ -112,10 +125,53 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 AlertDialog dialog = builder.create();
                 dialog.setTitle("Confirmer");
                 dialog.show();
+
+                return true;
+            }
+
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                if(position != RecyclerView.NO_POSITION){
+                    ViewGroup container = (ViewGroup)view.findViewById(R.id.container);
+                    TransitionInflater transitionInflater = TransitionInflater.from(holder.context);
+                    mTransitionManager = transitionInflater.inflateTransitionManager(
+                            R.transition.transition_manager, container);
+                    mScene1 = Scene.getSceneForLayout(container,
+                            R.layout.activity_view_list_books, holder.context);
+                    mScene2 = Scene.getSceneForLayout(container,
+                            R.layout.activity_book_detail, holder.context);
+                    goToScene2(view);
+        //send data to detailbookactivity
+                    String img = model.getImageUrl();
+                    String prenom = model.getNameAutor();
+                    String title = model.getTitle();
+                    String nnam = model.getLastnameAutor();
+                    String isbn = model.getIsbn();
+                    Float rating = model.getRating();
+                    Intent intent = new Intent(holder.context, BookDetailActivity.class);
+                    intent.putExtra("title",title);
+                    intent.putExtra("name",nnam);
+                    intent.putExtra("prenom", prenom);
+                    intent.putExtra("isbn",isbn);
+                    intent.putExtra("couv", img);
+                    intent.putExtra("rating", rating);
+                    holder.context.startActivity(intent);
+                }
             }
         });
+
+    }
+    public void goToScene1(View view) {
+        mTransitionManager.transitionTo(mScene1);
     }
 
+    public void goToScene2(View view) {
+        mTransitionManager.transitionTo(mScene2);
+    }
     @Override
     protected void itemAdded(BookModel item, String key, int position) {
         Log.d("MyAdapter", "Added a new item to the adapter.");

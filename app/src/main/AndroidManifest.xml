@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.helenacorp.android.mybibliotheque">
 
     <uses-sdk
@@ -44,17 +45,29 @@
         </activity>
         <activity android:name=".AccountActivity" />
         <activity android:name=".SignupActivity" />
-        <activity android:name=".SubmitBookActivity" />
+        <activity android:name=".SubmitBookActivity"
+            android:parentActivityName="com.helenacorp.android.mybibliotheque.ViewListBooksActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:targetApi="jelly_bean">
+           <meta-data
+               android:name="android.support.PARENT_ACTIVITY"
+               android:value="com.helenacorp.android.mybibliotheque.ViewListBooksActivity"/>
+        </activity>
         <activity android:name=".SimpleScannerActivity" />
         <activity android:name=".BaseScannerActivity" />
+        <activity android:name=".BookDetailActivity"/>
 
         <activity
             android:name=".ViewListBooksActivity"
+            android:parentActivityName="com.helenacorp.android.mybibliotheque.AccountActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:targetApi="jelly_bean">
 
             <meta-data
                 android:name="android.app.searchable"
+                android:value="com.helenacorp.android.mybibliotheque.AccountActivity"
                 android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

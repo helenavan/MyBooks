@@ -32,7 +32,7 @@
     <!-- activity_main_drawer -->
     <string name="drawer_liste">Ma liste de livres</string>
     <string name="drawer_photo">Ma photo</string>
-    <string name="drawer_livres">Mon nombre de livres</string>
+    <string name="drawer_livres">Ajouter</string>
     <string name="drawer_deco">Déconnexion</string>
     <string name="drawer_send">Envoyé</string>
 

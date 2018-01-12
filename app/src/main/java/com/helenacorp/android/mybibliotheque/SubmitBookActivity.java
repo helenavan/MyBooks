@@ -95,15 +95,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setSubtitle("Yeah!");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_submit, menu);
+       // getMenuInflater().inflate(R.menu.menu_submit, menu);
         return true;
     }
 
@@ -116,7 +115,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
