@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -63,8 +64,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     public void onBindViewHolder(final BookListAdapter.ViewHolder holder, final int position) {
         final BookModel model = getItem(position);
         holder.txtTitle.setText(model.getTitle());
-        holder.txtAutorFirstname.setText(model.getNameAutor());
         holder.txtAutorLastname.setText(model.getLastnameAutor());
+        holder.resume.setText(model.getInfo());
         holder.isbnNumber.setText(model.getIsbn());
         holder.ratingBar.setRating(model.getRating());
         holder.pic.getContext();
@@ -91,7 +92,6 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View view) {
-
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.context);
                 builder.setMessage("Voulez-vous supprimer ?").setCancelable(false)
@@ -147,15 +147,15 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     goToScene2(view);
         //send data to detailbookactivity
                     String img = model.getImageUrl();
-                    String prenom = model.getNameAutor();
                     String title = model.getTitle();
                     String nnam = model.getLastnameAutor();
+                    String resume = model.getInfo();
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
                     intent.putExtra("title",title);
                     intent.putExtra("name",nnam);
-                    intent.putExtra("prenom", prenom);
+                    intent.putExtra("info", resume);
                     intent.putExtra("isbn",isbn);
                     intent.putExtra("couv", img);
                     intent.putExtra("rating", rating);
@@ -163,8 +163,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 }
             }
         });
-
     }
+
     public void goToScene1(View view) {
         mTransitionManager.transitionTo(mScene1);
     }
@@ -196,7 +196,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtTitle, txtAutorFirstname, txtAutorLastname, isbnNumber;
+        private TextView txtTitle, txtAutorLastname, isbnNumber, resume;
         private RatingBar ratingBar;
         private ImageView pic;
         private Context context;
@@ -205,8 +205,6 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             super(v);
             txtTitle = (TextView) v.findViewById(R.id.title_item);
 
-            txtAutorFirstname = (TextView) v.findViewById(R.id.autorName_item);
-
             txtAutorLastname = (TextView) v.findViewById(R.id.autorLastName_item);
 
             isbnNumber = (TextView) v.findViewById(R.id.isbn_item);
@@ -214,6 +212,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
 
             pic = (ImageView) v.findViewById(R.id.pic_item);
+
+            resume = v.findViewById(R.id.resum_item);
 
             context = pic.getContext();
 

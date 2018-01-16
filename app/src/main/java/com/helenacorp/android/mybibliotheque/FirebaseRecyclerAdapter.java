@@ -121,7 +121,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
     };
 
-    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
+    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
         this(query, null, null);
     }
 
@@ -291,7 +291,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     /**
      * Converts the data snapshot to generic object
      *
-     * @param snapshot Result
+     * @param snapshot com.helenacorp.android.mybibliotheque.SimpleScannerActivity.Result
      * @return Data converted
      */
     protected BookModel getConvertedObject(DataSnapshot snapshot) {

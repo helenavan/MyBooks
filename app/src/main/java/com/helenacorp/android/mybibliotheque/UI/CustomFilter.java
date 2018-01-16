@@ -3,7 +3,7 @@ package com.helenacorp.android.mybibliotheque.UI;
 import android.widget.Filter;
 
 import com.helenacorp.android.mybibliotheque.BookListAdapter;
-import com.helenacorp.android.mybibliotheque.BookModel;
+import com.helenacorp.android.mybibliotheque.model.BookModel;
 
 import java.util.ArrayList;
 import java.util.List;

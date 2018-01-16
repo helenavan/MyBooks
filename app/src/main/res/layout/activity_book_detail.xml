@@ -34,30 +34,13 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
-        android:id="@+id/autorName_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:maxLength="10"
-        android:maxLines="1"
-        android:text="prenom"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_item"
-        android:layout_marginLeft="8dp" />
-
-    <TextView
         android:id="@+id/autorLastName_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="23dp"
-        android:layout_marginStart="8dp"
-        android:maxLength="15"
-        android:maxLines="1"
         android:text="nomdefamille"
-        app:layout_constraintBaseline_toBaselineOf="@+id/autorName_item"
-        app:layout_constraintStart_toEndOf="@+id/autorName_item" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_item" />
 
     <TextView
         android:id="@+id/isbn_item"
@@ -67,8 +50,19 @@
         android:text="isbn"
         android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@id/autorName_item"
-        app:layout_constraintTop_toBottomOf="@+id/autorName_item"/>
+        app:layout_constraintStart_toStartOf="@id/autorLastName_item"
+        app:layout_constraintTop_toBottomOf="@+id/autorLastName_item"/>
+    <TextView
+        android:id="@+id/resum_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        android:maxLines="15"
+        android:minLines="1"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/ratingbar"
+        app:layout_constraintTop_toBottomOf="@+id/isbn_item"/>
 
     <RatingBar
         android:id="@+id/ratingbar"

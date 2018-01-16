@@ -1,38 +1,66 @@
-package com.helenacorp.android.mybibliotheque;
+package com.helenacorp.android.mybibliotheque.model;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created by helena on 09/08/2017.
  */
 
 public class BookModel {
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("description")
+    @Expose
+    private String description;
     private String category;
     private String isbn;
-    private String nameAutor;
     private String lastnameAutor;
     private String userName;
     private String userid;
     private float rating;
     private String imageUrl;
+    @SerializedName("info")
+    @Expose
+    private String info;
+    @SerializedName("authors")
+    @Expose
+    private List<String> authors;
+    @SerializedName("imageLinks")
+    @Expose
+    private ImageLinks imageLinks;
+
+    public ImageLinks getImageLinks() {
+        return imageLinks;
+    }
+
+    public void setImageLinks(ImageLinks imageLinks) {
+        this.imageLinks = imageLinks;
+    }
+
+
+
 
     //bug du constructeur vise
     BookModel() {
 
     }
 
-    public BookModel(String title, String category, String isbn, String nameAutor, String lastnameAutor,
-                     String userName, String userid, float rating, String imageUrl) {
+    public BookModel(String title, String category, String isbn, String lastnameAutor,
+                     String userName, String userid, float rating, String imageUrl, String info) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
-        this.nameAutor = nameAutor;
         this.lastnameAutor = lastnameAutor;
         this.userName = userName;
         this.userid = userid;
         this.rating = rating;
         this.imageUrl = imageUrl;
+        this.info = info;
     }
-
 
     public String getUserName() {
         return userName;
@@ -82,14 +110,6 @@ public class BookModel {
         this.isbn = isbn;
     }
 
-    public String getNameAutor() {
-        return nameAutor;
-    }
-
-    public void setNameAutor(String nameAutor) {
-        this.nameAutor = nameAutor;
-    }
-
     public String getLastnameAutor() {
         return lastnameAutor;
     }
@@ -112,5 +132,24 @@ public class BookModel {
 
     public void setUserid(String userid) {
         this.userid = userid;
+    }
+
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public String getInfo() {return info;}
+
+    public void setInfo(String info) {this.info = info;}
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

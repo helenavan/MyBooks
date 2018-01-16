@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.model.BookModel;
 
 import java.io.ByteArrayOutputStream;
 
@@ -46,11 +50,12 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     String result;
     private Class<?> mClss;
-    private EditText titleName, firstName, lastName;
+    private EditText titleName, lastName;
     private EditText isbn;
     private String isbnId;
     private Button btnClean, btnAdd, btnIsbn;
     private RatingBar ratingBar;
+    private TextView resum;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private ImageView mImageBook, mImageBookVisible;
@@ -63,8 +68,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_submit_book);
 
         titleName = (EditText) findViewById(R.id.title_submit);
-        firstName = (EditText) findViewById(R.id.nameAutor_submit);
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
+        resum = findViewById(R.id.submit_resum);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
@@ -102,7 +107,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_submit, menu);
+        // getMenuInflater().inflate(R.menu.menu_submit, menu);
         return true;
     }
 
@@ -195,7 +200,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
-        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + firstName.getText().toString() + ".jpg");
+        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + lastName.getText().toString() + ".jpg");
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = userPic.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -206,9 +211,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(), firstName.getText().toString(),
-                        lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString());
+                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(),
+                        lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
                 String uploadId = databaseReference.push().getKey();
                 databaseReference.child(uploadId).setValue(bookModel);
@@ -224,11 +228,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         if (view == btnAdd) {
+            new FetchBookTask().execute(getISBN());
             validation();
         }
         if (view == btnClean) {
             clearEditText(titleName);
-            clearEditText(firstName);
             clearEditText(lastName);
             clearEditText(isbn);
         }
@@ -275,6 +279,49 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
                 }
+        }
+    }
+
+    private String getISBN() {
+        final EditText isbnField = (EditText) findViewById(R.id.isbn);
+        return isbnField.getText().toString();
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    class FetchBookTask extends AsyncTask<String, Void, BookModel> {
+
+        @Override
+        protected BookModel doInBackground(String... params) {
+            final String isbn = params[0];
+            try {
+                return new BookLookupService().fetchBookByISBN(isbn);
+            } catch (Exception e) {
+                Log.e("fetchBookByISBN", e.toString());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(BookModel book) {
+
+                if (book != null) {
+
+                   // String urlB = book.getImageLinks().getThumbnail().toString();
+                    showMessage("Got book: " + book.getTitle());
+                    titleName.setText(book.getTitle());
+                    lastName.setText(book.getAuthors().get(0).toString());
+                    if(book.getDescription() != null) {resum.setText(book.getDescription().toString());
+                    }
+                } else {
+                    showMessage("Failed to fetch book");
+                }
+
+               // Picasso.with(getApplicationContext()).load(book.getImageLinks().getThumbnail()).centerCrop().into(mImageBookVisible);
+
+
         }
     }
 }

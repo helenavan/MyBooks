@@ -109,13 +109,13 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                             // Sign in success, update UI with the signed-in user's information
                             Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
                             startActivity(intent);
-                            messToast.setText(R.string.mlog_bvn);
+                            messToast.setText("Bonjour" + mAuth.getCurrentUser().getDisplayName());
                             messageToast();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
+                           // startActivity(intent);
                             messToast.setText(R.string.mlog_count);
                             messageToast();
                         }
@@ -151,40 +151,4 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
-/*
-    //keep email and password
-    @Override
-    public void onPause() {
-        super.onPause();
-        savePreference();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadPreference();
-    }
-
-    private void savePreference() {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        // Edit and commit
-        UnameValue = email_log.getText().toString();
-        PasswordValue = password_log.getText().toString();
-        editor.putString(PREF_UNAME, UnameValue);
-        editor.putString(PREF_PASSWORD, PasswordValue);
-        editor.commit();
-    }
-
-    private void loadPreference() {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME,
-                Context.MODE_PRIVATE);
-        // Get value
-        UnameValue = settings.getString(PREF_UNAME, DefaultUnameValue);
-        PasswordValue = settings.getString(PREF_PASSWORD, DefaultPasswordValue);
-        email_log.setText(UnameValue);
-        password_log.setText(PasswordValue);
-        Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
-        startActivity(intent);
-    }*/
 }
