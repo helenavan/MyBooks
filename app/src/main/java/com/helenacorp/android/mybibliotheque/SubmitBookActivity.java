@@ -40,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -53,7 +54,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private EditText titleName, lastName;
     private EditText isbn;
     private String isbnId;
-    private Button btnClean, btnAdd, btnIsbn;
+    private Button btnClean, btnAdd, btnIsbn, btnVerif;
     private RatingBar ratingBar;
     private TextView resum;
     private FirebaseAuth mAuth;
@@ -72,6 +73,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         resum = findViewById(R.id.submit_resum);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
+        btnVerif = findViewById(R.id.btn_verify_isbn_submit);
         mImageBook = (ImageView) findViewById(R.id.submit_photoView);
         mImageBookVisible = (ImageView) findViewById(R.id.submit_viewpic);
         btnIsbn = (Button) findViewById(R.id.submit_btn_isbn);
@@ -95,6 +97,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         btnAdd.setOnClickListener(this);
         btnClean.setOnClickListener(this);
+        btnVerif.setOnClickListener(this);
         btnIsbn.setOnClickListener(this);
         mImageBook.setOnClickListener(this);
 
@@ -130,16 +133,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             if (resultCode == RESULT_OK) {
                 imguri = data.getData();
                 try {
-
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                    mImageBook.setVisibility(View.INVISIBLE);
+                   // mImageBook.setVisibility(View.INVISIBLE);
                     mImageBookVisible.setImageBitmap(imageBitmap);
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         }
         if (requestCode == 1) {
@@ -160,7 +160,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 toast.show();
             }
         } else {
-            sendBookcover();
+            if(mImageBookVisible != null) sendBookcover();
         }
     }
 
@@ -177,7 +177,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 if (dataSnapshot.exists()) {
                     Toast.makeText(SubmitBookActivity.this, "ce livre est déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendBookcover();
+                    if(mImageBookVisible != null) sendBookcover();
                 }
             }
 
@@ -190,8 +190,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void sendBookcover() {
-
         final String userName = user.getDisplayName();
+       // mImageBookVisible.setImageBitmap(null);
         mImageBookVisible.setDrawingCacheEnabled(true);
         mImageBookVisible.buildDrawingCache();
         Bitmap bitmap = mImageBookVisible.getDrawingCache();
@@ -224,17 +224,28 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void clearEditText(EditText editText) {
         editText.setText("");
     }
+    public void cleanText(TextView textView){textView.setText("");}
+    public void cleanCouv(ImageView img){
+        if(img != null){
+            img.setImageBitmap(null);
+            img.getDrawingCache(false);
+        }
+    }
 
     @Override
     public void onClick(View view) {
-        if (view == btnAdd) {
+        if(view == btnVerif){
             new FetchBookTask().execute(getISBN());
+        }
+        if (view == btnAdd) {
             validation();
         }
         if (view == btnClean) {
             clearEditText(titleName);
             clearEditText(lastName);
             clearEditText(isbn);
+            resum.setText("");
+            cleanCouv(mImageBookVisible);
         }
         if (view == mImageBook) {
             shooseToCamera();
@@ -306,22 +317,24 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(BookModel book) {
-
+            try {
                 if (book != null) {
 
-                   // String urlB = book.getImageLinks().getThumbnail().toString();
-                    showMessage("Got book: " + book.getTitle());
+                    // String urlB = book.getImageLinks().getThumbnail().toString();
+                    //showMessage("Got book: " + book.getTitle());
                     titleName.setText(book.getTitle());
                     lastName.setText(book.getAuthors().get(0).toString());
-                    if(book.getDescription() != null) {resum.setText(book.getDescription().toString());
+                    if (book.getDescription() != null) {
+                        resum.setText(book.getDescription().toString());
+                    } else if (book.getImageLinks().getThumbnail() != null) {
+                        Picasso.with(getApplicationContext()).load(book.getImageLinks().getThumbnail().toString()).into(mImageBookVisible);
                     }
                 } else {
                     showMessage("Failed to fetch book");
                 }
-
-               // Picasso.with(getApplicationContext()).load(book.getImageLinks().getThumbnail()).centerCrop().into(mImageBookVisible);
-
-
+            }catch (Exception e){
+                Log.e("Tag", "====>image");
+            }
         }
     }
 }

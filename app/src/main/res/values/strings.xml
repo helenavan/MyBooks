@@ -10,6 +10,7 @@
     <string name="isbn">Entrez n° isbn ou scannez</string>
     <string name="btn_add">envoyer</string>
     <string name="btn_clean">effacer</string>
+    <string name="btn_verif">vérifier isbn</string>
     <!--activity_signup-->
     <string name="btn_creatAccount">créez votre compte</string>
     <string name="hint_nom">Entrer votre nom ou pseudo</string>

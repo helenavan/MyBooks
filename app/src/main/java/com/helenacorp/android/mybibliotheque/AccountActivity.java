@@ -65,7 +65,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
 
-      //  mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
+        //  mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -230,7 +230,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
                 // progressDialog.dismiss();
-               // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
             }
         });
         return true;
@@ -259,7 +259,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // progressDialog.dismiss();
-                   // mBar.setVisibility(View.VISIBLE);
+                    // mBar.setVisibility(View.VISIBLE);
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     //sendMsg("" + downloadUrl, 2);

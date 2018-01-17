@@ -66,8 +66,21 @@
         android:textColor="@color/bleud"
         app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit_photoView" />
+        app:layout_constraintRight_toLeftOf="@+id/btn_verify_isbn_submit"
+        app:layout_constraintTop_toBottomOf="@+id/submit_viewpic" />
+
+    <Button
+        android:id="@+id/btn_verify_isbn_submit"
+        style="@style/buttonTheme"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:text="@string/btn_verif"
+        android:textColor="@color/bleud"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_add_submit"
+        app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
+        app:layout_constraintLeft_toRightOf="@+id/btn_add_submit"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/btn_clean_submit"
@@ -105,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginTop="14dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:maxLines="2"
@@ -129,13 +142,13 @@
         android:id="@+id/submit_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleIndicator"
         android:layout_marginTop="16dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
         android:stepSize="0.5"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submit_resum"
@@ -145,25 +158,36 @@
         android:id="@+id/submit_photoView"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/ic_camera_alt_yellow_700_24dp"
         android:clickable="true"
         android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/submit_viewpic"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit_rating" />
-
+        app:layout_constraintLeft_toRightOf="@+id/submit_viewpic"
+        app:layout_constraintTop_toTopOf="@+id/submit_viewpic" />
+    <ImageView
+        android:id="@+id/submit_viewpic"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submit_rating"
+        app:layout_constraintRight_toLeftOf="@+id/submit_photoView"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"/>
+<!--
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/submit_viewpic"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginTop="16dp"
-        android:visibility="visible"
         android:scaleType="centerCrop"
+        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submit_rating"
+        app:layout_constraintRight_toLeftOf="@+id/submit_photoView"
         app:riv_corner_radius="24dp"
-        app:riv_oval="true" />
+        app:riv_oval="true" />-->
 
 </android.support.constraint.ConstraintLayout>

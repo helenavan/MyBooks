@@ -135,8 +135,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
-                if(position != RecyclerView.NO_POSITION){
-                    ViewGroup container = (ViewGroup)view.findViewById(R.id.container);
+                if (position != RecyclerView.NO_POSITION) {
+                    ViewGroup container = (ViewGroup) view.findViewById(R.id.container);
                     TransitionInflater transitionInflater = TransitionInflater.from(holder.context);
                     mTransitionManager = transitionInflater.inflateTransitionManager(
                             R.transition.transition_manager, container);
@@ -145,7 +145,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     mScene2 = Scene.getSceneForLayout(container,
                             R.layout.activity_book_detail, holder.context);
                     goToScene2(view);
-        //send data to detailbookactivity
+                    //send data to detailbookactivity
                     String img = model.getImageUrl();
                     String title = model.getTitle();
                     String nnam = model.getLastnameAutor();
@@ -153,10 +153,10 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
-                    intent.putExtra("title",title);
-                    intent.putExtra("name",nnam);
+                    intent.putExtra("title", title);
+                    intent.putExtra("name", nnam);
                     intent.putExtra("info", resume);
-                    intent.putExtra("isbn",isbn);
+                    intent.putExtra("isbn", isbn);
                     intent.putExtra("couv", img);
                     intent.putExtra("rating", rating);
                     holder.context.startActivity(intent);
@@ -172,6 +172,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     public void goToScene2(View view) {
         mTransitionManager.transitionTo(mScene2);
     }
+
     @Override
     protected void itemAdded(BookModel item, String key, int position) {
         Log.d("MyAdapter", "Added a new item to the adapter.");

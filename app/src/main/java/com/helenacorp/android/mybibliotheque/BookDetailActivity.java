@@ -45,13 +45,6 @@ public class BookDetailActivity extends AppCompatActivity {
         ratingBar.setRating(bundle.getFloat("rating"));
         String url = bundle.getString("couv");
         Picasso.with(getApplicationContext()).load(url).into(couv);
-      /*  constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(BookDetailActivity.this, ViewListBooksActivity.class);
-                startActivity(intent);
-            }
-        });*/
     }
 
     @Override

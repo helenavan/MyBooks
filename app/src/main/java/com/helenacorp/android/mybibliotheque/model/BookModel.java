@@ -41,9 +41,6 @@ public class BookModel {
         this.imageLinks = imageLinks;
     }
 
-
-
-
     //bug du constructeur vise
     BookModel() {
 
@@ -149,6 +146,7 @@ public class BookModel {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }

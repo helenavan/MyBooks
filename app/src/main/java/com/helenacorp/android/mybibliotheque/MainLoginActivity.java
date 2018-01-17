@@ -52,8 +52,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
         messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
 
-        email_log =  findViewById(R.id.log_email);
-        password_log =  findViewById(R.id.log_password);
+        email_log = findViewById(R.id.log_email);
+        password_log = findViewById(R.id.log_password);
         email_log_parent = findViewById(R.id.log_email_parent);
         password_log_parent = findViewById(R.id.log_password_parent);
 
@@ -115,7 +115,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                         } else {
                             // If sign in fails, display a message to the user.
                             //Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
-                           // startActivity(intent);
+                            // startActivity(intent);
                             messToast.setText(R.string.mlog_count);
                             messageToast();
                         }

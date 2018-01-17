@@ -52,9 +52,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
         messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
 
-        authName =  findViewById(R.id.name_signup);
-        authEmail =  findViewById(R.id.email_signup);
-        authPassw =  findViewById(R.id.password_signup);
+        authName = findViewById(R.id.name_signup);
+        authEmail = findViewById(R.id.email_signup);
+        authPassw = findViewById(R.id.password_signup);
         authNameParent = findViewById(R.id.name_singup_parent);
         authEmailParent = findViewById(R.id.email_signup_parent);
         authPassParent = findViewById(R.id.password_signup_parent);
@@ -67,7 +67,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void validation() {
-        if (authName.getText().length() == 0  ||
+        if (authName.getText().length() == 0 ||
                 authEmail.getText().length() == 0 || authPassw.getText().length() == 0) {
             messToast.setText(R.string.mlog_tss);
             messageToast();
@@ -122,7 +122,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         toast1.setView(viewLayout);
         toast1.show();
     }
-    public void validationAuth(){
+
+    public void validationAuth() {
         useremail = authEmailParent.getEditText().getText().toString();
         password = authPassParent.getEditText().getText().toString();
         name = authNameParent.getEditText().getText().toString();
@@ -130,15 +131,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             authEmailParent.setError("Not a valid email address!");
         } else if (!validatePassword(password)) {
             authPassParent.setError("Not a valid password!");
-        } else if (!validateName(name)){
+        } else if (!validateName(name)) {
             authNameParent.setError("pas bon");
-        }
-        else {
+        } else {
             authNameParent.setErrorEnabled(false);
             authEmailParent.setErrorEnabled(false);
             authPassParent.setErrorEnabled(false);
         }
     }
+
     public boolean validateEmail(String email) {
         matcher = pattern.matcher(email);
         return matcher.matches();
@@ -148,8 +149,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         return password.length() > 5;
     }
 
-    public boolean validateName(String name){
-        return name.length()>1;
+    public boolean validateName(String name) {
+        return name.length() > 1;
     }
 
 /*
