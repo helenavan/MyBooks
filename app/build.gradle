@@ -43,6 +43,7 @@ dependencies {
     compile('io.github.openfeign:feign-java8:9.5.0')
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.google.apis:google-api-services-books:v1-rev94-1.23.0'
+    compile 'com.facebook.fresco:fresco:0.9.0'
     testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
 }

@@ -156,7 +156,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             if (titleName.getText().length() == 0 || lastName.length() == 0) {
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, "Ha! N'avez-vous pas oublié quelque chose?", duration);
+                Toast toast = Toast.makeText(context, R.string.toast_2, duration);
                 toast.show();
             }
         } else {
@@ -175,7 +175,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Toast.makeText(SubmitBookActivity.this, "ce livre est déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitBookActivity.this, R.string.toast, Toast.LENGTH_SHORT).show();
                 } else {
                     if(mImageBookVisible != null) sendBookcover();
                 }
@@ -319,15 +319,17 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         protected void onPostExecute(BookModel book) {
             try {
                 if (book != null) {
-
-                    // String urlB = book.getImageLinks().getThumbnail().toString();
                     //showMessage("Got book: " + book.getTitle());
                     titleName.setText(book.getTitle());
                     lastName.setText(book.getAuthors().get(0).toString());
                     if (book.getDescription() != null) {
                         resum.setText(book.getDescription().toString());
                     } else if (book.getImageLinks().getThumbnail() != null) {
-                        Picasso.with(getApplicationContext()).load(book.getImageLinks().getThumbnail().toString()).into(mImageBookVisible);
+                        Picasso.with(getApplicationContext())
+                                .load(book.getImageLinks().getThumbnail())
+                                .placeholder(R.drawable.account_icon)
+                                .error(R.drawable.account_icon)
+                                .into(mImageBookVisible);
                     }
                 } else {
                     showMessage("Failed to fetch book");

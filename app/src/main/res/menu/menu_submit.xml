@@ -2,10 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_photo"
-        android:icon="@drawable/ic_camera_alt_yellow_700_24dp"
-        android:title="Photo"
-        app:showAsAction="always">
-
-    </item>
+        android:id="@+id/setting"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
 </menu>

@@ -27,5 +27,7 @@
     <color name="orangeD">#f49d02</color>
     <color name="rougeD">#F17402</color>
 
+    <color name="beige">#f4ece6</color>
+
     <color name="actionbar">@android:color/transparent</color>
 </resources>

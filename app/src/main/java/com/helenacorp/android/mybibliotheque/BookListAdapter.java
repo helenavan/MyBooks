@@ -144,7 +144,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                             R.layout.activity_view_list_books, holder.context);
                     mScene2 = Scene.getSceneForLayout(container,
                             R.layout.activity_book_detail, holder.context);
-                    goToScene2(view);
+                  //  goToScene2(view);
                     //send data to detailbookactivity
                     String img = model.getImageUrl();
                     String title = model.getTitle();
