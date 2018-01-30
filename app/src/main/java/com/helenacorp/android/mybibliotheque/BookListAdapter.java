@@ -47,6 +47,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     private Scene mScene1;
     private Scene mScene2;
     private OnBookItemClick onBookItemClick;
+    private ArrayList<BookModel> mItems = new ArrayList<>();
+    private ArrayList<BookModel>mItemCopy = new ArrayList<>();
 
     public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
                            OnBookItemClick bookItemClick) {
@@ -164,7 +166,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             }
         });
     }
-
+    //to use setTransitionManager
     public void goToScene1(View view) {
         mTransitionManager.transitionTo(mScene1);
     }
@@ -193,6 +195,11 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     @Override
     protected void itemMoved(BookModel item, String key, int oldPosition, int newPosition) {
         Log.d("MyAdapter", "Moved an item.");
+    }
+
+    @Override
+    protected void populateView(View v, BookModel bookModel) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

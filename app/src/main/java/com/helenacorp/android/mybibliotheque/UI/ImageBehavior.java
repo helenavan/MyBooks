@@ -6,15 +6,15 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.helenacorp.android.mybibliotheque.R;
 
 /**
  * Created by helena on 19/01/2018.
  */
 
-public class ImageBehavior extends CoordinatorLayout.Behavior<SimpleDraweeView> {
+public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
     private final static float MIN_AVATAR_PERCENTAGE_SIZE   = 0.3f;
     private final static int EXTRA_FINAL_AVATAR_PADDING     = 80;
 
@@ -50,12 +50,12 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<SimpleDraweeView> 
     private int mFinalXPosition;
 
     @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, SimpleDraweeView child, View dependency) {
+    public boolean layoutDependsOn(CoordinatorLayout parent, ImageView child, View dependency) {
         return dependency instanceof Toolbar;
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, SimpleDraweeView child, View dependency) {
+    public boolean onDependentViewChanged(CoordinatorLayout parent, ImageView child, View dependency) {
         maybeInitProperties(child, dependency);
 
         final int maxScrollDistance = (int) (mStartToolbarPosition - getStatusBarHeight());
@@ -82,7 +82,7 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<SimpleDraweeView> 
     }
 
     @SuppressLint("PrivateResource")
-    private void maybeInitProperties(SimpleDraweeView child, View dependency) {
+    private void maybeInitProperties(ImageView child, View dependency) {
         if (mStartYPosition == 0)
             mStartYPosition = (int) (dependency.getY());
 

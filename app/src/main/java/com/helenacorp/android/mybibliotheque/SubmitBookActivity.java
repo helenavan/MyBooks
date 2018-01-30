@@ -134,7 +134,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 imguri = data.getData();
                 try {
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                   // mImageBook.setVisibility(View.INVISIBLE);
+                    // mImageBook.setVisibility(View.INVISIBLE);
+                    mImageBookVisible.setMaxWidth(200);
+                    mImageBookVisible.setMaxHeight(300);
                     mImageBookVisible.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
@@ -160,7 +162,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 toast.show();
             }
         } else {
-            if(mImageBookVisible != null) sendBookcover();
+            if (mImageBookVisible != null) sendBookcover();
         }
     }
 
@@ -177,7 +179,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 if (dataSnapshot.exists()) {
                     Toast.makeText(SubmitBookActivity.this, R.string.toast, Toast.LENGTH_SHORT).show();
                 } else {
-                    if(mImageBookVisible != null) sendBookcover();
+                    if (mImageBookVisible != null) sendBookcover();
                 }
             }
 
@@ -189,9 +191,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+    //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
     public void sendBookcover() {
         final String userName = user.getDisplayName();
-       // mImageBookVisible.setImageBitmap(null);
+        // mImageBookVisible.setImageBitmap(null);
         mImageBookVisible.setDrawingCacheEnabled(true);
         mImageBookVisible.buildDrawingCache();
         Bitmap bitmap = mImageBookVisible.getDrawingCache();
@@ -224,9 +227,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public void clearEditText(EditText editText) {
         editText.setText("");
     }
-    public void cleanText(TextView textView){textView.setText("");}
-    public void cleanCouv(ImageView img){
-        if(img != null){
+
+    public void cleanText(TextView textView) {
+        textView.setText("");
+    }
+
+    public void cleanCouv(ImageView img) {
+        if (img != null) {
             img.setImageBitmap(null);
             img.getDrawingCache(false);
         }
@@ -234,7 +241,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        if(view == btnVerif){
+        if (view == btnVerif) {
             new FetchBookTask().execute(getISBN());
         }
         if (view == btnAdd) {
@@ -302,6 +309,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    //récupère les infos sur google books
     class FetchBookTask extends AsyncTask<String, Void, BookModel> {
 
         @Override
@@ -321,20 +329,19 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 if (book != null) {
                     //showMessage("Got book: " + book.getTitle());
                     titleName.setText(book.getTitle());
-                    lastName.setText(book.getAuthors().get(0).toString());
-                    if (book.getDescription() != null) {
+                    if (book.getDescription() != null || book.getAuthors() != null || book.getImageLinks().getThumbnail() != null) {
+                        lastName.setText(book.getAuthors().get(0).toString());
                         resum.setText(book.getDescription().toString());
-                    } else if (book.getImageLinks().getThumbnail() != null) {
-                        Picasso.with(getApplicationContext())
+                        mImageBookVisible.setAdjustViewBounds(true);
+                        Picasso.with(SubmitBookActivity.this)
                                 .load(book.getImageLinks().getThumbnail())
-                                .placeholder(R.drawable.account_icon)
                                 .error(R.drawable.account_icon)
                                 .into(mImageBookVisible);
                     }
                 } else {
-                    showMessage("Failed to fetch book");
+                    showMessage("Ce livre n'ai pas dans la base de données");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.e("Tag", "====>image");
             }
         }

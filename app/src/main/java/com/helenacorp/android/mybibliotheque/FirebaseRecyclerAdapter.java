@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.database.ChildEventListener;
@@ -19,8 +21,10 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
     private Query mQuery;
     private int mLayout;
+    private LayoutInflater mInflater;
     private Class<BookModel> mModelClass;
     private ArrayList<BookModel> mItems;
+    private ArrayList<BookModel>mItemCopy;
     private ArrayList<String> mKeys;
     private ChildEventListener mListener = new ChildEventListener() {
         @Override
@@ -33,6 +37,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 int insertedPosition;
                 if (previousChildName == null) {
                     mItems.add(0, item);
+                    mItemCopy.add(0,item);
                     mKeys.add(0, key);
                     insertedPosition = 0;
                 } else {
@@ -40,9 +45,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mItems.size()) {
                         mItems.add(item);
+                        mItemCopy.add(item);
                         mKeys.add(key);
                     } else {
                         mItems.add(nextIndex, item);
+                        mItemCopy.add(nextIndex,item);
                         mKeys.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
@@ -63,6 +70,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 BookModel newItem = getConvertedObject(dataSnapshot);
 
                 mItems.set(index, newItem);
+                mItemCopy.set(index, newItem);
 
                 notifyItemChanged(index);
                 itemChanged(oldItem, newItem, key, index);
@@ -122,14 +130,16 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     };
 
     public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
-        this(query, null, null);
+        this(query, (ArrayList<BookModel>) null, null, null);
     }
 
     public FirebaseRecyclerAdapter(Query mQuery, Class<BookModel> mModelClass, int mLayout, Activity activity) {
         this.mQuery = mQuery;
         this.mModelClass = mModelClass;
         this.mLayout = mLayout;
+        mInflater = activity.getLayoutInflater();
         mItems = new ArrayList<BookModel>();
+        mItemCopy = new ArrayList<>();
         mKeys = new ArrayList<String>();
 
         mQuery.addChildEventListener(mListener);
@@ -151,18 +161,21 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
 
     public FirebaseRecyclerAdapter(Query mQuery,
-                                   @Nullable ArrayList<BookModel> items,
+                                   @Nullable ArrayList<BookModel> items,@Nullable ArrayList<BookModel> itemCopy,
                                    @Nullable ArrayList<String> keys) {
         this.mQuery = mQuery;
         if (items != null && keys != null) {
             this.mItems = items;
+            this.mItemCopy = itemCopy;
             this.mKeys = keys;
         } else {
             mItems = new ArrayList<BookModel>();
+            mItemCopy = new ArrayList<BookModel>();
             mKeys = new ArrayList<String>();
         }
         mQuery.addChildEventListener(mListener);
     }
+
 
     @Override
     public abstract ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
@@ -175,6 +188,16 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         return (mItems != null) ? mItems.size() : 0;
     }
 
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        if (view == null) {
+            view = mInflater.inflate(mLayout, viewGroup, false);
+        }
+
+        BookModel model = mItems.get(i);
+        // Call out to subclass to marshall this model into the provided view
+        populateView(view, model);
+        return view;
+    }
     /**
      * Clean the adapter.
      * ALWAYS call this method before destroying the adapter to remove the listener.
@@ -306,5 +329,21 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
     }
+
+    public void filter(String text) {
+        mItems.clear();
+        if(text.isEmpty()){
+            mItems.addAll(mItemCopy);
+        } else{
+            text = text.toLowerCase();
+            for(BookModel post : mItemCopy){
+                if(post.toString().toLowerCase().contains(text)){
+                    mItems.add(post);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+    protected abstract void populateView(View v, BookModel model);
 
 }

@@ -4,24 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/nested_container"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.helenacorp.android.mybibliotheque.BookDetailActivity"
     tools:showIn="@layout/activity_book_detail">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/nested_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <TextView
-        android:id="@id/autorLastName_item"
+        android:id="@+id/isbn_title_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:text="Isbn :  "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/resum_item"/>
 
     <TextView
         android:id="@+id/isbn_item"
@@ -30,15 +31,14 @@
         android:maxLength="13"
         android:text="isbn"
         android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@+id/autorLastName_item"
-        app:layout_constraintLeft_toRightOf="@+id/autorLastName_item"/>
+        app:layout_constraintBaseline_toBaselineOf="@+id/isbn_title_item"
+        app:layout_constraintLeft_toRightOf="@+id/isbn_title_item"/>
 
     <TextView
         android:id="@+id/resum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:maxLines="15"
         android:minLines="1"
         android:padding="8dp"
         android:scrollbars="vertical"
@@ -56,6 +56,7 @@
         android:numStars="5"
         android:rating="0"
         android:stepSize="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/isbn_title_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

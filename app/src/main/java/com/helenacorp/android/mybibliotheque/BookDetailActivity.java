@@ -13,14 +13,16 @@ import android.view.Menu;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 public class BookDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -34,14 +36,14 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
 
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
-   // private ImageView couv;
+    private ImageView couv;
     private TextView title, name, isbn, resume, title_two;
     private RatingBar ratingBar;
     ConstraintLayout constraintLayout;
     private FrameLayout framelayoutTitle;
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
-    private SimpleDraweeView couv;
+   // private SimpleDraweeView couv;
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -75,7 +77,14 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         name.setText(bundle.getString("name"));
         ratingBar.setRating(bundle.getFloat("rating"));
         String url = bundle.getString("couv");
-        Picasso.with(getApplicationContext()).load(url).into(couv);
+
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(R.color.bleu_gray)
+                .borderWidthDp(3)
+                .cornerRadiusDp(20)
+                .oval(false)
+                .build();
+        Picasso.with(getApplicationContext()).load(url).fit().transform(transformation).into(couv);
 
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
