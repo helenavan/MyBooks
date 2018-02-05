@@ -7,7 +7,7 @@
     </group>
     <group>
         <group>
-            <path android:fillColor="#F49D02"
+            <path android:fillColor="#98b7e3"
                 android:pathData="M 0,0 L 480,0 L 480,480 L 0,480 z" />
             <path android:fillColor="#DDDDDD" android:pathData="M215.391,291.047c0,0-32.285-23.598-89.945-16.963c-57.665,6.637-74.882,13.953-95.106,16.963
 				c0,0,19.366,2.584,46.91-2.579c27.539-5.166,101.558-17.646,135.125,3.226l6.023-0.647" />

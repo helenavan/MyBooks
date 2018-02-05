@@ -59,7 +59,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:gravity="bottom|center"
+                            android:fontFamily="@font/font_born"
                             android:text="Grumpy Cat"
+                            android:maxLines="1"
+                            android:maxLength="30"
+                            android:ellipsize="end"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginLeft="8dp"
                             android:textColor="@android:color/white"
                             android:textSize="25sp" />
 
@@ -69,7 +75,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="4dp"
+                            android:maxLines="1"
+                            android:maxLength="30"
+                            android:ellipsize="end"
                             android:text="The famous meme"
+                            android:fontFamily="@font/font_born"
                             android:textColor="@android:color/white" />
 
                     </LinearLayout>
@@ -106,6 +116,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/font_born"
+                    android:maxLines="1"
+                    android:maxLength="30"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="Grumpy Cat information"
                     android:textColor="@android:color/white"
@@ -114,12 +128,14 @@
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
+
         <ImageView
             android:id="@+id/pic_item"
             android:layout_width="@dimen/image_width"
-            android:layout_height="@dimen/image_width"
+            android:layout_height="106dp"
             android:layout_gravity="center"
-            app:layout_behavior="com.helenacorp.android.mybibliotheque.UI.ImageBehavior"/>
+            app:layout_behavior="com.helenacorp.android.mybibliotheque.UI.ImageBehavior"
+            tools:layout_editor_absoluteY="233dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

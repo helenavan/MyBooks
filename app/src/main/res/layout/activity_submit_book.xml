@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/EditTextHint"
     tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_activitySubmit"
+        style="@style/ToolBarStyle.Event"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/orangeD"
@@ -31,6 +31,7 @@
         android:inputType="text"
         android:lines="1"
         android:maxLines="1"
+        android:theme="@style/EditTextHint"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_activitySubmit" />
@@ -48,26 +49,26 @@
         android:inputType="text"
         android:lines="1"
         android:maxLines="1"
+        android:theme="@style/EditTextHint"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_submit" />
 
     <Button
-        android:id="@+id/btn_add_submit"
+        android:id="@+id/btn_clean_submit"
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginStart="15dp"
         android:layout_marginTop="24dp"
-        android:text="@string/btn_add"
+        android:text="@string/btn_clean"
         android:textColor="@color/bleud"
-        app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_verify_isbn_submit"
-        app:layout_constraintTop_toBottomOf="@+id/submit_viewpic" />
+        app:layout_constraintTop_toBottomOf="@+id/submit_viewpic"
+        app:layout_constraintVertical_bias="0.777" />
 
     <Button
         android:id="@+id/btn_verify_isbn_submit"
@@ -77,28 +78,25 @@
         android:layout_marginRight="15dp"
         android:text="@string/btn_verif"
         android:textColor="@color/bleud"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_add_submit"
-        app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
-        app:layout_constraintLeft_toRightOf="@+id/btn_add_submit"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_clean_submit"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
+        app:layout_constraintLeft_toRightOf="@+id/btn_clean_submit"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/btn_clean_submit"
+        android:id="@+id/btn_add_submit"
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="111dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/btn_clean"
+        android:layout_marginTop="15dp"
+        android:text="@string/btn_add"
         android:textColor="@color/bleud"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add_submit" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <EditText
         android:id="@+id/isbn"
@@ -109,6 +107,7 @@
         android:hint="@string/isbn"
         android:inputType="number"
         android:maxLines="1"
+        android:theme="@style/EditTextHint"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/submit_btn_isbn"
         app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
@@ -149,7 +148,8 @@
         android:numStars="5"
         android:rating="1"
         android:stepSize="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
+        android:theme="@style/RatingBar"
+        app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isbn"
@@ -161,6 +161,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/ic_camera_alt_yellow_700_24dp"
+        android:backgroundTint="@color/bleu"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/submit_viewpic"
         app:layout_constraintLeft_toRightOf="@+id/submit_viewpic"
@@ -177,7 +178,8 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/submit_photoView"
-        app:layout_constraintTop_toBottomOf="@+id/submit_rating" />
+        app:layout_constraintTop_toBottomOf="@+id/submit_rating"
+        app:layout_constraintVertical_bias="0.185" />
 
 
 </android.support.constraint.ConstraintLayout>

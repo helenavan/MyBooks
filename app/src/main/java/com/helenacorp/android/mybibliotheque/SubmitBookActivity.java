@@ -1,7 +1,9 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -63,6 +65,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private Uri imguri;
     private DatabaseReference databaseReference;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +107,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -311,7 +315,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     //récupère les infos sur google books
     class FetchBookTask extends AsyncTask<String, Void, BookModel> {
-
+        private ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute(){
+            progressDialog = new ProgressDialog(SubmitBookActivity.this);
+            progressDialog.setMessage("recherche dans la base de données");
+            progressDialog.show();
+        }
         @Override
         protected BookModel doInBackground(String... params) {
             final String isbn = params[0];
@@ -337,13 +347,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                                 .load(book.getImageLinks().getThumbnail())
                                 .error(R.drawable.account_icon)
                                 .into(mImageBookVisible);
+
                     }
                 } else {
                     showMessage("Ce livre n'ai pas dans la base de données");
                 }
             } catch (Exception e) {
                 Log.e("Tag", "====>image");
-            }
+            }progressDialog.dismiss();
         }
     }
 }

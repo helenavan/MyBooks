@@ -20,6 +20,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:text="Isbn :  "
+        android:fontFamily="@font/font_born"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/resum_item"/>
@@ -30,20 +31,22 @@
         android:layout_height="wrap_content"
         android:maxLength="13"
         android:text="isbn"
+        android:fontFamily="@font/font_born"
         android:textStyle="italic"
         app:layout_constraintBaseline_toBaselineOf="@+id/isbn_title_item"
         app:layout_constraintLeft_toRightOf="@+id/isbn_title_item"/>
 
-    <TextView
-        android:id="@+id/resum_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:minLines="1"
-        android:padding="8dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/ratingbar"
-        app:layout_constraintTop_toBottomOf="@+id/isbn_item" />
+        <TextView
+            android:id="@+id/resum_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/font_born"
+            android:minLines="1"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/ratingbar"
+            app:layout_constraintTop_toBottomOf="@+id/isbn_item" />
 
     <RatingBar
         android:id="@+id/ratingbar"

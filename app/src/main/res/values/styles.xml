@@ -13,7 +13,8 @@
 
     <style name="EditTextHint" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@android:color/white</item>
-        <item name="android:textColorHint">@color/Line</item>
+        <item name="android:textColorHint">@color/bleu</item>
+        <item name="android:fontFamily">@font/font_born</item>
         <item name="colorControlNormal">@color/vertD</item>
         <item name="colorControlActivated">@color/orangeD</item>
         <item name="colorControlHighlight">@color/Highlight</item>
@@ -23,6 +24,7 @@
     <style name="buttonTheme" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:fontFamily">@font/font_born</item>
         <item name="android:shadowColor">#FF000000</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">-1.5</item>
@@ -49,5 +51,28 @@
 
     <style name="AppThemeBase.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--Toolbar style-->
+    <style name="ToolBarStyle" parent="ToolBarStyle.Base"/>
+
+    <style name="ToolBarStyle.Base" parent="">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="ToolBarStyle.Event" parent="ToolBarStyle">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Event.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <!--Any text styling can be done here-->
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/font_skybird</item>
+    </style>
+
+    <!--rating bar-->
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/bleu</item>
+        <item name="colorControlActivated">@color/bleud</item>
+    </style>
 
 </resources>

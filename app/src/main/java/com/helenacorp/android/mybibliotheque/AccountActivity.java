@@ -1,8 +1,10 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,7 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
 
@@ -56,6 +60,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private Uri imageUri;
     private Bitmap bitmap;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +69,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
-
-        //  mBar = (ProgressBar) findViewById(R.id.simpleProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -219,17 +222,19 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                // progressDialog.dismiss();
-                Picasso.with(AccountActivity.this)
-                        .load(uri)
-                        .into(userPic);
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(Color.WHITE)
+                        .borderWidthDp(3)
+                        .cornerRadiusDp(10)
+                        .oval(true)
+                        .build();
+                Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
             }
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                // progressDialog.dismiss();
                 // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -252,17 +257,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    // progressDialog.dismiss();
                     Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // progressDialog.dismiss();
-                    // mBar.setVisibility(View.VISIBLE);
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    //sendMsg("" + downloadUrl, 2);
                     Picasso.with(AccountActivity.this)
                             .load(downloadUrl)
                             .into(userPic);

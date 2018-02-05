@@ -75,8 +75,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     startActivity(intent);
                 } else {
                     // User is signed out
-                    messToast.setText(R.string.mlog_count);
-                    messageToast();
+                   // messToast.setText(R.string.mlog_count);
+                   // messageToast();
                 }
             }
         };
@@ -109,7 +109,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                             // Sign in success, update UI with the signed-in user's information
                             Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
                             startActivity(intent);
-                            messToast.setText("Bonjour" + mAuth.getCurrentUser().getDisplayName());
+                            messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
                             messageToast();
 
                         } else {

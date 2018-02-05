@@ -2,8 +2,10 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -40,8 +42,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnCreatAccount;
     private String displayName, useremail, password, name;
     private View viewLayout;
-    private TextView messToast;
+    private TextView messToast, txtTitle;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,16 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         LayoutInflater layoutInflater = getLayoutInflater();
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
         messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
-
+        txtTitle =findViewById(R.id.txt_signup);
         authName = findViewById(R.id.name_signup);
         authEmail = findViewById(R.id.email_signup);
         authPassw = findViewById(R.id.password_signup);
         authNameParent = findViewById(R.id.name_singup_parent);
         authEmailParent = findViewById(R.id.email_signup_parent);
         authPassParent = findViewById(R.id.password_signup_parent);
+
+        //Typeface typeface = Typeface.createFromAsset(getAssets(),"font/skybird.otf");
+        //txtTitle.setTypeface(typeface);
 
         btnCreatAccount = (Button) findViewById(R.id.btn_creatAccount);
         btnCreatAccount.setOnClickListener(this);

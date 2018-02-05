@@ -60,17 +60,12 @@
         <activity
             android:name=".ViewListBooksActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".AccountActivity"
             android:screenOrientation="portrait"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"
-                android:value="com.helenacorp.android.mybibliotheque.AccountActivity" />
+                android:resource="@xml/searchable" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
         </activity>
     </application>
 

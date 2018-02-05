@@ -1,7 +1,5 @@
 package com.helenacorp.android.mybibliotheque;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
@@ -52,11 +49,9 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, mOnBook);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(bookListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewListBooksActivity.this));
         bookListAdapter.notifyDataSetChanged();
-        //recyclerView.invalidate();
 
         btn = findViewById(R.id.btn_listbookcreat);
         btn.setOnClickListener(this);
@@ -65,6 +60,14 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        bookListAdapter.notifyDataSetChanged();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),AccountActivity.class));
+            }
+        });
         bookListAdapter.notifyDataSetChanged();
 
         // retrieve number of books in listview firebase
@@ -94,23 +97,23 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_view, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        // Assumes current activity is the searchable activity
-       // assert searchManager != null;
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+       // SearchManager searchManager =
+       //         (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        //searchView.setSearchableInfo(
+               // searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Query booksQuery = mDatabase.child("books").orderByChild("title").equalTo(newText);
+               // Query booksQuery = mDatabase.child("books").orderByChild("title").equalTo(newText);
                 bookListAdapter.filter(newText);
-                return true;
-
+                return false;
             }
         });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
