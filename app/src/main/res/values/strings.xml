@@ -20,6 +20,9 @@
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="error_name">En manque d\'imagination pour le pseudo?</string>
+    <string name="error_email">Est-ce un Email?</string>
+    <string name="error_password">Il faut 6 caractères, au moins!</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

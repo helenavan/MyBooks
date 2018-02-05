@@ -76,7 +76,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="4dp"
                             android:maxLines="1"
-                            android:maxLength="30"
+                            android:maxLength="35"
                             android:ellipsize="end"
                             android:text="The famous meme"
                             android:fontFamily="@font/font_born"

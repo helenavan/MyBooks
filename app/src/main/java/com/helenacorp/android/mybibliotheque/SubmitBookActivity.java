@@ -198,7 +198,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
     public void sendBookcover() {
         final String userName = user.getDisplayName();
-        // mImageBookVisible.setImageBitmap(null);
         mImageBookVisible.setDrawingCacheEnabled(true);
         mImageBookVisible.buildDrawingCache();
         Bitmap bitmap = mImageBookVisible.getDrawingCache();
@@ -340,7 +339,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                     //showMessage("Got book: " + book.getTitle());
                     titleName.setText(book.getTitle());
                     if (book.getDescription() != null || book.getAuthors() != null || book.getImageLinks().getThumbnail() != null) {
-                        lastName.setText(book.getAuthors().get(0).toString());
+                        lastName.setText(book.getAuthors().toString());
                         resum.setText(book.getDescription().toString());
                         mImageBookVisible.setAdjustViewBounds(true);
                         Picasso.with(SubmitBookActivity.this)

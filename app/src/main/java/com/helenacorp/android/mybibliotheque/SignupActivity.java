@@ -6,14 +6,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +41,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseUser user;
     private DatabaseReference ref;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private EditText authName, authEmail, authPassw;
+    private TextInputEditText authName, authEmail, authPassw;
     private TextInputLayout authNameParent, authEmailParent, authPassParent;
     private Button btnCreatAccount;
     private String displayName, useremail, password, name;
@@ -62,29 +66,38 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         authEmailParent = findViewById(R.id.email_signup_parent);
         authPassParent = findViewById(R.id.password_signup_parent);
 
-        //Typeface typeface = Typeface.createFromAsset(getAssets(),"font/skybird.otf");
-        //txtTitle.setTypeface(typeface);
-
         btnCreatAccount = (Button) findViewById(R.id.btn_creatAccount);
         btnCreatAccount.setOnClickListener(this);
+        authName.addTextChangedListener(new MyTextWatcher(authName));
+        authEmail.addTextChangedListener(new MyTextWatcher(authEmail));
+        authPassw.addTextChangedListener(new MyTextWatcher(authPassw));
 
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     public void validation() {
-        if (authName.getText().length() == 0 ||
+        if (!validateName()) {
+            return;
+        }
+
+        if (!validateEmail()) {
+            return;
+        }
+
+        if (!validatePassword()) {
+            return;
+        }
+        loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
+     /*   if (authName.getText().length() == 0 ||
                 authEmail.getText().length() == 0 || authPassw.getText().length() == 0) {
             messToast.setText(R.string.mlog_tss);
             messageToast();
         } else {
             loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
-        }
+        }*/
     }
 
     private void loginAccount(final String name, String email, String password) {
-        //showProgressDialog();
-
         // START create_user_with_email
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -116,7 +129,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             // If sign in fails, display a message to the user.
                         }
 
-                        //hideProgressDialog();
                     }
 
                 });
@@ -129,35 +141,50 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         toast1.show();
     }
 
-    public void validationAuth() {
-        useremail = authEmailParent.getEditText().getText().toString();
-        password = authPassParent.getEditText().getText().toString();
-        name = authNameParent.getEditText().getText().toString();
-        if (!validateEmail(useremail)) {
-            authEmailParent.setError("Not a valid email address!");
-        } else if (!validatePassword(password)) {
-            authPassParent.setError("Not a valid password!");
-        } else if (!validateName(name)) {
-            authNameParent.setError("pas bon");
+ private boolean validateName() {
+     if (authName.getText().toString().trim().length() < 3) {
+         authNameParent.setError(getString(R.string.error_name));
+         requestFocus(authName);
+         return false;
+     } else {
+         authNameParent.setErrorEnabled(false);
+     }
+
+     return true;
+ }
+    private boolean validatePassword() {
+        if (authPassw.getText().toString().trim().length() < 6) {
+            authPassParent.setError(getString(R.string.error_password));
+            requestFocus(authPassw);
+            return false;
         } else {
-            authNameParent.setErrorEnabled(false);
-            authEmailParent.setErrorEnabled(false);
             authPassParent.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+    public boolean validateEmail() {
+        String email = authEmail.getText().toString().trim();
+        if (email.isEmpty() || !isValidEmail(email)) {
+            authEmailParent.setError(getString(R.string.error_email));
+            requestFocus(authEmail);
+            return false;
+        } else {
+            authEmailParent.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
-    public boolean validateEmail(String email) {
-        matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    public boolean validatePassword(String password) {
-        return password.length() > 5;
-    }
-
-    public boolean validateName(String name) {
-        return name.length() > 1;
-    }
 
 /*
     @Override
@@ -178,7 +205,36 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         if (view == btnCreatAccount) {
             validation();
-            validationAuth();
+           // validationAuth();
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.name_signup:
+                    validateName();
+                    break;
+                case R.id.email_signup:
+                    validateEmail();
+                    break;
+                case R.id.password_signup:
+                    validatePassword();
+                    break;
+            }
         }
     }
 }
