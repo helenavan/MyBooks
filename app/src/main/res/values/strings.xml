@@ -5,7 +5,6 @@
     <string name="log_email">Votre email</string>
     <string name="log_password">Votre mot de passe</string>
     <string name="title_sub">Titre</string>
-    <string name="fistname_sub">Entrez le prénom de l\'auteur</string>
     <string name="lastname_sub">Auteur</string>
     <string name="isbn">scan n° isbn</string>
     <string name="toast">Ce livre est déjà dans votre bibliothèque</string>
@@ -13,13 +12,11 @@
     <string name="btn_add">Envoyer</string>
     <string name="btn_clean">Effacer</string>
     <string name="btn_verif">Vérifier isbn</string>
-    <string name="pdialog">je recherche dans la base de données</string>
     <!--activity_signup-->
     <string name="btn_creatAccount">Créez votre compte</string>
     <string name="hint_nom">Entrer votre nom ou pseudo</string>
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="error_name">En manque d\'imagination pour le pseudo?</string>
     <string name="error_email">Est-ce un Email?</string>
     <string name="error_password">Il faut 6 caractères, au moins!</string>
@@ -41,17 +38,13 @@
     <string name="drawer_photo">Ma photo</string>
     <string name="drawer_livres">Ajouter</string>
     <string name="drawer_deco">Déconnexion</string>
-    <string name="drawer_send">Envoyé</string>
 
     <!-- MainLoginActivity -->
-    <string name="mlog_deco">Veuillez vous reconnecter</string>
     <string name="mlog_tss">tsss tout n\'est pas là!!!</string>
     <string name="mlog_bvn">Bienvenue</string>
     <string name="mlog_count">Avez-vous bien un compte?</string>
 
-    <string name="mlog_ok">Authentification réussie</string>
     <string name="mlog_signup">Est-ce bien correcte?</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
 
 
 </resources>

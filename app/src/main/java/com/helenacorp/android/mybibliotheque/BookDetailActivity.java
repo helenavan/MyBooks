@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
@@ -43,6 +45,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private FrameLayout framelayoutTitle;
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
+    private FloatingActionButton edit_detail;
    // private SimpleDraweeView couv;
 
 
@@ -53,6 +56,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         Fresco.initialize(this);
         setContentView(R.layout.activity_book_detail);
 
+        edit_detail = findViewById(R.id.edit_detail);
         supportPostponeEnterTransition();
         BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
         couv = findViewById(R.id.pic_item);
@@ -90,6 +94,16 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
         startAlphaAnimation(title_two, 0, View.INVISIBLE);
+
+        edit_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resume.setCursorVisible(true);
+                resume.setFocusableInTouchMode(true);
+                resume.setInputType(InputType.TYPE_CLASS_TEXT);
+                resume.requestFocus(); //to trigger the soft input
+            }
+        });
 
     }
     @Override

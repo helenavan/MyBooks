@@ -29,14 +29,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    private Matcher matcher;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DatabaseReference ref;
@@ -58,7 +56,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         LayoutInflater layoutInflater = getLayoutInflater();
         viewLayout = layoutInflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_layout));
         messToast = (TextView) viewLayout.findViewById(R.id.toast_txt);
-        txtTitle =findViewById(R.id.txt_signup);
+        txtTitle = findViewById(R.id.txt_signup);
         authName = findViewById(R.id.name_signup);
         authEmail = findViewById(R.id.email_signup);
         authPassw = findViewById(R.id.password_signup);
@@ -88,13 +86,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
-     /*   if (authName.getText().length() == 0 ||
-                authEmail.getText().length() == 0 || authPassw.getText().length() == 0) {
-            messToast.setText(R.string.mlog_tss);
-            messageToast();
-        } else {
-            loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
-        }*/
     }
 
     private void loginAccount(final String name, String email, String password) {
@@ -141,17 +132,18 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         toast1.show();
     }
 
- private boolean validateName() {
-     if (authName.getText().toString().trim().length() < 3) {
-         authNameParent.setError(getString(R.string.error_name));
-         requestFocus(authName);
-         return false;
-     } else {
-         authNameParent.setErrorEnabled(false);
-     }
+    private boolean validateName() {
+        if (authName.getText().toString().trim().length() < 3) {
+            authNameParent.setError(getString(R.string.error_name));
+            requestFocus(authName);
+            return false;
+        } else {
+            authNameParent.setErrorEnabled(false);
+        }
 
-     return true;
- }
+        return true;
+    }
+
     private boolean validatePassword() {
         if (authPassw.getText().toString().trim().length() < 6) {
             authPassParent.setError(getString(R.string.error_password));
@@ -163,6 +155,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         return true;
     }
+
     public boolean validateEmail() {
         String email = authEmail.getText().toString().trim();
         if (email.isEmpty() || !isValidEmail(email)) {
@@ -205,7 +198,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         if (view == btnCreatAccount) {
             validation();
-           // validationAuth();
         }
     }
 
