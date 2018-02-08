@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="coloractivated">#cc3366</color>
     <color name="Highlight">#3b76ca</color>
     <color name="Line">#99cccc</color>
-    <color name="pressed">#b1bbca</color>
-    <color name="focused">#b7e398</color>
     <color name="darkgray1">#3d3d3d</color>
-    <color name="enabled">#4b81ce</color>
     <color name="focused2">#c6d7f0</color>
 
     <color name="orange">#e3c498</color>
-    <color name="rose">#e398b7</color>
     <color name="vert">#98e3c4</color>
     <color name="bleu">#98b7e3</color>
     <color name="bleu_gray">#a7bfc1</color>
@@ -27,7 +21,4 @@
     <color name="orangeD">#f49d02</color>
     <color name="rougeD">#F17402</color>
 
-    <color name="beige">#f4ece6</color>
-
-    <color name="actionbar">@android:color/transparent</color>
 </resources>

@@ -1,11 +1,8 @@
 package com.helenacorp.android.mybibliotheque;
 
-import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.database.ChildEventListener;
@@ -16,28 +13,82 @@ import com.google.firebase.database.Query;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 
-
+/**
+ * Created by Matteo on 24/08/2015.
+ * Updated on 19/06/2016 following https://firebase.google.com/support/guides/firebase-android.
+ * <p>
+ * This class is a generic way of backing an Android RecyclerView with a Firebase location.
+ * It handles all of the child events at the given Firebase location.
+ * It marshals received data into the given class type.
+ * Extend this class and provide an implementation of the abstract methods, which will notify when
+ * the adapter list changes.
+ * <p>
+ * This class also simplifies the management of configuration change (e.g.: device rotation)
+ * allowing the restore of the list.
+ *
+ * @param <BookModel> The class type to use as a model for the data contained in the children of the
+ *            given Firebase location
+ */
 public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> {
 
     private Query mQuery;
-    private int mLayout;
-    private LayoutInflater mInflater;
-    private Class<BookModel> mModelClass;
     private ArrayList<BookModel> mItems;
-    private ArrayList<BookModel>mItemCopy;
+    private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
+
+    /**
+     * @param query The Firebase location to watch for data changes.
+     *              Can also be a slice of a location, using some combination of
+     *              <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
+     * @param bookModelArrayList
+     * @param keys
+     * @param bookItemClick
+     */
+    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
+        this(query, (ArrayList<BookModel>) null, null, null);
+    }
+
+    /**
+     * @param query The Firebase location to watch for data changes.
+     *              Can also be a slice of a location, using some combination of
+     *              <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
+     * @param items List of items that will load the adapter before starting the listener.
+     *              Generally null or empty, but this can be useful when dealing with a
+     *              configuration change (e.g.: reloading the adapter after a device rotation).
+     *              Be careful: keys must be coherent with this list.
+     * @param keys  List of keys of items that will load the adapter before starting the listener.
+     *              Generally null or empty, but this can be useful when dealing with a
+     *              configuration change (e.g.: reloading the adapter after a device rotation).
+     *              Be careful: items must be coherent with this list.
+     */
+    public FirebaseRecyclerAdapter(Query query,
+                                   @Nullable ArrayList<BookModel> items,
+                                   @Nullable ArrayList<BookModel> itemsCopy,
+                                   @Nullable ArrayList<String> keys) {
+        this.mQuery = query;
+        if (items != null && keys != null) {
+            this.mItems = items;
+            this.mItemsCopy = items;
+            this.mKeys = keys;
+        } else {
+            mItems = new ArrayList<BookModel>();
+            mItemsCopy = new ArrayList<>();
+            mKeys = new ArrayList<String>();
+        }
+        query.addChildEventListener(mListener);
+    }
+
     private ChildEventListener mListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
             String key = dataSnapshot.getKey();
 
             if (!mKeys.contains(key)) {
-               // BookModel item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mModelClass);
                 BookModel item = getConvertedObject(dataSnapshot);
                 int insertedPosition;
                 if (previousChildName == null) {
                     mItems.add(0, item);
-                    mItemCopy.add(0,item);
+                    mItemsCopy.add(0,item);
                     mKeys.add(0, key);
                     insertedPosition = 0;
                 } else {
@@ -45,11 +96,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mItems.size()) {
                         mItems.add(item);
-                        mItemCopy.add(item);
+                        mItemsCopy.add(item);
                         mKeys.add(key);
                     } else {
                         mItems.add(nextIndex, item);
-                        mItemCopy.add(nextIndex,item);
+                        mItemsCopy.add(nextIndex,item);
                         mKeys.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
@@ -70,7 +121,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 BookModel newItem = getConvertedObject(dataSnapshot);
 
                 mItems.set(index, newItem);
-                mItemCopy.set(index, newItem);
+                mItemsCopy.set(index, newItem);
 
                 notifyItemChanged(index);
                 itemChanged(oldItem, newItem, key, index);
@@ -124,58 +175,10 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.e("", "Listen was cancelled, no more updates will occur.");
+            Log.e("FirebaseListAdapter", "Listen was cancelled, no more updates will occur.");
         }
 
     };
-
-    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
-        this(query, (ArrayList<BookModel>) null, null, null);
-    }
-
-    public FirebaseRecyclerAdapter(Query mQuery, Class<BookModel> mModelClass, int mLayout, Activity activity) {
-        this.mQuery = mQuery;
-        this.mModelClass = mModelClass;
-        this.mLayout = mLayout;
-        mInflater = activity.getLayoutInflater();
-        mItems = new ArrayList<BookModel>();
-        mItemCopy = new ArrayList<>();
-        mKeys = new ArrayList<String>();
-
-        mQuery.addChildEventListener(mListener);
-
-        /**
-         * @param query The Firebase location to watch for data changes.
-         *              Can also be a slice of a location, using some combination of
-         *              <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
-         * @param items List of items that will load the adapter before starting the listener.
-         *              Generally null or empty, but this can be useful when dealing with a
-         *              configuration change (e.g.: reloading the adapter after a device rotation).
-         *              Be careful: keys must be coherent with this list.
-         * @param keys  List of keys of items that will load the adapter before starting the listener.
-         *              Generally null or empty, but this can be useful when dealing with a
-         *              configuration change (e.g.: reloading the adapter after a device rotation).
-         *              Be careful: items must be coherent with this list.
-         */
-    }
-
-
-    public FirebaseRecyclerAdapter(Query mQuery,
-                                   @Nullable ArrayList<BookModel> items,@Nullable ArrayList<BookModel> itemCopy,
-                                   @Nullable ArrayList<String> keys) {
-        this.mQuery = mQuery;
-        if (items != null && keys != null) {
-            this.mItems = items;
-            this.mItemCopy = itemCopy;
-            this.mKeys = keys;
-        } else {
-            mItems = new ArrayList<BookModel>();
-            mItemCopy = new ArrayList<BookModel>();
-            mKeys = new ArrayList<String>();
-        }
-        mQuery.addChildEventListener(mListener);
-    }
-
 
     @Override
     public abstract ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
@@ -188,23 +191,12 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         return (mItems != null) ? mItems.size() : 0;
     }
 
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = mInflater.inflate(mLayout, viewGroup, false);
-        }
-
-        BookModel model = mItems.get(i);
-        // Call out to subclass to marshall this model into the provided view
-        populateView(view, model);
-        return view;
-    }
     /**
      * Clean the adapter.
      * ALWAYS call this method before destroying the adapter to remove the listener.
      */
     public void destroy() {
         mQuery.removeEventListener(mListener);
-        // mItems.clear();
     }
 
     /**
@@ -296,7 +288,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      * @param position Position of the removed item in the adapter
      */
     protected void itemRemoved(BookModel item, String key, int position) {
-
+        notifyDataSetChanged();
     }
 
     /**
@@ -314,7 +306,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     /**
      * Converts the data snapshot to generic object
      *
-     * @param snapshot com.helenacorp.android.mybibliotheque.SimpleScannerActivity.Result
+     * @param snapshot Result
      * @return Data converted
      */
     protected BookModel getConvertedObject(DataSnapshot snapshot) {
@@ -327,16 +319,15 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     @SuppressWarnings("unchecked")
     private Class<BookModel> getGenericClass() {
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-
     }
 
     public void filter(String text) {
         mItems.clear();
         if(text.isEmpty()){
-            mItems.addAll(mItemCopy);
+            mItems.addAll(mItemsCopy);
         } else{
             text = text.toLowerCase();
-            for(BookModel post : mItemCopy){
+            for(BookModel post : mItemsCopy){
                 if(post.toString().toLowerCase().contains(text)){
                     mItems.add(post);
                 }
@@ -344,6 +335,5 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         }
         notifyDataSetChanged();
     }
-    protected abstract void populateView(View v, BookModel model);
 
 }

@@ -1,19 +1,22 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,11 +70,11 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         name = findViewById(R.id.autorLastName_item);
         ratingBar = findViewById(R.id.ratingbar);
         constraintLayout = findViewById(R.id.container);
-        linearlayoutTitle = (LinearLayout)findViewById( R.id.linearlayout_title );
-        collapsing = (CollapsingToolbarLayout)findViewById( R.id.collapsing );
-        toolbar = (Toolbar)findViewById( R.id.toolbar );
-        appbar = (AppBarLayout)findViewById( R.id.app_bar );
-        Bundle bundle = getIntent().getExtras();
+        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
+        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        appbar = (AppBarLayout) findViewById(R.id.app_bar);
+        final Bundle bundle = getIntent().getExtras();
         //ok
         isbn.setText(bundle.getString("isbn"));
         title.setText(bundle.getString("title"));
@@ -98,14 +101,36 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         edit_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resume.setCursorVisible(true);
-                resume.setFocusableInTouchMode(true);
-                resume.setInputType(InputType.TYPE_CLASS_TEXT);
-                resume.requestFocus(); //to trigger the soft input
+                LayoutInflater layoutInflater = LayoutInflater.from(BookDetailActivity.this);
+                View view1 = layoutInflater.inflate(R.layout.dialog_detail,null);
+                final AlertDialog.Builder alertD = new AlertDialog.Builder(BookDetailActivity.this);
+                alertD.setView(view1);
+
+                EditText resume_dialog = view1.findViewById(R.id.resum_dialog);
+                resume_dialog.setText(resume.getText());
+                ImageView head = findViewById(R.id.head_dialog);
+                TextView headTxt = view1.findViewById(R.id.title_dialog);
+                headTxt.setText(title.getText());
+                alertD.setPositiveButton("Enregistrer\nles modifs", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //TODO
+                      //  sendResume(resume_dialog);
+                    }
+                });
+                alertD.setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog dialog = alertD.create();
+                dialog.show();
             }
         });
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -163,5 +188,13 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
+
+  /*  public void sendResume(final EditText info){
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        BookModel model = new BookModel(null,null,null,null,null,null,0.0f, null, info.getText().toString());
+       if(model.getInfo().toString() != null) {
+           databaseReference.child("books").child("info").setValue(model);
+       }
+    }*/
 
 }

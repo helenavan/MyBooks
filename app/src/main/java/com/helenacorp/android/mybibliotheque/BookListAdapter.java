@@ -197,10 +197,10 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         Log.d("MyAdapter", "Moved an item.");
     }
 
-    @Override
+  /*  @Override
     protected void populateView(View v, BookModel bookModel) {
 
-    }
+    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

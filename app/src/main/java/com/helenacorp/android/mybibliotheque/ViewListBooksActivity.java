@@ -114,7 +114,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             @Override
             public boolean onQueryTextChange(String newText) {
                // Query booksQuery = mDatabase.child("books").orderByChild("title").equalTo(newText);
-                bookListAdapter.filter(newText);
+              //  bookListAdapter.filter(newText);
                 return false;
             }
         });
