@@ -315,12 +315,14 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     //récupère les infos sur google books
     class FetchBookTask extends AsyncTask<String, Void, BookModel> {
         private ProgressDialog progressDialog;
+
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             progressDialog = new ProgressDialog(SubmitBookActivity.this);
             progressDialog.setMessage("recherche dans la base de données");
             progressDialog.show();
         }
+
         @Override
         protected BookModel doInBackground(String... params) {
             final String isbn = params[0];
@@ -353,7 +355,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 }
             } catch (Exception e) {
                 Log.e("Tag", "====>image");
-            }progressDialog.dismiss();
+            }
+            progressDialog.dismiss();
         }
     }
 }

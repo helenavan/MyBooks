@@ -48,7 +48,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     private Scene mScene2;
     private OnBookItemClick onBookItemClick;
     private ArrayList<BookModel> mItems = new ArrayList<>();
-    private ArrayList<BookModel>mItemCopy = new ArrayList<>();
+    private ArrayList<BookModel> mItemCopy = new ArrayList<>();
+    private String key;
 
     public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
                            OnBookItemClick bookItemClick) {
@@ -87,10 +88,10 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        final String idBooks = holder.txtTitle.getText().toString();
+        final String idBooks = holder.isbnNumber.getText().toString();
         Log.e("tag", idBooks);
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        final Query booksQuery = databaseReference.child("books").orderByChild("title").equalTo(idBooks);
+        final Query booksQuery = databaseReference.child("books").orderByChild("isbn").equalTo(idBooks);
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View view) {
@@ -146,7 +147,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                             R.layout.activity_view_list_books, holder.context);
                     mScene2 = Scene.getSceneForLayout(container,
                             R.layout.activity_book_detail, holder.context);
-                  //  goToScene2(view);
+                    //  goToScene2(view);
                     //send data to detailbookactivity
                     String img = model.getImageUrl();
                     String title = model.getTitle();
@@ -154,6 +155,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     String resume = model.getInfo();
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
+
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("name", nnam);
@@ -161,11 +163,13 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     intent.putExtra("isbn", isbn);
                     intent.putExtra("couv", img);
                     intent.putExtra("rating", rating);
+
                     holder.context.startActivity(intent);
                 }
             }
         });
     }
+
     //to use setTransitionManager
     public void goToScene1(View view) {
         mTransitionManager.transitionTo(mScene1);

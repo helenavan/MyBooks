@@ -41,8 +41,8 @@ public class BookModel {
         this.imageLinks = imageLinks;
     }
 
-    //bug du constructeur vise
-    BookModel() {
+    //bug du constructeur vide
+    public BookModel() {
 
     }
 
@@ -56,6 +56,10 @@ public class BookModel {
         this.userid = userid;
         this.rating = rating;
         this.imageUrl = imageUrl;
+        this.info = info;
+    }
+
+    public BookModel(String info){
         this.info = info;
     }
 

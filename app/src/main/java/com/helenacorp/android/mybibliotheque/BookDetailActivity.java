@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -24,6 +25,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -32,11 +37,11 @@ import com.squareup.picasso.Transformation;
 public class BookDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     public static final String EXTRA_CAR_ITEM = "com.helenacorp.android.mybibliotheque";
-    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
-    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
-    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
 
-    private boolean mIsTheTitleVisible          = false;
+    private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
 
     private AppBarLayout appbar;
@@ -49,7 +54,11 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
     private FloatingActionButton edit_detail;
-   // private SimpleDraweeView couv;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private String key;
+    private DatabaseReference ref;
+    // private SimpleDraweeView couv;
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -74,6 +83,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
+        //retrieve extra in bundle
         final Bundle bundle = getIntent().getExtras();
         //ok
         isbn.setText(bundle.getString("isbn"));
@@ -98,15 +108,19 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         setSupportActionBar(toolbar);
         startAlphaAnimation(title_two, 0, View.INVISIBLE);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getUid());
+
         edit_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LayoutInflater layoutInflater = LayoutInflater.from(BookDetailActivity.this);
-                View view1 = layoutInflater.inflate(R.layout.dialog_detail,null);
+                View view1 = layoutInflater.inflate(R.layout.dialog_detail, null);
                 final AlertDialog.Builder alertD = new AlertDialog.Builder(BookDetailActivity.this);
                 alertD.setView(view1);
 
-                EditText resume_dialog = view1.findViewById(R.id.resum_dialog);
+                final EditText resume_dialog = view1.findViewById(R.id.resum_dialog);
                 resume_dialog.setText(resume.getText());
                 ImageView head = findViewById(R.id.head_dialog);
                 TextView headTxt = view1.findViewById(R.id.title_dialog);
@@ -115,7 +129,26 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //TODO
-                      //  sendResume(resume_dialog);
+                        //code tout moche
+                        String url = bundle.getString("couv");
+                        Transformation transformation = new RoundedTransformationBuilder()
+                                .borderColor(R.color.bleu_gray)
+                                .borderWidthDp(3)
+                                .cornerRadiusDp(20)
+                                .oval(false)
+                                .build();
+                        Picasso.with(getApplicationContext()).load(url).fit().transform(transformation).into(couv);
+
+                        Intent intent = new Intent(BookDetailActivity.this, BookDetailActivity.class);
+                        String updateR = resume_dialog.getText().toString();
+                        intent.putExtra("info", updateR);
+                        intent.putExtra("title", title.getText());
+                        intent.putExtra("name", name.getText());
+                        intent.putExtra("isbn", isbn.getText());
+                        intent.putExtra("couv", url);
+                        intent.putExtra("rating", ratingBar.getRating());
+                        startActivity(intent);
+                        // ref.child("books").child(key).setValue(updateR);
                     }
                 });
                 alertD.setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
@@ -149,7 +182,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
 
-            if(!mIsTheTitleVisible) {
+            if (!mIsTheTitleVisible) {
                 startAlphaAnimation(title_two, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleVisible = true;
             }
@@ -165,13 +198,12 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
 
     private void handleAlphaOnTitle(float percentage) {
         if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
-            if(mIsTheTitleContainerVisible) {
+            if (mIsTheTitleContainerVisible) {
                 startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
                 mIsTheTitleContainerVisible = false;
             }
 
         } else {
-
             if (!mIsTheTitleContainerVisible) {
                 startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleContainerVisible = true;
@@ -179,22 +211,14 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         }
     }
 
-    public static void startAlphaAnimation (View v, long duration, int visibility) {
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation;
         if (visibility == View.VISIBLE) alphaAnimation = new AlphaAnimation(0f, 1f);
         else alphaAnimation = new AlphaAnimation(1f, 0f);
-
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
 
-  /*  public void sendResume(final EditText info){
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        BookModel model = new BookModel(null,null,null,null,null,null,0.0f, null, info.getText().toString());
-       if(model.getInfo().toString() != null) {
-           databaseReference.child("books").child("info").setValue(model);
-       }
-    }*/
 
 }
