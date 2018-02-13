@@ -45,6 +45,8 @@ import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SubmitBookActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -205,10 +207,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
-        StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + lastName.getText().toString() + ".jpg");
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books").push();
+        final StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + lastName.getText().toString() + ".jpg");
         byte[] data = baos.toByteArray();
-        UploadTask uploadTask = userPic.putBytes(data);
+        final UploadTask uploadTask = userPic.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -217,11 +219,21 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                String imageDownloadUrl=taskSnapshot.getDownloadUrl().toString();
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
-                String uploadId = databaseReference.push().getKey();
-                databaseReference.child(uploadId).setValue(bookModel);
+               // databaseReference.push();
+                Map<String, Object> map = new HashMap<>();
+                map.put("title", bookModel.getTitle());
+                map.put("isbn", bookModel.getIsbn());
+                map.put("lastnameAutor", bookModel.getLastnameAutor());
+                map.put("rating", bookModel.getRating());
+                map.put("imageUrl", bookModel.getImageUrl());
+                map.put("info",bookModel.getInfo());
+                map.put("id", databaseReference.getKey());
+                databaseReference.setValue(map);
+                //databaseReference.setValue(bookModel);
                 Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
         });

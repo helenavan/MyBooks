@@ -2,7 +2,6 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -91,9 +90,9 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         title_two.setText(bundle.getString("title"));
         resume.setText(bundle.getString("info"));
         resume.setMovementMethod(new ScrollingMovementMethod());
-        name.setText(bundle.getString("name"));
+        name.setText(bundle.getString("lastnameAutor"));
         ratingBar.setRating(bundle.getFloat("rating"));
-        String url = bundle.getString("couv");
+        String url = bundle.getString("imageUrl");
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(R.color.bleu_gray)
@@ -110,7 +109,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getUid());
+        ref = FirebaseDatabase.getInstance().getReference("users").child(mUser.getUid()).child("books");
 
         edit_detail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,25 +129,8 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //TODO
                         //code tout moche
-                        String url = bundle.getString("couv");
-                        Transformation transformation = new RoundedTransformationBuilder()
-                                .borderColor(R.color.bleu_gray)
-                                .borderWidthDp(3)
-                                .cornerRadiusDp(20)
-                                .oval(false)
-                                .build();
-                        Picasso.with(getApplicationContext()).load(url).fit().transform(transformation).into(couv);
+                        String updateRemu = resume_dialog.getText().toString();
 
-                        Intent intent = new Intent(BookDetailActivity.this, BookDetailActivity.class);
-                        String updateR = resume_dialog.getText().toString();
-                        intent.putExtra("info", updateR);
-                        intent.putExtra("title", title.getText());
-                        intent.putExtra("name", name.getText());
-                        intent.putExtra("isbn", isbn.getText());
-                        intent.putExtra("couv", url);
-                        intent.putExtra("rating", ratingBar.getRating());
-                        startActivity(intent);
-                        // ref.child("books").child(key).setValue(updateR);
                     }
                 });
                 alertD.setNegativeButton("Quitter", new DialogInterface.OnClickListener() {

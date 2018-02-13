@@ -151,17 +151,17 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     //send data to detailbookactivity
                     String img = model.getImageUrl();
                     String title = model.getTitle();
-                    String nnam = model.getLastnameAutor();
+                    String name = model.getLastnameAutor();
                     String resume = model.getInfo();
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
 
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
                     intent.putExtra("title", title);
-                    intent.putExtra("name", nnam);
+                    intent.putExtra("lastnameAutor", name);
                     intent.putExtra("info", resume);
                     intent.putExtra("isbn", isbn);
-                    intent.putExtra("couv", img);
+                    intent.putExtra("imageUrl", img);
                     intent.putExtra("rating", rating);
 
                     holder.context.startActivity(intent);

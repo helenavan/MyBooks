@@ -264,8 +264,15 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Transformation transformation = new RoundedTransformationBuilder()
+                            .borderColor(R.color.bleu_gray)
+                            .borderWidthDp(3)
+                            .cornerRadiusDp(20)
+                            .oval(false)
+                            .build();
                     Picasso.with(AccountActivity.this)
                             .load(downloadUrl)
+                            .fit().transform(transformation)
                             .into(userPic);
                     Log.d("downloadUrl-->", "" + downloadUrl);
 
