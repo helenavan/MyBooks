@@ -33,6 +33,17 @@
             app:layout_constraintVertical_bias="1.0" />
     -->
     <ImageView
+        android:id="@+id/user_pic_bck"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="113dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/acc_profil"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/user_bcrg" />
+
+    <ImageView
         android:id="@+id/user_pic"
         android:layout_width="110dp"
         android:layout_height="110dp"
@@ -73,8 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="@string/acc_nom"
-            android:fontFamily="@font/font_born"/>
+            android:fontFamily="@font/font_born"
+            android:text="@string/acc_nom" />
     </LinearLayout>
 
     <LinearLayout
@@ -92,8 +103,8 @@
             android:id="@+id/user_book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/acc_books"
             android:fontFamily="@font/font_born"
+            android:text="@string/acc_books"
             app:layout_constraintTop_toBottomOf="@+id/user_bjr" />
 
         <TextView
@@ -101,19 +112,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="@string/acc_nbr"
             android:fontFamily="@font/font_born"
+            android:text="@string/acc_nbr"
             app:layout_constraintLeft_toRightOf="@+id/user_book"
             app:layout_constraintRight_toRightOf="parent" />
     </LinearLayout>
 
-        <include
-            layout="@layout/drawer_account"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <include
+        layout="@layout/drawer_account"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+                
 </android.support.constraint.ConstraintLayout>
 

@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -45,7 +46,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
 
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
-    private ImageView couv;
+    private ImageView couv, arrow;
     private TextView title, name, isbn, resume, title_two;
     private RatingBar ratingBar;
     ConstraintLayout constraintLayout;
@@ -67,6 +68,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         Fresco.initialize(this);
         setContentView(R.layout.activity_book_detail);
 
+        arrow = findViewById(R.id.arrow_detail);
         edit_detail = findViewById(R.id.edit_detail);
         supportPostponeEnterTransition();
         BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
@@ -144,11 +146,18 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
             }
         });
 
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookDetailActivity.this, ViewListBooksActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 

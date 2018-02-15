@@ -326,9 +326,9 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         if(text.isEmpty()){
             mItems.addAll(mItemsCopy);
         } else{
-            text = text.toLowerCase();
+            text = text.toLowerCase().trim();
             for(BookModel post : mItemsCopy){
-                if(post.toString().toLowerCase().contains(text)){
+                if(post.toString().contains(text)){
                     mItems.add(post);
                 }
             }

@@ -116,7 +116,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.menu_submit, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -129,6 +129,15 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_home:
+                Intent intent = new Intent(SubmitBookActivity.this, AccountActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_list:
+                Intent i = new Intent(SubmitBookActivity.this, ViewListBooksActivity.class);
+                startActivity(i);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -223,7 +232,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
-               // databaseReference.push();
                 Map<String, Object> map = new HashMap<>();
                 map.put("title", bookModel.getTitle());
                 map.put("isbn", bookModel.getIsbn());
@@ -233,7 +241,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 map.put("info",bookModel.getInfo());
                 map.put("id", databaseReference.getKey());
                 databaseReference.setValue(map);
-                //databaseReference.setValue(bookModel);
                 Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -299,7 +306,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             startActivityForResult(intent, 1);
         }
     }
-
+    //ouvre l'activité du scan code bar
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
