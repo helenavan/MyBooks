@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bckg_card"
+    android:background="@color/orange_light"
     android:orientation="vertical"
     tools:ignore="NamespaceTypo">
 
@@ -31,7 +31,8 @@
                     android:id="@+id/imageview_placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:background="@color/orangeD"
+                    android:background="@drawable/book7"
+                    android:alpha="0.8"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.9" />
 

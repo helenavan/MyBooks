@@ -10,11 +10,9 @@
         android:bottom="7dp"
         android:left="7dp"
         android:right="7dp"
-        android:top="7dp" />
-    <stroke
-        android:width="2dip"
-        android:color="#FFFFFF" />
-    -->
-    <solid android:color="@color/Line" />
+        android:top="7dp" /> -->
+    <solid
+        android:width="2dp"
+        android:color="@color/orange"  />
     <corners android:radius="8dp" />
 </shape>

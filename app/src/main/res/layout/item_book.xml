@@ -14,7 +14,7 @@
         android:transitionName="profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bckg_card"
+        android:background="@color/orange_light"
         android:orientation="vertical"
         android:padding="2dp">
 
@@ -85,6 +85,7 @@
             android:numStars="5"
             android:rating="0"
             android:stepSize="0.5"
+            android:theme="@style/RatingBar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/pic_item"
             app:layout_constraintStart_toStartOf="@id/pic_item"

@@ -74,7 +74,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         holder.pic.getContext();
 
         Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(R.color.bleu_gray)
+                .borderColor(R.color.vertD)
                 .borderWidthDp(3)
                 .cornerRadiusDp(30)
                 .oval(false)

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/orange_light"
     tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
 
     <android.support.v7.widget.Toolbar
@@ -24,7 +25,8 @@
     <EditText
         android:id="@+id/title_submit"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
+        android:background="@drawable/background_edit"
         android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -42,7 +44,8 @@
     <EditText
         android:id="@+id/autorLastName_submit"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
+        android:background="@drawable/background_edit"
         android:layout_marginEnd="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -65,8 +68,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/btn_clean"
-        android:textColor="@color/bleud"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_verify_isbn_submit"
@@ -80,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"
         android:text="@string/btn_verif"
-        android:textColor="@color/bleud"
+        android:textColor="@color/white"
         app:layout_constraintBaseline_toBaselineOf="@+id/btn_clean_submit"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
         app:layout_constraintLeft_toRightOf="@+id/btn_clean_submit"
@@ -95,8 +99,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
+        android:background="@drawable/btn_connexion"
         android:text="@string/btn_add"
-        android:textColor="@color/bleud"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -104,7 +109,8 @@
     <EditText
         android:id="@+id/isbn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
+        android:background="@drawable/background_edit"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="14dp"
         android:hint="@string/isbn"
@@ -146,7 +152,7 @@
         style="?android:attr/ratingBarStyleIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
@@ -156,7 +162,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isbn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.04" />
 
     <ImageView
         android:id="@+id/submit_photoView"

@@ -6,9 +6,9 @@
         android:centerColor="#0000CC"
         android:endColor="#00CCFF"
         android:angle="90"/> -->
-    <stroke
+    <solid
         android:width="2dp"
-        android:color="@color/bleud" />
+        android:color="@color/orangeD" />
     <padding
         android:bottom="7dp"
         android:left="7dp"

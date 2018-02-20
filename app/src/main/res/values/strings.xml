@@ -9,11 +9,11 @@
     <string name="isbn">scan n° isbn</string>
     <string name="toast">Ce livre est déjà dans votre bibliothèque</string>
     <string name="toast_2">"Ha! N'avez-vous pas oublié quelque chose?"</string>
-    <string name="btn_add">Envoyer</string>
+    <string name="btn_add">Enregistrer</string>
     <string name="btn_clean">Effacer</string>
     <string name="btn_verif">Vérifier isbn</string>
     <!--activity_signup-->
-    <string name="btn_creatAccount">Créez votre compte</string>
+    <string name="btn_creatAccount">Créer</string>
     <string name="hint_nom">Entrer votre nom ou pseudo</string>
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>

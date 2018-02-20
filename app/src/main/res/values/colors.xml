@@ -17,8 +17,10 @@
 
     <color name="bleud">#0443BE</color>
     <color name="bleuDd">#DAEBF3</color>
-    <color name="vertD">#8BC243</color>
+    <color name="vertD">#06af7f</color>
     <color name="orangeD">#f49d02</color>
+    <color name="orange_light">#fdf5ec</color>
     <color name="rougeD">#F17402</color>
+    <color name="white">#ffffff</color>
 
 </resources>
