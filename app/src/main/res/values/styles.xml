@@ -53,17 +53,35 @@
 
     <style name="ToolBarStyle.Event" parent="ToolBarStyle">
         <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="TextAppearance.Widget.Event.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!--Any text styling can be done here-->
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/font_skybird</item>
     </style>
 
+    <!--toolbar account-->
+    <style name="ToolBarStyleAccount" parent="ToolBarStyle.BaseAccount" />
+
+    <style name="ToolBarStyle.BaseAccount" parent="">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:background">@drawable/toolbar_background</item>
+    </style>
+
+    <style name="ToolBarStyle.Account" parent="ToolBarStyleAccount">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>
+    </style>
+
+
     <!--rating bar-->
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/bleu</item>
+        <item name="colorControlNormal">@color/vertD</item>
         <item name="colorControlActivated">@color/vertD</item>
     </style>
 

@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -218,12 +220,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         StorageReference storageRef = firebaseStorage.getReference();
 
         storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onSuccess(Uri uri) {
                 Transformation transformation = new RoundedTransformationBuilder()
                         .borderColor(Color.WHITE)
                         .borderWidthDp(3)
-                        .cornerRadiusDp(10)
+                        .cornerRadiusDp(20)
                         .oval(true)
                         .build();
                 Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
@@ -258,14 +261,15 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                     Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Transformation transformation = new RoundedTransformationBuilder()
-                            .borderColor(R.color.bleu_gray)
+                            .borderColor(Color.WHITE)
                             .borderWidthDp(3)
-                            .cornerRadiusDp(20)
+                            .cornerRadiusDp(55)
                             .oval(false)
                             .build();
                     Picasso.with(AccountActivity.this)

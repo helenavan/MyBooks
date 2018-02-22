@@ -1,11 +1,14 @@
 package com.helenacorp.android.mybibliotheque;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +62,9 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //color arrow
+       // Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_arrow_back_orange);
+       // getSupportActionBar().setHomeAsUpIndicator(drawable);
 
         bookListAdapter.notifyDataSetChanged();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -95,34 +101,31 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_viewlist, menu);
-    /*    SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchActionBarItem = menu.findItem(R.id.search);
-        SearchView searchView =
-                (SearchView) searchActionBarItem.getActionView();
-        searchView.setIconifiedByDefault(true);
+        getMenuInflater().inflate(R.menu.menu_search_view, menu);
+
+        SearchManager searchManager =(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =(SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+       // searchView.setIconifiedByDefault(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                // filter recycler view when query submitted
+                bookListAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                // filter recycler view when text is changed
                // Query booksQuery = mDatabase.child("books").orderByChild("title").equalTo(newText);
-                if(TextUtils.isEmpty(newText)){
-                    bookListAdapter.filter("");
-                }else{
-                    bookListAdapter.filter(newText);
-                }
-
-                return true;
+                bookListAdapter.getFilter().filter(newText);
+                return false;
             }
-        });*/
-
+        });
         return true;
-
     }
 
     @Override

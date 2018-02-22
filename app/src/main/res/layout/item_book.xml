@@ -7,16 +7,16 @@
     card_view:cardCornerRadius="4dp"
     android:layout_marginBottom="5dp"
     android:clickable="true"
+
     android:orientation="vertical">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container"
         android:transitionName="profile"
+        android:background="@color/orange_light"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/orange_light"
-        android:orientation="vertical"
-        android:padding="2dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/pic_item"

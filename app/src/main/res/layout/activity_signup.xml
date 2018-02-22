@@ -7,6 +7,13 @@
     android:theme="@style/EditTextHint"
     android:background="@color/orange_light"
     tools:context="com.helenacorp.android.mybibliotheque.SignupActivity">
+    <ImageView
+        android:id="@+id/signup_bckgrd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/book3"
+        android:alpha="0.8"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/txt_signup"
@@ -18,6 +25,7 @@
         android:textAllCaps="false"
         android:textSize="40sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +48,7 @@
             android:id="@+id/name_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_account_box_white_24dp"
             android:hint="@string/hint_nom"
             android:inputType="text"
             android:maxLines="1" />
@@ -64,6 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_email"
+            android:drawableRight="@android:drawable/sym_action_email"
+            android:drawableTint="@color/white"
             android:inputType="textEmailAddress"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
@@ -86,6 +97,8 @@
             android:id="@+id/password_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@android:drawable/ic_secure"
+            android:drawableTint="@color/white"
             android:hint="@string/hint_passw"
             android:inputType="textPassword"
             android:maxLines="1" />

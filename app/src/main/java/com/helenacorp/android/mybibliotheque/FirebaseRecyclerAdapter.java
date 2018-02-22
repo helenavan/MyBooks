@@ -29,11 +29,10 @@ import java.util.ArrayList;
  * @param <BookModel> The class type to use as a model for the data contained in the children of the
  *            given Firebase location
  */
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> {
+public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder>{
 
     private Query mQuery;
     private ArrayList<BookModel> mItems;
-    private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
 
     /**
@@ -68,11 +67,9 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         this.mQuery = query;
         if (items != null && keys != null) {
             this.mItems = items;
-            this.mItemsCopy = items;
             this.mKeys = keys;
         } else {
             mItems = new ArrayList<BookModel>();
-            mItemsCopy = new ArrayList<>();
             mKeys = new ArrayList<String>();
         }
         query.addChildEventListener(mListener);
@@ -88,7 +85,6 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 int insertedPosition;
                 if (previousChildName == null) {
                     mItems.add(0, item);
-                    mItemsCopy.add(0,item);
                     mKeys.add(0, key);
                     insertedPosition = 0;
                 } else {
@@ -96,11 +92,9 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mItems.size()) {
                         mItems.add(item);
-                        mItemsCopy.add(item);
                         mKeys.add(key);
                     } else {
                         mItems.add(nextIndex, item);
-                        mItemsCopy.add(nextIndex,item);
                         mKeys.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
@@ -121,7 +115,6 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 BookModel newItem = getConvertedObject(dataSnapshot);
 
                 mItems.set(index, newItem);
-                mItemsCopy.set(index, newItem);
 
                 notifyItemChanged(index);
                 itemChanged(oldItem, newItem, key, index);
@@ -319,21 +312,6 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     @SuppressWarnings("unchecked")
     private Class<BookModel> getGenericClass() {
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-    }
-
-    public void filter(String text) {
-        mItems.clear();
-        if(text.isEmpty()){
-            mItems.addAll(mItemsCopy);
-        } else{
-            text = text.toLowerCase().trim();
-            for(BookModel post : mItemsCopy){
-                if(post.toString().contains(text)){
-                    mItems.add(post);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
 }

@@ -5,6 +5,6 @@
         android:id="@+id/action_home_list"
         android:orderInCategory="300"
         android:title="Home"
-        android:icon="@drawable/ic_home_white_24dp"
+        android:icon="@drawable/ic_home_orange"
         app:showAsAction="ifRoom" />
 </menu>

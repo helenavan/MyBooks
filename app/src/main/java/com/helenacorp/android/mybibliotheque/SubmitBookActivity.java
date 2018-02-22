@@ -109,7 +109,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activitySubmit);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //color arrow
+        //Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_arrow_back);
+        //getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
 
     @Override
@@ -256,7 +258,8 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     public void cleanCouv(ImageView img) {
         if (img != null) {
-            img.setImageBitmap(null);
+            img.setImageResource(R.drawable.vector_drawable_book_carre);
+           // img.setImageBitmap(null);
             img.getDrawingCache(false);
         }
     }

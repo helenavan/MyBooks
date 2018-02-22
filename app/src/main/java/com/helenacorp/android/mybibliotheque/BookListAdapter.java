@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -34,21 +36,22 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by helena on 09/08/2017.
  */
 
-public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel> {
+public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel> implements Filterable{
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private TransitionManager mTransitionManager;
     private Scene mScene1;
     private Scene mScene2;
     private OnBookItemClick onBookItemClick;
-    private ArrayList<BookModel> mItems = new ArrayList<>();
-    private ArrayList<BookModel> mItemCopy = new ArrayList<>();
+    private List<BookModel> mItems;
+    private List<BookModel> mItemFilter;
     private String key;
 
     public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
@@ -199,6 +202,41 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     @Override
     protected void itemMoved(BookModel item, String key, int oldPosition, int newPosition) {
         Log.d("MyAdapter", "Moved an item.");
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    mItemFilter = mItems;
+                } else {
+                    List<BookModel> filteredList = new ArrayList<>();
+                    for (BookModel row : mItems) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getTitle().toLowerCase().contains(charString.toLowerCase()) || row.getLastnameAutor().contains(charSequence)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    mItemFilter = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mItemFilter;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mItemFilter = (ArrayList<BookModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
   /*  @Override

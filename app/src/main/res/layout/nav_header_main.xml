@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/old_books"
+    android:alpha="0.8"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
