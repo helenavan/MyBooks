@@ -20,6 +20,8 @@ public class BookModel {
     private String isbn;
     private String lastnameAutor;
     private String userName;
+    @SerializedName("userid")
+    @Expose
     private String userid;
     private float rating;
     private String imageUrl;

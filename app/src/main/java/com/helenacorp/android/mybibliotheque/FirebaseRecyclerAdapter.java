@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +14,7 @@ import com.google.firebase.database.Query;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Matteo on 24/08/2015.
@@ -27,18 +30,21 @@ import java.util.ArrayList;
  * allowing the restore of the list.
  *
  * @param <BookModel> The class type to use as a model for the data contained in the children of the
- *            given Firebase location
+ *                    given Firebase location
  */
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder>{
+public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
 
     private Query mQuery;
     private ArrayList<BookModel> mItems;
+    private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
+    private CustomFilter filter;
+  //  private BookModelFilter mBook;
 
     /**
-     * @param query The Firebase location to watch for data changes.
-     *              Can also be a slice of a location, using some combination of
-     *              <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
+     * @param query              The Firebase location to watch for data changes.
+     *                           Can also be a slice of a location, using some combination of
+     *                           <code>limit()</code>, <code>startAt()</code>, and <code>endAt()</code>.
      * @param bookModelArrayList
      * @param keys
      * @param bookItemClick
@@ -67,9 +73,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         this.mQuery = query;
         if (items != null && keys != null) {
             this.mItems = items;
+            this.mItemsCopy = items;
             this.mKeys = keys;
         } else {
             mItems = new ArrayList<BookModel>();
+            mItemsCopy = new ArrayList<>();
             mKeys = new ArrayList<String>();
         }
         query.addChildEventListener(mListener);
@@ -85,6 +93,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 int insertedPosition;
                 if (previousChildName == null) {
                     mItems.add(0, item);
+                    mItemsCopy.add(0, item);
                     mKeys.add(0, key);
                     insertedPosition = 0;
                 } else {
@@ -92,9 +101,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                     int nextIndex = previousIndex + 1;
                     if (nextIndex == mItems.size()) {
                         mItems.add(item);
+                        mItemsCopy.add(item);
                         mKeys.add(key);
                     } else {
                         mItems.add(nextIndex, item);
+                        mItemsCopy.add(nextIndex, item);
                         mKeys.add(nextIndex, key);
                     }
                     insertedPosition = nextIndex;
@@ -115,6 +126,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 BookModel newItem = getConvertedObject(dataSnapshot);
 
                 mItems.set(index, newItem);
+                mItemsCopy.set(index, newItem);
 
                 notifyItemChanged(index);
                 itemChanged(oldItem, newItem, key, index);
@@ -144,10 +156,12 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
             int index = mKeys.indexOf(key);
             BookModel item = getConvertedObject(dataSnapshot);
             mItems.remove(index);
+            mItemsCopy.remove(index);
             mKeys.remove(index);
             int newPosition;
             if (previousChildName == null) {
                 mItems.add(0, item);
+                mItemsCopy.add(0, item);
                 mKeys.add(0, key);
                 newPosition = 0;
             } else {
@@ -155,9 +169,11 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
                 int nextIndex = previousIndex + 1;
                 if (nextIndex == mItems.size()) {
                     mItems.add(item);
+                    mItemsCopy.add(item);
                     mKeys.add(key);
                 } else {
                     mItems.add(nextIndex, item);
+                    mItemsCopy.add(nextIndex, item);
                     mKeys.add(nextIndex, key);
                 }
                 newPosition = nextIndex;
@@ -200,7 +216,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      *
      * @return the list of items of the adapter
      */
-    public ArrayList<BookModel> getItems() {
+    public List<BookModel> getItems() {
         return mItems;
     }
 
@@ -313,5 +329,29 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     private Class<BookModel> getGenericClass() {
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
+
+ /*   public void filter(String text) {
+        mItems.clear();
+        if(text.isEmpty()){
+            mItems.addAll(mItemsCopy);
+        } else{
+            text = text.toLowerCase();
+
+            for(BookModel item: mItemsCopy){
+                if(item.getClass().getName().contains(text)){
+                    mItems.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }*/
+    @SuppressWarnings("unchecked")
+    @Override
+    public Filter getFilter() {
+        if (filter == null)
+            filter = new CustomFilter(FirebaseRecyclerAdapter.this, (ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel>) mItemsCopy);
+        return filter;
+    }
+
 
 }

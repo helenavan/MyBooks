@@ -14,7 +14,7 @@
     <string name="btn_verif">Vérifier isbn</string>
     <!--activity_signup-->
     <string name="btn_creatAccount">Créer</string>
-    <string name="hint_nom">Entrer votre nom ou pseudo</string>
+    <string name="hint_nom">Entrez votre nom ou pseudo</string>
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>
     <string name="error_name">En manque d\'imagination pour le pseudo?</string>
@@ -45,6 +45,9 @@
     <string name="mlog_count">Avez-vous bien un compte?</string>
 
     <string name="mlog_signup">Est-ce bien correcte?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,9 @@ import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BookDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -56,10 +60,8 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton edit_detail;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private String key;
     private DatabaseReference ref;
-    // private SimpleDraweeView couv;
-
+    private String key;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -71,7 +73,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         arrow = findViewById(R.id.arrow_detail);
         edit_detail = findViewById(R.id.edit_detail);
         supportPostponeEnterTransition();
-        BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
+        final BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
         couv = findViewById(R.id.pic_item);
         isbn = findViewById(R.id.isbn_item);
         title = findViewById(R.id.title_item);
@@ -86,7 +88,6 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         //retrieve extra in bundle
         final Bundle bundle = getIntent().getExtras();
-        //ok
         isbn.setText(bundle.getString("isbn"));
         title.setText(bundle.getString("title"));
         title_two.setText(bundle.getString("title"));
@@ -94,7 +95,9 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         resume.setMovementMethod(new ScrollingMovementMethod());
         name.setText(bundle.getString("lastnameAutor"));
         ratingBar.setRating(bundle.getFloat("rating"));
-        String url = bundle.getString("imageUrl");
+        final String url = bundle.getString("imageUrl");
+        //retrieve key's child of books node
+        key = bundle.getString("userid");
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(R.color.bleu_gray)
@@ -127,12 +130,17 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                 TextView headTxt = view1.findViewById(R.id.title_dialog);
                 headTxt.setText(title.getText());
                 alertD.setPositiveButton("Enregistrer\nles modifs", new DialogInterface.OnClickListener() {
+                    //retrieve resume , change it, save in view and upgrade in firebase
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //TODO
-                        //code tout moche
-                        String updateRemu = resume_dialog.getText().toString();
-
+                        //pass de string key as child in datareference
+                        DatabaseReference infoDb = ref.child(key);
+                        String updateResum = resume_dialog.getText().toString();
+                        resume.setText(updateResum);
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("info", updateResum);
+                        infoDb.updateChildren(map);
+                        Toast.makeText(BookDetailActivity.this, "RE-enregistré", Toast.LENGTH_SHORT).show();
                     }
                 });
                 alertD.setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
@@ -144,6 +152,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                 AlertDialog dialog = alertD.create();
                 dialog.show();
             }
+
         });
 
         arrow.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +162,14 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                 startActivity(intent);
             }
         });
+    }
+
+    public static String EncodeString(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static String DecodeString(String string) {
+        return string.replace(",", ".");
     }
 
     @Override

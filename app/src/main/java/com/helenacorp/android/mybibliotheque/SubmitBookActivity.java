@@ -66,6 +66,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ImageView mImageBook, mImageBookVisible;
     private Uri imguri;
     private DatabaseReference databaseReference;
+    private int bookId;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -219,6 +220,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books").push();
+
         final StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + lastName.getText().toString() + ".jpg");
         byte[] data = baos.toByteArray();
         final UploadTask uploadTask = userPic.putBytes(data);
@@ -231,9 +233,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 String imageDownloadUrl=taskSnapshot.getDownloadUrl().toString();
-                BookModel bookModel = new BookModel(titleName.getText().toString().trim(), null, isbn.getText().toString(),
+                BookModel bookModel = new BookModel(titleName.getText().toString(), null, isbn.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
+                //keys = name's attribut
                 Map<String, Object> map = new HashMap<>();
                 map.put("title", bookModel.getTitle());
                 map.put("isbn", bookModel.getIsbn());
@@ -241,7 +244,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 map.put("rating", bookModel.getRating());
                 map.put("imageUrl", bookModel.getImageUrl());
                 map.put("info",bookModel.getInfo());
-                map.put("id", databaseReference.getKey());
+                map.put("userid", databaseReference.getKey());
                 databaseReference.setValue(map);
                 Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
             }

@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
@@ -90,6 +91,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             }
         });
         bookListAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -100,29 +102,42 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_view, menu);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        Query query = mDatabase.child("books").orderByChild("title");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot bookSnapshot : dataSnapshot.getChildren()) {
+                    bookSnapshot.getValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         SearchManager searchManager =(SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =(SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-       // searchView.setIconifiedByDefault(true);
+        searchView.setIconifiedByDefault(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 // filter recycler view when query submitted
-                bookListAdapter.getFilter().filter(query);
-                return false;
+               bookListAdapter.getFilter().filter(query);
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 // filter recycler view when text is changed
-               // Query booksQuery = mDatabase.child("books").orderByChild("title").equalTo(newText);
+               // newText.toUpperCase();
                 bookListAdapter.getFilter().filter(newText);
-                return false;
+                return true;
             }
         });
         return true;
