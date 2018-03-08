@@ -66,7 +66,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     private ImageView mImageBook, mImageBookVisible;
     private Uri imguri;
     private DatabaseReference databaseReference;
-    private int bookId;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -123,16 +122,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-  /*  public void onLaunchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(SubmitBookActivity.this.getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_home:
                 Intent intent = new Intent(SubmitBookActivity.this, AccountActivity.class);
                 startActivity(intent);
@@ -153,8 +145,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                     // mImageBook.setVisibility(View.INVISIBLE);
-                    mImageBookVisible.setMaxWidth(200);
-                    mImageBookVisible.setMaxHeight(300);
+                    mImageBookVisible.setMaxWidth(100);
+                    mImageBookVisible.setMaxHeight(100);
+                    mImageBookVisible.setAdjustViewBounds(true);
                     mImageBookVisible.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
@@ -232,7 +225,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                String imageDownloadUrl=taskSnapshot.getDownloadUrl().toString();
+                String imageDownloadUrl = taskSnapshot.getDownloadUrl().toString();
                 BookModel bookModel = new BookModel(titleName.getText().toString(), null, isbn.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
@@ -243,7 +236,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 map.put("lastnameAutor", bookModel.getLastnameAutor());
                 map.put("rating", bookModel.getRating());
                 map.put("imageUrl", bookModel.getImageUrl());
-                map.put("info",bookModel.getInfo());
+                map.put("info", bookModel.getInfo());
                 map.put("userid", databaseReference.getKey());
                 databaseReference.setValue(map);
                 Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
@@ -255,15 +248,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         editText.setText("");
     }
 
-    public void cleanText(TextView textView) {
-        textView.setText("");
-    }
-
     public void cleanCouv(ImageView img) {
         if (img != null) {
-            img.setImageResource(R.drawable.vector_drawable_book_carre);
-           // img.setImageBitmap(null);
-            img.getDrawingCache(false);
+            img.setImageResource(R.drawable.background_edit_submit);
+            img.setMaxHeight(100);
+            img.setMaxWidth(100);
+            img.setAdjustViewBounds(true);
+           // img.getDrawingCache(false);
         }
     }
 
@@ -291,9 +282,6 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void shooseToCamera() {
-       /* Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        Intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-        startActivityForResult(intent, 0);*/
         Intent intent = new Intent();
         //change intent.setType("images/*") by ("*/*")
         intent.setType("*/*");
@@ -312,6 +300,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             startActivityForResult(intent, 1);
         }
     }
+
     //ouvre l'activité du scan code bar
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
@@ -337,7 +326,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    //récupère les infos sur google books
+    //récupère/extrait les infos sur google books
     class FetchBookTask extends AsyncTask<String, Void, BookModel> {
         private ProgressDialog progressDialog;
 
@@ -366,14 +355,13 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                     //showMessage("Got book: " + book.getTitle());
                     titleName.setText(book.getTitle());
                     if (book.getDescription() != null || book.getAuthors() != null || book.getImageLinks().getThumbnail() != null) {
-                        lastName.setText(book.getAuthors().toString());
+                        lastName.setText(book.getAuthors().get(0).toString());
                         resum.setText(book.getDescription().toString());
                         mImageBookVisible.setAdjustViewBounds(true);
                         Picasso.with(SubmitBookActivity.this)
                                 .load(book.getImageLinks().getThumbnail())
-                                .error(R.drawable.account_icon)
+                                .error(R.drawable.acc_profil)
                                 .into(mImageBookVisible);
-
                     }
                 } else {
                     showMessage("Ce livre n'ai pas dans la base de données");

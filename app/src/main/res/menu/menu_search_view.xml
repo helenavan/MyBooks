@@ -5,7 +5,7 @@
     tools:context="com.helenacorp.android.mybibliotheque.ViewListBooksActivity">
     <item
         android:id="@+id/search"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:icon="@drawable/ic_search"
         android:title="Search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
@@ -13,6 +13,6 @@
         android:id="@+id/action_home_list"
         android:orderInCategory="300"
         android:title="Home"
-        android:icon="@drawable/ic_home_white"
+        android:icon="@drawable/ic_home"
         app:showAsAction="ifRoom" />
 </menu>

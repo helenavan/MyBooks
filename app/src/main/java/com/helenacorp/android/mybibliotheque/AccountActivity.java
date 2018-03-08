@@ -21,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -61,6 +63,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private FirebaseUser user;
     private Uri imageUri;
     private Bitmap bitmap;
+    private ImageView cloudL, cloudM, cloudR;
 
     @SuppressLint("ResourceType")
     @Override
@@ -71,6 +74,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
+        cloudL = findViewById(R.id.user_cloudL);
+        cloudM = findViewById(R.id.user_cloudM);
+        cloudR = findViewById(R.id.user_cloudR);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -133,6 +139,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        animateCloud(cloudL, 40000);
+        animateCloud(cloudM, 50000);
+        animateCloud(cloudR, 30000);
     }
 
     @Override
@@ -181,8 +191,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_send) {
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -304,6 +312,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             acc_numlist.setText(values);
         }*/
 
+    }
+
+    private void animateCloud(ImageView imageView, long duration){
+        Animation set =  AnimationUtils.loadAnimation(this,R.anim.cloud_right);
+        imageView.startAnimation(set);
+        set.setRepeatCount(Animation.INFINITE);
+        set.setDuration(duration);
     }
 
 }

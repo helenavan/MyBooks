@@ -6,16 +6,12 @@
     <color name="Highlight">#3b76ca</color>
     <color name="Line">#99cccc</color>
     <color name="darkgray1">#3d3d3d</color>
-    <color name="focused2">#c6d7f0</color>
 
     <color name="orange">#e3c498</color>
     <color name="vert">#98e3c4</color>
     <color name="bleu">#98b7e3</color>
     <color name="bleu_gray">#a7bfc1</color>
 
-    <color name="bckg_card">#ecf1f2</color>
-
-    <color name="bleud">#0443BE</color>
     <color name="bleuDd">#DAEBF3</color>
     <color name="vertD">#06af7f</color>
     <color name="orangeD">#f49d02</color>

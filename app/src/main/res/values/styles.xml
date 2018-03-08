@@ -64,19 +64,6 @@
     </style>
 
     <!--toolbar account-->
-    <style name="ToolBarStyleAccount" parent="ToolBarStyle.BaseAccount" />
-
-    <style name="ToolBarStyle.BaseAccount" parent="">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="android:background">@drawable/toolbar_background</item>
-    </style>
-
-    <style name="ToolBarStyle.Account" parent="ToolBarStyleAccount">
-        <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>
-    </style>
 
 
     <!--rating bar-->

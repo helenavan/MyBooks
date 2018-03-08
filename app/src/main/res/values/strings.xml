@@ -6,7 +6,7 @@
     <string name="log_password">Votre mot de passe</string>
     <string name="title_sub">Titre</string>
     <string name="lastname_sub">Auteur</string>
-    <string name="isbn">scan n° isbn</string>
+    <string name="isbn">Scanner le n° isbn</string>
     <string name="toast">Ce livre est déjà dans votre bibliothèque</string>
     <string name="toast_2">"Ha! N'avez-vous pas oublié quelque chose?"</string>
     <string name="btn_add">Enregistrer</string>
@@ -23,8 +23,6 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
 
     <!-- activity_account -->
     <string name="acc_upload">upload</string>
@@ -47,7 +45,6 @@
     <string name="mlog_signup">Est-ce bien correcte?</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
