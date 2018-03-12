@@ -128,7 +128,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                 AlertDialog dialog = builder.create();
                 dialog.setTitle("Confirmer");
                 dialog.show();
-
+                notifyDataSetChanged();
                 return true;
             }
 

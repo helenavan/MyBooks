@@ -145,9 +145,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                     // mImageBook.setVisibility(View.INVISIBLE);
-                    mImageBookVisible.setMaxWidth(100);
-                    mImageBookVisible.setMaxHeight(100);
+                    mImageBookVisible.setMaxWidth(80);
+                    mImageBookVisible.setMaxHeight(80);
                     mImageBookVisible.setAdjustViewBounds(true);
+                    mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     mImageBookVisible.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {
@@ -250,10 +251,11 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     public void cleanCouv(ImageView img) {
         if (img != null) {
-            img.setImageResource(R.drawable.background_edit_submit);
-            img.setMaxHeight(100);
-            img.setMaxWidth(100);
+            img.setImageResource(R.drawable.clean_image_submit);
+            img.setMaxWidth(80);
+            img.setMaxHeight(80);
             img.setAdjustViewBounds(true);
+            img.setScaleType(ImageView.ScaleType.CENTER);
            // img.getDrawingCache(false);
         }
     }

@@ -8,63 +8,67 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_list"
+        style="@style/ToolBarStyle.Event"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/rougeD"
-        style="@style/ToolBarStyle.Event"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.Toolbar>
-<!--
-    <Button
-        android:id="@+id/btn_listbookcreat"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/btn_list_add"
+    <!--
+        <Button
+            android:id="@+id/btn_listbookcreat"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/btn_list_add"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    -->
+    <android.support.v7.widget.SearchView
+        android:id="@+id/mSearch"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        app:defaultQueryHint="Search.."
+        android:background="@drawable/background_edit_submit"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_list"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
--->
+        app:layout_constraintRight_toRightOf="parent">
+
+    </android.support.v7.widget.SearchView>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingLeft="5dp"
         android:layout_marginTop="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_list">
+        app:layout_constraintTop_toBottomOf="@id/mSearch">
 
     </android.support.v7.widget.RecyclerView>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_listbookcreat"
-        android:layout_height="48dp"
         android:layout_width="48dp"
-        app:layout_anchorGravity="bottom|right|end"
+        android:layout_height="48dp"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:focusable="true"
+        android:scaleType="centerCrop"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_add_white_48dp"
-        android:scaleType="centerCrop"
-        app:backgroundTint="@color/colorAccent"
         tools:ignore="VectorDrawableCompat" />
-
-    <ProgressBar
-        android:id="@+id/progressBarListv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

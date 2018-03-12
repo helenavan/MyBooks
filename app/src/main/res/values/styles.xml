@@ -67,9 +67,5 @@
 
 
     <!--rating bar-->
-    <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/vertD</item>
-        <item name="colorControlActivated">@color/vertD</item>
-    </style>
 
 </resources>

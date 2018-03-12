@@ -6,7 +6,7 @@
     android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange_light"
+    android:background="@drawable/fond2"
     tools:context="com.helenacorp.android.mybibliotheque.AccountActivity">
 
     <ImageView
@@ -39,9 +39,10 @@
         android:background="@drawable/cloud1"
         app:layout_constraintBottom_toTopOf="@+id/user_pic"
         app:layout_constraintEnd_toStartOf="@+id/user_cloudR"
-        app:layout_constraintHorizontal_bias="0.117"
+        app:layout_constraintHorizontal_bias="0.163"
         app:layout_constraintStart_toEndOf="@+id/user_cloudL"
-        app:layout_constraintTop_toBottomOf="@+id/user_cloudL" />
+        app:layout_constraintTop_toBottomOf="@+id/user_cloudL"
+        app:layout_constraintVertical_bias="0.944" />
 
     <ImageView
         android:id="@+id/user_cloudR"

@@ -1,7 +1,5 @@
 package com.helenacorp.android.mybibliotheque;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
@@ -37,6 +34,7 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
     private ArrayList<BookModel> mAdapterItems = new ArrayList<>();
     private ArrayList<String> mAdapterKeys = new ArrayList<>();
     private OnBookItemClick mOnBook;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +90,22 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         });
         bookListAdapter.notifyDataSetChanged();
 
+        searchView = findViewById(R.id.mSearch);
+        //SEARCH
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //FILTER AS YOU TYPE
+                bookListAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -103,43 +117,8 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_view, menu);
+        getMenuInflater().inflate(R.menu.menu_list, menu);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        Query query = mDatabase.child("books").orderByChild("title");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot bookSnapshot : dataSnapshot.getChildren()) {
-                    bookSnapshot.getValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        SearchManager searchManager =(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =(SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-               bookListAdapter.getFilter().filter(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // filter recycler view when text is changed
-               // newText.toUpperCase();
-                bookListAdapter.getFilter().filter(newText);
-                return true;
-            }
-        });
         return true;
     }
 
@@ -166,10 +145,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.search) {
-            return true;
-        }
         if(id == R.id.action_home_list){
             Intent i = new Intent(ViewListBooksActivity.this, AccountActivity.class);
             startActivity(i);

@@ -32,10 +32,10 @@ import java.util.List;
  * @param <BookModel> The class type to use as a model for the data contained in the children of the
  *                    given Firebase location
  */
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
+public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable{
 
     private Query mQuery;
-    private ArrayList<BookModel> mItems;
+    ArrayList<BookModel> mItems;
     private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
     private CustomFilter filter;
@@ -330,28 +330,15 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
         return (Class<BookModel>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
- /*   public void filter(String text) {
-        mItems.clear();
-        if(text.isEmpty()){
-            mItems.addAll(mItemsCopy);
-        } else{
-            text = text.toLowerCase();
-
-            for(BookModel item: mItemsCopy){
-                if(item.getClass().getName().contains(text)){
-                    mItems.add(item);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }*/
-    @SuppressWarnings("unchecked")
+    //RETURN FILTER OBJ
     @Override
     public Filter getFilter() {
-        if (filter == null)
-            filter = new CustomFilter(FirebaseRecyclerAdapter.this, (ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel>) mItemsCopy);
+        if(filter==null)
+        {
+            filter=new CustomFilter(this, (ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel>) mItemsCopy);
+        }
+
         return filter;
     }
-
 
 }

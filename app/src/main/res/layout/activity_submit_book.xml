@@ -5,20 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
-    <!--
+
      <ImageView
          android:id="@+id/bckgrd_submit"
          android:layout_width="match_parent"
          android:layout_height="match_parent"
-         android:src="@drawable/old_books"
-         android:alpha="0.6"
+         android:src="@drawable/fond2"
          app:layout_constraintTop_toTopOf="parent"
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintRight_toRightOf="parent"
          app:layout_constraintLeft_toLeftOf="parent"
-         android:scaleX="2"
-         android:scaleY="3.5"/>
- -->
+         android:scaleType="centerCrop"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_activitySubmit"
         style="@style/ToolBarStyle.Event"
@@ -166,10 +164,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:padding="2dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
         android:stepSize="1"
+        android:background="@drawable/background_edit_submit"
         app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

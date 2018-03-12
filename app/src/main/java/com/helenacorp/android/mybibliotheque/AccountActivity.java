@@ -46,7 +46,7 @@ import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
 
-public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Animation.AnimationListener {
     public static final String LIST_BOOKS = "listItems";
     public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
@@ -64,6 +64,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private Uri imageUri;
     private Bitmap bitmap;
     private ImageView cloudL, cloudM, cloudR;
+    private Animation cloudTranslate;
 
     @SuppressLint("ResourceType")
     @Override
@@ -140,9 +141,11 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        animateCloud(cloudL, 40000);
-        animateCloud(cloudM, 50000);
-        animateCloud(cloudR, 30000);
+        animateCloud(cloudL);
+        cloudTranslate.setStartOffset(500);
+        animateCloud(cloudM);
+        cloudTranslate.setStartOffset(100);
+        animateCloud(cloudR);
     }
 
     @Override
@@ -313,12 +316,26 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         }*/
 
     }
-
-    private void animateCloud(ImageView imageView, long duration){
-        Animation set =  AnimationUtils.loadAnimation(this,R.anim.cloud_right);
-        imageView.startAnimation(set);
-        set.setRepeatCount(Animation.INFINITE);
-        set.setDuration(duration);
+    //to rotate clouds
+    private void animateCloud(ImageView imageView){
+        cloudTranslate =  AnimationUtils.loadAnimation(getApplicationContext(),R.anim.cloud_right);
+        cloudTranslate.setAnimationListener(AccountActivity.this);
+        imageView.startAnimation(cloudTranslate);
     }
 
+    //to repeat animation because setRepeat don't work'
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        animation.start();
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
 }

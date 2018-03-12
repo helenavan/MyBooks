@@ -15,7 +15,6 @@ class CustomFilter extends Filter {
 
     private FirebaseRecyclerAdapter adapter;
     private ArrayList<BookModel> filterList = new ArrayList<>();
-    private ArrayList<BookModel> filteredList = new ArrayList<>();
 
     public CustomFilter(FirebaseRecyclerAdapter adapter, ArrayList<BookModel> filterList) {
         this.adapter = adapter;
@@ -25,22 +24,28 @@ class CustomFilter extends Filter {
     //filtering ocurs
     @Override
     protected FilterResults performFiltering(CharSequence charSequence) {
-        filteredList.clear();
+
         FilterResults results = new FilterResults();
         //CHECK CONSTRAINT VALIDITY
-        if(charSequence.length() == 0){
-            filteredList.addAll(filterList);
-        } else {
-
-            for (BookModel bookM : filterList) {
-                if (bookM.getTitle().toLowerCase().contains(charSequence.toString().toLowerCase())){
-                    filteredList.add(bookM);
+        if (charSequence != null && charSequence.length() > 0) {
+            //change to upper
+            charSequence = charSequence.toString().toUpperCase();
+            //store filtered players
+            ArrayList<BookModel> filterableBook = new ArrayList<>();
+            for (int i = 0; i < filterList.size(); i++) {
+                //check
+                if (filterList.get(i).getTitle().toUpperCase().contains(charSequence)) {
+                    filterableBook.add(filterList.get(i));
                 }
             }
-            // //  for( BookModel mBook : book)
-            results.count = filteredList.size();
-            results.values = filteredList;
+            results.count = filterableBook.size();
+            results.values = filterableBook;
+        } else {
+            results.count = filterList.size();
+            results.values = filterList;
+
         }
+
         return results;
 
     }
@@ -48,7 +53,8 @@ class CustomFilter extends Filter {
     @SuppressWarnings("unchecked")
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-        filterList = (ArrayList<BookModel>) filterResults.values;
+        adapter.mItems = (ArrayList<BookModel>) filterResults.values;
+        // filterList = (ArrayList<BookModel>) filterResults.values;
         adapter.notifyDataSetChanged();
     }
 

@@ -5,14 +5,16 @@
     android:id="@+id/nested_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange_light"
+    android:background="@drawable/fond2"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.helenacorp.android.mybibliotheque.BookDetailActivity"
     tools:showIn="@layout/activity_book_detail">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:background="@drawable/background_edit">
 
         <TextView
             android:id="@+id/isbn_title_item"
