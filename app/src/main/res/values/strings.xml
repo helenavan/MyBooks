@@ -4,6 +4,7 @@
     <string name="log_btn">Connexion</string>
     <string name="log_email">Votre email</string>
     <string name="log_password">Votre mot de passe</string>
+
     <string name="title_sub">Titre</string>
     <string name="lastname_sub">Auteur</string>
     <string name="isbn">Scanner le n° isbn</string>
@@ -12,6 +13,7 @@
     <string name="btn_add">Enregistrer</string>
     <string name="btn_clean">Effacer</string>
     <string name="btn_verif">Vérifier isbn</string>
+    <string name="category">Catégorie</string>
     <!--activity_signup-->
     <string name="btn_creatAccount">Créer</string>
     <string name="hint_nom">Entrez votre nom ou pseudo</string>

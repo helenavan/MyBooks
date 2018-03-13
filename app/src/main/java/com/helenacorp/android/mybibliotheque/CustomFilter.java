@@ -34,7 +34,8 @@ class CustomFilter extends Filter {
             ArrayList<BookModel> filterableBook = new ArrayList<>();
             for (int i = 0; i < filterList.size(); i++) {
                 //check
-                if (filterList.get(i).getTitle().toUpperCase().contains(charSequence)) {
+                if (filterList.get(i).getTitle().toUpperCase().contains(charSequence) || filterList.get(i).getLastnameAutor().toUpperCase().contains(charSequence)
+                        || filterList.get(i).getCategory().toUpperCase().contains(charSequence)) {
                     filterableBook.add(filterList.get(i));
                 }
             }

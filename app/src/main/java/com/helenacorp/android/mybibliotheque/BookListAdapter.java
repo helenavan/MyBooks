@@ -67,6 +67,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
         final BookModel model = getItem(position);
         holder.txtTitle.setText(model.getTitle());
         holder.txtAutorLastname.setText(model.getLastnameAutor());
+        holder.category.setText(model.getCategory());
         holder.resume.setText(model.getInfo());
         holder.isbnNumber.setText(model.getIsbn());
         holder.ratingBar.setRating(model.getRating());
@@ -152,6 +153,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     String img = model.getImageUrl();
                     String title = model.getTitle();
                     String name = model.getLastnameAutor();
+                    String categorie = model.getCategory();
                     String resume = model.getInfo();
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
@@ -161,6 +163,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     intent.putExtra("userid", bookKey);
                     intent.putExtra("title", title);
                     intent.putExtra("lastnameAutor", name);
+                    intent.putExtra("category", categorie);
                     intent.putExtra("info", resume);
                     intent.putExtra("isbn", isbn);
                     intent.putExtra("imageUrl", img);
@@ -200,17 +203,19 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
     @Override
     protected void itemRemoved(BookModel item, String key, int position) {
         Log.d("MyAdapter", "Removed an item from the adapter.");
+        notifyDataSetChanged();
     }
 
     @Override
     protected void itemMoved(BookModel item, String key, int oldPosition, int newPosition) {
         Log.d("MyAdapter", "Moved an item.");
+        notifyDataSetChanged();
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtTitle, txtAutorLastname, isbnNumber, resume, keyBook;
+        private TextView txtTitle, txtAutorLastname, isbnNumber, resume, keyBook, category;
         private RatingBar ratingBar;
         private ImageView pic;
         private Context context;
@@ -227,6 +232,8 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
             ratingBar = (RatingBar) v.findViewById(R.id.ratingbar);
 
             pic = (ImageView) v.findViewById(R.id.pic_item);
+
+            category = (TextView) v.findViewById(R.id.category_list);
 
             resume = v.findViewById(R.id.resum_item);
 

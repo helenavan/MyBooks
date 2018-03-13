@@ -55,7 +55,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
     String result;
     private Class<?> mClss;
-    private EditText titleName, lastName;
+    private EditText titleName, lastName, category;
     private EditText isbn;
     private String isbnId;
     private Button btnClean, btnAdd, btnIsbn, btnVerif;
@@ -75,6 +75,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
 
         titleName = (EditText) findViewById(R.id.title_submit);
         lastName = (EditText) findViewById(R.id.autorLastName_submit);
+        category = (EditText) findViewById(R.id.category_submit);
         resum = findViewById(R.id.submit_resum);
         btnClean = (Button) findViewById(R.id.btn_clean_submit);
         btnAdd = (Button) findViewById(R.id.btn_add_submit);
@@ -227,7 +228,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 String imageDownloadUrl = taskSnapshot.getDownloadUrl().toString();
-                BookModel bookModel = new BookModel(titleName.getText().toString(), null, isbn.getText().toString(),
+                BookModel bookModel = new BookModel(titleName.getText().toString(), category.getText().toString(), isbn.getText().toString(),
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
                 //keys = name's attribut
@@ -237,6 +238,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 map.put("lastnameAutor", bookModel.getLastnameAutor());
                 map.put("rating", bookModel.getRating());
                 map.put("imageUrl", bookModel.getImageUrl());
+                map.put("category", bookModel.getCategory());
                 map.put("info", bookModel.getInfo());
                 map.put("userid", databaseReference.getKey());
                 databaseReference.setValue(map);
@@ -256,7 +258,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             img.setMaxHeight(80);
             img.setAdjustViewBounds(true);
             img.setScaleType(ImageView.ScaleType.CENTER);
-           // img.getDrawingCache(false);
+            // img.getDrawingCache(false);
         }
     }
 
@@ -272,6 +274,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
             clearEditText(titleName);
             clearEditText(lastName);
             clearEditText(isbn);
+            clearEditText(category);
             resum.setText("");
             cleanCouv(mImageBookVisible);
         }

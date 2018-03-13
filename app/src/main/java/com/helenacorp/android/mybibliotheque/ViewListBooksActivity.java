@@ -89,8 +89,9 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
             }
         });
         bookListAdapter.notifyDataSetChanged();
-
         searchView = findViewById(R.id.mSearch);
+
+
         //SEARCH
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -140,9 +141,6 @@ public class ViewListBooksActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if(id == R.id.action_home_list){

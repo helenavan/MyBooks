@@ -17,27 +17,29 @@
         android:background="@drawable/background_edit">
 
         <TextView
-            android:id="@+id/isbn_title_item"
+            android:id="@+id/category_title_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:fontFamily="@font/font_born"
-            android:text="Isbn :  "
+            android:text="Catégorie :  "
             app:layout_constraintBottom_toTopOf="@+id/resum_item"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/isbn_item"
+            android:id="@+id/category_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_born"
             android:maxLength="13"
-            android:text="isbn"
+            android:text=""
             android:textStyle="italic"
-            app:layout_constraintBaseline_toBaselineOf="@+id/isbn_title_item"
-            app:layout_constraintLeft_toRightOf="@+id/isbn_title_item" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/category_title_item"
+            app:layout_constraintLeft_toRightOf="@+id/category_title_item"
+            app:layout_constraintBottom_toTopOf="@+id/resum_item"/>
 
         <TextView
             android:id="@+id/resum_item"
@@ -45,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:fontFamily="@font/font_born"
+            android:textSize="14sp"
             android:minLines="1"
             android:padding="8dp"
             android:scrollbars="vertical"

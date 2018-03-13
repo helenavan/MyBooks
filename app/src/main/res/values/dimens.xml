@@ -5,4 +5,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="image_width">110dp</dimen>
     <dimen name="image_small_width">32dp</dimen>
+    <dimen name="edit_height">42dp</dimen>
 </resources>

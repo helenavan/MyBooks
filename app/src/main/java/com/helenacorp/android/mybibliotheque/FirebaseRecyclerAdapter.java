@@ -32,14 +32,14 @@ import java.util.List;
  * @param <BookModel> The class type to use as a model for the data contained in the children of the
  *                    given Firebase location
  */
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable{
+public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
 
     private Query mQuery;
     ArrayList<BookModel> mItems;
     private ArrayList<BookModel> mItemsCopy;
     private ArrayList<String> mKeys;
     private CustomFilter filter;
-  //  private BookModelFilter mBook;
+    //  private BookModelFilter mBook;
 
     /**
      * @param query              The Firebase location to watch for data changes.
@@ -333,9 +333,8 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
     //RETURN FILTER OBJ
     @Override
     public Filter getFilter() {
-        if(filter==null)
-        {
-            filter=new CustomFilter(this, (ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel>) mItemsCopy);
+        if (filter == null) {
+            filter = new CustomFilter(this, (ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel>) mItemsCopy);
         }
 
         return filter;

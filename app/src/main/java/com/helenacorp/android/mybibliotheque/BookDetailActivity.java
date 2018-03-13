@@ -51,7 +51,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
     private ImageView couv, arrow;
-    private TextView title, name, isbn, resume, title_two;
+    private TextView title, name, category, resume, title_two;
     private RatingBar ratingBar;
     ConstraintLayout constraintLayout;
     private FrameLayout framelayoutTitle;
@@ -75,7 +75,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         supportPostponeEnterTransition();
         final BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
         couv = findViewById(R.id.pic_item);
-        isbn = findViewById(R.id.isbn_item);
+        category = findViewById(R.id.category_item);
         title = findViewById(R.id.title_item);
         title_two = findViewById(R.id.title_item_two);
         resume = findViewById(R.id.resum_item);
@@ -88,7 +88,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         //retrieve extra in bundle
         final Bundle bundle = getIntent().getExtras();
-        isbn.setText(bundle.getString("isbn"));
+        category.setText(bundle.getString("category"));
         title.setText(bundle.getString("title"));
         title_two.setText(bundle.getString("title"));
         resume.setText(bundle.getString("info"));
