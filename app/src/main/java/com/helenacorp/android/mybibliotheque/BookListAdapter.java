@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.transition.Scene;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -89,6 +94,9 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        // Create a reference to the file to delete
+        final StorageReference desertRef = storageReference.child("couvertures/" + user.getUid() + holder.txtTitle.getText().toString().trim() + ".jpg");
         final String idBooks = holder.isbnNumber.getText().toString();
         Log.e("tag", idBooks);
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
@@ -102,6 +110,18 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                         .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // Delete the file
+                                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                    }
+                                });
                                 //retrieve the path of title from detail item and delete it
                                 booksQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override

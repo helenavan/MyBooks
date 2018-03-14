@@ -216,7 +216,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books").push();
 
-        final StorageReference userPic = storageReference.child("couvertures/" + titleName.getText().toString() + lastName.getText().toString() + ".jpg");
+        final StorageReference userPic = storageReference.child("couvertures/" + user.getUid() + titleName.getText().toString().trim() + ".jpg");
         byte[] data = baos.toByteArray();
         final UploadTask uploadTask = userPic.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {

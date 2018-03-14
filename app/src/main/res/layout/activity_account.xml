@@ -116,6 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:textSize="16sp"
             android:fontFamily="@font/font_born"
             android:text="@string/acc_nom" />
     </LinearLayout>
@@ -136,6 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_born"
+            android:textSize="16sp"
             android:text="@string/acc_books"
             app:layout_constraintTop_toBottomOf="@+id/user_bjr" />
 
@@ -146,6 +148,7 @@
             android:layout_marginLeft="5dp"
             android:fontFamily="@font/font_born"
             android:text="@string/acc_nbr"
+            android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@+id/user_book"
             app:layout_constraintRight_toRightOf="parent" />
     </LinearLayout>

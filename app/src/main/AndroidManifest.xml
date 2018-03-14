@@ -31,7 +31,7 @@
         android:theme="@style/AppThemeBase">
         <meta-data
             android:name="com.google.android.book.API_KEY"
-            android:value="@string/google_key"></meta-data>
+            android:value="@string/google_key" />
 
         <activity
             android:name=".MainLoginActivity"

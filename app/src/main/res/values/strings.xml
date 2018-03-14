@@ -1,5 +1,4 @@
 <resources>
-    <string name="google_key">AIzaSyDfQzOdJ7RLXAnhOh6OcW1R0Uv5hvNxV24</string>
     <string name="app_name">MyBooks</string>
     <string name="log_btn">Connexion</string>
     <string name="log_email">Votre email</string>
@@ -20,6 +19,7 @@
     <string name="hint_passw">Entrez votre mot de passe</string>
     <string name="hint_email">Entrez votre email</string>
     <string name="error_name">En manque d\'imagination pour le pseudo?</string>
+    <string name="google_key">AIzaSyDfQzOdJ7RLXAnhOh6OcW1R0Uv5hvNxV24</string>
     <string name="error_email">Est-ce un Email?</string>
     <string name="error_password">Il faut 6 caractères, au moins!</string>
 
