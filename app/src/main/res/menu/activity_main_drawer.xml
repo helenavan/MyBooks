@@ -14,6 +14,10 @@
             android:id="@+id/nav_countBooks"
             android:icon="@drawable/ic_playlist_add_blue_grey_800_18dp"
             android:title="@string/drawer_livres" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_home"
+            android:title="chat"/>
 
     </group>
 

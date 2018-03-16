@@ -97,7 +97,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         ratingBar.setRating(bundle.getFloat("rating"));
         final String url = bundle.getString("imageUrl");
         //retrieve key's child of books node
-        key = bundle.getString("userid");
+        key = bundle.getString("bookid");
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(R.color.bleu_gray)

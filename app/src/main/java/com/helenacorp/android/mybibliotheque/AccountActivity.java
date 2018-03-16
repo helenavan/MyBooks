@@ -190,6 +190,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             showFileChooser();
         } else if (id == R.id.nav_countBooks) {
             displayListBooks();
+        } else if (id == R.id.nav_chat){
+            Intent i = new Intent(AccountActivity.this, ChatActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);

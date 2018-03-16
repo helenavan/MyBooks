@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 class CustomFilter extends Filter {
 
-    private FirebaseRecyclerAdapter adapter;
+    private FirebaseRecyclerBookAdapter adapter;
     private ArrayList<BookModel> filterList = new ArrayList<>();
 
-    public CustomFilter(FirebaseRecyclerAdapter adapter, ArrayList<BookModel> filterList) {
+    public CustomFilter(FirebaseRecyclerBookAdapter adapter, ArrayList<BookModel> filterList) {
         this.adapter = adapter;
         this.filterList = filterList;
     }

@@ -45,7 +45,7 @@ import java.util.ArrayList;
  * Created by helena on 09/08/2017.
  */
 
-public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.ViewHolder, BookModel>{
+public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter.ViewHolder, BookModel> {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private TransitionManager mTransitionManager;
@@ -180,7 +180,7 @@ public class BookListAdapter extends FirebaseRecyclerAdapter<BookListAdapter.Vie
                     String bookKey = model.getUserid();
 
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
-                    intent.putExtra("userid", bookKey);
+                    intent.putExtra("bookid", bookKey);
                     intent.putExtra("title", title);
                     intent.putExtra("lastnameAutor", name);
                     intent.putExtra("category", categorie);

@@ -1,7 +1,10 @@
-package com.helenacorp.android.mybibliotheque;
+package com.helenacorp.android.mybibliotheque.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import com.helenacorp.android.mybibliotheque.GoogleBooksApi;
+import com.helenacorp.android.mybibliotheque.Result;
+import com.helenacorp.android.mybibliotheque.Results;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
 import java.io.IOException;

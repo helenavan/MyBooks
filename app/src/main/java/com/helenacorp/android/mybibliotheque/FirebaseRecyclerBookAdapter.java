@@ -32,7 +32,7 @@ import java.util.List;
  * @param <BookModel> The class type to use as a model for the data contained in the children of the
  *                    given Firebase location
  */
-public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
+public abstract class FirebaseRecyclerBookAdapter<ViewHolder extends RecyclerView.ViewHolder, BookModel> extends RecyclerView.Adapter<ViewHolder> implements Filterable {
 
     private Query mQuery;
     ArrayList<BookModel> mItems;
@@ -49,7 +49,7 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      * @param keys
      * @param bookItemClick
      */
-    public FirebaseRecyclerAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
+    public FirebaseRecyclerBookAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
         this(query, (ArrayList<BookModel>) null, null, null);
     }
 
@@ -66,10 +66,10 @@ public abstract class FirebaseRecyclerAdapter<ViewHolder extends RecyclerView.Vi
      *              configuration change (e.g.: reloading the adapter after a device rotation).
      *              Be careful: items must be coherent with this list.
      */
-    public FirebaseRecyclerAdapter(Query query,
-                                   @Nullable ArrayList<BookModel> items,
-                                   @Nullable ArrayList<BookModel> itemsCopy,
-                                   @Nullable ArrayList<String> keys) {
+    public FirebaseRecyclerBookAdapter(Query query,
+                                       @Nullable ArrayList<BookModel> items,
+                                       @Nullable ArrayList<BookModel> itemsCopy,
+                                       @Nullable ArrayList<String> keys) {
         this.mQuery = query;
         if (items != null && keys != null) {
             this.mItems = items;

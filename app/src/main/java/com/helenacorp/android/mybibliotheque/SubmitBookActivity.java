@@ -42,6 +42,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
+import com.helenacorp.android.mybibliotheque.service.BookLookupService;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -240,7 +241,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 map.put("imageUrl", bookModel.getImageUrl());
                 map.put("category", bookModel.getCategory());
                 map.put("info", bookModel.getInfo());
-                map.put("userid", databaseReference.getKey());
+                map.put("bookid", databaseReference.getKey());
                 databaseReference.setValue(map);
                 Toast.makeText(SubmitBookActivity.this, "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
