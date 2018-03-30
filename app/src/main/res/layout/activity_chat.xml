@@ -33,13 +33,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_toolbar"
         />
-
+    <ImageView
+        android:id="@+id/back_addMessage"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/bleu_gray"
+        app:layout_constraintStart_toStartOf="@id/addMessageImageView"
+        app:layout_constraintEnd_toEndOf="@id/message_btn_send"
+        app:layout_constraintBottom_toBottomOf="@+id/message_EditText"
+        app:layout_constraintTop_toTopOf="@+id/message_EditText"/>
     <ImageView
         android:id="@+id/addMessageImageView"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="@dimen/fab_margin"
-        android:src="@drawable/ic_home"
+        android:src="@drawable/ic_add_white_48dp"
+        android:tint="@color/darkgray1"
         app:layout_constraintBottom_toBottomOf="@+id/message_RecyclerView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/message_EditText"
@@ -56,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/addMessageImageView"
         app:layout_constraintRight_toLeftOf="@+id/message_btn_send"
-        app:layout_constraintTop_toBottomOf="@+id/message_EditText"
+        app:layout_constraintTop_toBottomOf="@+id/message_RecyclerView"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
@@ -64,6 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="envoyer"
+        android:theme="@style/buttonTheme"
         app:layout_constraintBaseline_toBaselineOf="@+id/message_EditText"
         app:layout_constraintLeft_toRightOf="@+id/message_EditText"
         app:layout_constraintRight_toRightOf="parent"/>

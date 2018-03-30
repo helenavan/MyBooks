@@ -28,8 +28,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -103,15 +105,14 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
             startActivity(intent);
 
-
         } else {
             // User is signed in
             uID = user.getUid();
             userPseudo = user.getDisplayName();
             userEmail = user.getEmail();
-            imageUri = user.getPhotoUrl();
+           // imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-            userPic.setImageURI(imageUri);
+           // userPic.setImageURI(imageUri);
             //sharedpreference
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sp.edit();
@@ -191,7 +192,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.nav_countBooks) {
             displayListBooks();
         } else if (id == R.id.nav_chat){
-            Intent i = new Intent(AccountActivity.this, ChatActivity.class);
+            Intent i = new Intent(AccountActivity.this, UserList.class);
             startActivity(i);
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
@@ -259,9 +260,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private void uploadImage() {
 
         if (imageUri != null) {
-
+            final DatabaseReference image_profil = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
             StorageReference storageReference = firebaseStorage.getReference();
-            StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
+            final StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
             userPic.setDrawingCacheEnabled(true);
             userPic.buildDrawingCache();
             bitmap = userPic.getDrawingCache();
@@ -278,18 +279,29 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
+
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    Transformation transformation = new RoundedTransformationBuilder()
-                            .borderColor(Color.WHITE)
-                            .borderWidthDp(3)
-                            .cornerRadiusDp(55)
-                            .oval(false)
-                            .build();
-                    Picasso.with(AccountActivity.this)
-                            .load(downloadUrl)
-                            .fit().transform(transformation)
-                            .into(userPic);
+                    final String download_url= taskSnapshot.getDownloadUrl().toString();
+                    //créer un attribut image dans user firebase
+                    image_profil.child("picChatUser").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Transformation transformation = new RoundedTransformationBuilder()
+                                        .borderColor(Color.WHITE)
+                                        .borderWidthDp(3)
+                                        .cornerRadiusDp(55)
+                                        .oval(false)
+                                        .build();
+                                Picasso.with(AccountActivity.this)
+                                        .load(download_url)
+                                        .fit().transform(transformation)
+                                        .into(userPic);
+                                Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                     Log.d("downloadUrl-->", "" + downloadUrl);
 
                 }

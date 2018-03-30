@@ -147,10 +147,10 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
                     // mImageBook.setVisibility(View.INVISIBLE);
-                    mImageBookVisible.setMaxWidth(80);
-                    mImageBookVisible.setMaxHeight(80);
+                    mImageBookVisible.setMaxWidth(78);
+                    mImageBookVisible.setMaxHeight(78);
                     mImageBookVisible.setAdjustViewBounds(true);
-                    mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER);
                     mImageBookVisible.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {

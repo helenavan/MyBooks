@@ -2,10 +2,13 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,8 +33,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,12 +56,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.helenacorp.android.mybibliotheque.model.MessageModel;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class ChatActivity extends AppCompatActivity  {
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
@@ -92,6 +95,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter<MessageModel, MessageViewHolder> mFirebaseAdapter;
     private ProgressBar mProgressBar;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -99,7 +103,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
     private EditText mMessageEditText;
     private ImageView mAddMessageImageView;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
     private String mUsername;
     private String mPhotoUrl;
@@ -111,16 +114,17 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_chat);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mUsername = ANONYMOUS;
+        //mUsername = ANONYMOUS;
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        //user info
         mUsername = mFirebaseUser.getDisplayName();
-
         if (mFirebaseUser.getPhotoUrl() != null) {
             mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
         }
+
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.message_RecyclerView);
@@ -128,7 +132,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         mLinearLayoutManager.setStackFromEnd(true);
 
         // mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().push();
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(mFirebaseUser.getUid());
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         SnapshotParser<MessageModel> parser = new SnapshotParser<MessageModel>() {
             @Override
@@ -164,6 +168,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getMessage() != null) {
                     viewHolder.textMessage.setText(friendlyMessage.getMessage());
+                  //  downloadAvatar(viewHolder.userImg);
                     viewHolder.nameUser.setVisibility(TextView.VISIBLE);
                     viewHolder.messageImg.setVisibility(ImageView.GONE);
                 } else {
@@ -195,14 +200,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
                     viewHolder.textMessage.setVisibility(TextView.GONE);
                 }
 
+                viewHolder.nameUser.setText(friendlyMessage.getUserNameModel());
 
-                viewHolder.nameUser.setText(friendlyMessage.getUserName());
-                if (friendlyMessage.getUserPic()== null) {
+                if (mPhotoUrl == null) {
                     viewHolder.userImg.setImageDrawable(ContextCompat.getDrawable(ChatActivity.this,
-                            R.drawable.ic_camera));
+                            R.drawable.ic_user));
                 } else {
+                  //  downloadAvatar(viewHolder.userImg);
                     Picasso.with(ChatActivity.this)
-                            .load(friendlyMessage.getUserPic())
+                            .load(mPhotoUrl)
                             .into(viewHolder.userImg);
                 }
 //!!!!
@@ -235,7 +241,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         mFirebaseAdapter.notifyDataSetChanged();
         // Initialize Firebase Measurement.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
         // Initialize Firebase Remote Config.
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -281,6 +286,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
 
         mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -303,18 +309,45 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
+    //download and uploadload photoprofil
+    private void downloadAvatar(final ImageView image) {
+        // Create a storage reference from our app
 
+        StorageReference storageRef = storage.getReference();
+
+        storageRef.child("images/" + mFirebaseUser.getUid() + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onSuccess(Uri uri) {
+
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(Color.WHITE)
+                        .borderWidthDp(3)
+                        .cornerRadiusDp(20)
+                        .oval(true)
+                        .build();
+                Picasso.with(ChatActivity.this).load(uri).fit().transform(transformation).into(image);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private Action getMessageViewAction(MessageModel friendlyMessage) {
         return new Action.Builder(com.google.firebase.appindexing.Action.Builder.VIEW_ACTION)
-                .setObject(friendlyMessage.getUserName(), MESSAGE_URL.concat(friendlyMessage.getId()))
+                .setObject(friendlyMessage.getUserNameModel(), MESSAGE_URL.concat(friendlyMessage.getId()))
                 .setMetadata(new Action.Metadata.Builder().setUpload(false))
                 .build();
     }
 
     private Indexable getMessageIndexable(MessageModel friendlyMessage) {
         PersonBuilder sender = Indexables.personBuilder()
-                .setIsSelf(mUsername.equals(friendlyMessage.getUserName()))
-                .setName(friendlyMessage.getUserName())
+                .setIsSelf(mUsername.equals(friendlyMessage.getUserNameModel()))
+                .setName(friendlyMessage.getUserNameModel())
                 .setUrl(MESSAGE_URL.concat(friendlyMessage.getId() + "/sender"));
 
         PersonBuilder recipient = Indexables.personBuilder()
@@ -322,7 +355,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
                 .setUrl(MESSAGE_URL.concat(friendlyMessage.getId() + "/recipient"));
 
         Indexable messageToIndex = Indexables.messageBuilder()
-                .setName(friendlyMessage.getUserName())
+                .setName(friendlyMessage.getUserNameModel())
                 .setUrl(MESSAGE_URL.concat(friendlyMessage.getId()))
                 .setSender(sender)
                 .setRecipient(recipient)
@@ -509,9 +542,5 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "FML is: " + friendly_msg_length);
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
 }

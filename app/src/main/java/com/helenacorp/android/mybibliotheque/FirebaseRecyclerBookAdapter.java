@@ -331,6 +331,7 @@ public abstract class FirebaseRecyclerBookAdapter<ViewHolder extends RecyclerVie
     }
 
     //RETURN FILTER OBJ
+    @SuppressWarnings("unchecked")
     @Override
     public Filter getFilter() {
         if (filter == null) {

@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -33,6 +34,11 @@
             android:name="com.google.android.book.API_KEY"
             android:value="@string/google_key" />
 
+        <meta-data
+            tools:replace="android:value"
+            android:name="android.support.VERSION"
+            android:value="26.1.0" />
+
         <activity
             android:name=".MainLoginActivity"
             android:screenOrientation="portrait">
@@ -45,7 +51,7 @@
         <activity
             android:name=".AccountActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SignupActivity"
             android:screenOrientation="portrait"
@@ -55,6 +61,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".ViewListBooksActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -90,6 +97,14 @@
                 android:pathPrefix="/message"/>
             </intent-filter>
         </activity>
+        <activity android:name=".Chat"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+        </activity>
+        <activity android:name=".UI.CustomActivity"/>
+        <activity android:name=".UserList"/>
+        <activity android:name=".ChattApp"/>
 
         <service
             android:name="service.MyFirebaseMessagingService"

@@ -8,17 +8,17 @@ public class MessageModel {
 
     private String id;
     private String message;
-    private String userName;
+    private String userNameModel;
     private String userPic;
     private String imageUserUrl;
 
     public MessageModel(){
     }
 
-    public MessageModel(String id, String message, String userName, String userPic, String imageUserUrl) {
+    public MessageModel(String id, String message, String userNameModel, String userPic, String imageUserUrl) {
         this.id = id;
         this.message = message;
-        this.userName = userName;
+        this.userNameModel = userNameModel;
         this.userPic = userPic;
         this.imageUserUrl = imageUserUrl;
     }
@@ -39,12 +39,12 @@ public class MessageModel {
         this.message = message;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUserNameModel() {
+        return userNameModel;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userNameModel = userNameModel;
     }
 
     public String getUserPic() {

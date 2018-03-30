@@ -19,7 +19,7 @@ public class BookModel {
     private String category;
     private String isbn;
     private String lastnameAutor;
-    private String userName;
+    private String firstNameAutor;
     @SerializedName("userid")
     @Expose
     private String userid;
@@ -49,12 +49,12 @@ public class BookModel {
     }
 
     public BookModel(String title, String category, String isbn, String lastnameAutor,
-                     String userName, String userid, float rating, String imageUrl, String info) {
+                     String firstNameAutor, String userid, float rating, String imageUrl, String info) {
         this.title = title;
         this.category = category;
         this.isbn = isbn;
         this.lastnameAutor = lastnameAutor;
-        this.userName = userName;
+        this.firstNameAutor = firstNameAutor;
         this.userid = userid;
         this.rating = rating;
         this.imageUrl = imageUrl;
@@ -65,12 +65,8 @@ public class BookModel {
         this.info = info;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFirstNameAutor(String firstNameAutor) {
+        this.firstNameAutor = firstNameAutor;
     }
 
     public String getImageUrl() {
@@ -121,12 +117,8 @@ public class BookModel {
         this.lastnameAutor = lastnameAutor;
     }
 
-    public String getCode() {
-        return userName;
-    }
-
-    public void setCode(String code) {
-        this.userName = code;
+    public String getFirstNameAutor() {
+        return firstNameAutor;
     }
 
     public String getUserid() {

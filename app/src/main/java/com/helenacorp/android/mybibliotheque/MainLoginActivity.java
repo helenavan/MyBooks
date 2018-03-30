@@ -106,8 +106,9 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+
                             Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
                             messageToast();
