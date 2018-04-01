@@ -1,6 +1,7 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +68,18 @@ public class UserList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UsersViewHolder usersViewHolder, int i, @NonNull ChatUser chatUser) {
                 usersViewHolder.setName(chatUser.getUsername());
                 usersViewHolder.setPic(chatUser.getPicChatUser());
+
+                final String user_name = chatUser.getUsername();
+
+                usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profileIntent = new Intent(UserList.this, ProfileFriendActivity.class);
+                        profileIntent.putExtra("user_name",user_name);
+                       // profileIntent.putExtra("user_status", user_status);
+                        startActivity(profileIntent);
+                    }
+                });
 
             }
 
@@ -135,7 +148,6 @@ public class UserList extends AppCompatActivity {
                     .transform(transformation)
                     .into(userPic);
         }
-
 
     }
 

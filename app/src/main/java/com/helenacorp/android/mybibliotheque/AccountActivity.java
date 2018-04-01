@@ -1,6 +1,8 @@
 package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,13 +18,18 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -57,6 +64,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private SharedPreferences sp;
     private TextView acc_username, acc_numlist, btn_upload;
+    private EditText statusEdit;
     private String uID, userEmail, userPseudo, nbrBooks;
     private ImageView userPic;
     private ProgressBar mBar;
@@ -67,6 +75,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private Bitmap bitmap;
     private ImageView cloudL, cloudM, cloudR;
     private Animation cloudTranslate;
+    private ProgressDialog mDialog;
+    private DrawerLayout drawer;
 
     @SuppressLint("ResourceType")
     @Override
@@ -77,18 +87,24 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
         userPic = (ImageView) findViewById(R.id.user_pic);
+        statusEdit = findViewById(R.id.edit_status_dialog);
         cloudL = findViewById(R.id.user_cloudL);
         cloudM = findViewById(R.id.user_cloudM);
         cloudR = findViewById(R.id.user_cloudR);
+
+        mDialog = new ProgressDialog(AccountActivity.this);
+        mDialog.setMessage("charge");
+        mDialog.show();
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         // retrieve number of books in listview firebase
-        mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
-        mStorageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        mStorageRef.child("books").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mDialog.dismiss();
                 nbrBooks = String.valueOf(dataSnapshot.getChildrenCount());
                 acc_numlist.setText(nbrBooks);
             }
@@ -110,9 +126,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             uID = user.getUid();
             userPseudo = user.getDisplayName();
             userEmail = user.getEmail();
-           // imageUri = user.getPhotoUrl();
+            imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
-           // userPic.setImageURI(imageUri);
+            userPic.setImageURI(imageUri);
             //sharedpreference
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sp.edit();
@@ -133,7 +149,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -183,7 +199,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_mylist) {
             Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
             startActivity(intent);
@@ -194,12 +209,15 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.nav_chat){
             Intent i = new Intent(AccountActivity.this, UserList.class);
             startActivity(i);
+        } else if (id ==R.id.nav_status){
+            setDialogue();
+            hidKeyboard();
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
             startActivity(i);
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -352,5 +370,31 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    public void setDialogue(){
+        LayoutInflater layoutInflater = LayoutInflater.from(AccountActivity.this);
+        View view1 = layoutInflater.inflate(R.layout.dialog_status, null);
+        final AlertDialog.Builder alertD = new AlertDialog.Builder(AccountActivity.this);
+        alertD.setView(view1);
+
+        alertD.setPositiveButton(R.string.btn_add,new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AccountActivity.this, "testDialogue", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertD.setNegativeButton(R.string.acc_quit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = alertD.create();
+        dialog.show();
+    }
+
+    public void hidKeyboard(){
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 }

@@ -115,12 +115,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            //Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
-                            // startActivity(intent);
-                            messToast.setText(R.string.mlog_count);
                             messageToast();
                         }
-
                     }
                 });
     }

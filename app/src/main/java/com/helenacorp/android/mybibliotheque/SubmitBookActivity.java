@@ -150,7 +150,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                     mImageBookVisible.setMaxWidth(78);
                     mImageBookVisible.setMaxHeight(78);
                     mImageBookVisible.setAdjustViewBounds(true);
-                    mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER);
+                    mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     mImageBookVisible.setImageBitmap(imageBitmap);
 
                 } catch (Exception e) {

@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -33,11 +33,10 @@
         <meta-data
             android:name="com.google.android.book.API_KEY"
             android:value="@string/google_key" />
-
         <meta-data
-            tools:replace="android:value"
             android:name="android.support.VERSION"
-            android:value="26.1.0" />
+            android:value="26.1.0"
+            tools:replace="android:value" />
 
         <activity
             android:name=".MainLoginActivity"
@@ -51,7 +50,7 @@
         <activity
             android:name=".AccountActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".SignupActivity"
             android:screenOrientation="portrait"
@@ -81,30 +80,29 @@
             android:name=".ViewListBooksActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:targetApi="jelly_bean">
-
-        </activity>
+            tools:targetApi="jelly_bean"/>
         <activity
             android:name=".ChatActivity"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
-            <action android:name="android.intent.action.VIEW"/>
-            <category android:name="android.intent.category.DEFAULT"/>
-            <category android:name="android.intent.category.BROWSABLE"/>
-            <data
-                android:host="mybibliotheque-46d02.firebaseio.com/"
-                android:scheme="http"
-                android:pathPrefix="/message"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="mybibliotheque-46d02.firebaseio.com/"
+                    android:pathPrefix="/message"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".Chat"
+        <activity
+            android:name=".Chat"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
-        </activity>
-        <activity android:name=".UI.CustomActivity"/>
-        <activity android:name=".UserList"/>
-        <activity android:name=".ChattApp"/>
+        <activity android:name=".UI.CustomActivity" />
+        <activity android:name=".UserList" />
 
         <service
             android:name="service.MyFirebaseMessagingService"
@@ -113,7 +111,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name="service.MyFirebaseInstanceIdService"
             android:exported="false">
@@ -121,6 +118,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".ProfileFriendActivity"/>
     </application>
 
 </manifest>

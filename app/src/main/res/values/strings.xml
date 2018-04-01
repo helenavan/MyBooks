@@ -32,11 +32,16 @@
     <string name="acc_nom">Mon nom : </string>
     <string name="acc_books">Nombre de livres : </string>
     <string name="acc_nbr">Mon nombre</string>
+    <string name="acc_btn_status">Mon statut</string>
+    <string name="acc_status_dialog">Mon statut</string>
+    <string name="acc_quit">Quitter</string>
 
     <!-- activity_main_drawer -->
     <string name="drawer_liste">Ma liste de livres</string>
     <string name="drawer_photo">Ma photo</string>
-    <string name="drawer_livres">Ajouter</string>
+    <string name="drawer_livres">Ajouter un livre</string>
+    <string name="drawer_chat">Mon chat</string>
+    <string name="drawer_statut">Mon statut</string>
     <string name="drawer_deco">Déconnexion</string>
 
     <!-- MainLoginActivity -->

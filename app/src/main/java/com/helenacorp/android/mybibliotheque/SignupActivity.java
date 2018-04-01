@@ -115,7 +115,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     // Construct the ChatUser
-                                    ChatUser chatUser = new ChatUser(mUser.getUid(),displayName, email,"default");
+                                    ChatUser chatUser = new ChatUser(mUser.getUid(),null, displayName, email,"default");
                                     //ChatUser chatUser = new ChatUser(user.getUid(),displayName, email,true,defaultRoom);
                                     // Setup link to users database
                                     FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).setValue(chatUser).addOnCompleteListener(new OnCompleteListener<Void>() {

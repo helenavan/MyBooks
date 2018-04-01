@@ -13,6 +13,7 @@ import java.io.Serializable;
 @IgnoreExtraProperties
 public class ChatUser implements Serializable{
     private String idUser;
+    private String status;
     private String username;
     private String email;
     private String picChatUser;
@@ -21,8 +22,9 @@ public class ChatUser implements Serializable{
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public ChatUser(String idUser, String username, String email, String picChatUser) {
+    public ChatUser(String idUser, String status, String username, String email, String picChatUser) {
         this.idUser = idUser;
+        this.status = status;
         this.username = username;
         this.email = email;
         this.picChatUser = picChatUser;
@@ -34,6 +36,14 @@ public class ChatUser implements Serializable{
 
     public void setIdUser(String idUser) {
         this.idUser = idUser;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getUsername() {

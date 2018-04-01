@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/head_detail"
+    tools:context=".ProfileFriendActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/frien_toolbar"
+        style="@style/ToolBarStyle.Event"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/rougeD"
+        android:elevation="4dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/friend_pic"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_edit_submit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frien_toolbar" />
+
+    <TextView
+        android:id="@+id/friend_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="status"
+        app:layout_constraintEnd_toEndOf="@id/friend_pic"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="@id/friend_pic"
+        app:layout_constraintTop_toBottomOf="@+id/friend_pic" />
+
+    <TextView
+        android:id="@+id/friend_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="friend name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/friend_status"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="@id/friend_status"
+        app:layout_constraintTop_toBottomOf="@+id/friend_status" />
+
+    <TextView
+        android:id="@+id/friend_numberbooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:text="nombre de livres"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/friend_numberfriends"
+        app:layout_constraintTop_toBottomOf="@+id/friend_name" />
+
+    <TextView
+        android:id="@+id/friend_numberfriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="number friends"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintBaseline_toBaselineOf="@id/friend_numberbooks"
+        app:layout_constraintLeft_toRightOf="@+id/friend_numberbooks"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friend_name" />
+
+    <Button
+        android:id="@+id/friend_button"
+        style="@style/buttonTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_connexion"
+        android:text="Discuter"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friend_numberbooks" />
+
+</android.support.constraint.ConstraintLayout>
