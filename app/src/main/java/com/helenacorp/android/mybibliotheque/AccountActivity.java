@@ -63,9 +63,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private SharedPreferences sp;
-    private TextView acc_username, acc_numlist, btn_upload;
-    private EditText statusEdit;
-    private String uID, userEmail, userPseudo, nbrBooks;
+    private TextView acc_username, acc_numlist, btn_upload, acc_status;
+    private String uID, userEmail, userPseudo, nbrBooks, userStatus;
     private ImageView userPic;
     private ProgressBar mBar;
     private DatabaseReference mStorageRef;
@@ -86,8 +85,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
+        acc_status = findViewById(R.id.user_status);
         userPic = (ImageView) findViewById(R.id.user_pic);
-        statusEdit = findViewById(R.id.edit_status_dialog);
         cloudL = findViewById(R.id.user_cloudL);
         cloudM = findViewById(R.id.user_cloudM);
         cloudR = findViewById(R.id.user_cloudR);
@@ -114,6 +113,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
             }
         });
+        //to fetch user's status
+        getStatus();
 
         if (user == null) {
             // User is signed out
@@ -375,13 +376,18 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public void setDialogue(){
         LayoutInflater layoutInflater = LayoutInflater.from(AccountActivity.this);
         View view1 = layoutInflater.inflate(R.layout.dialog_status, null);
+        final EditText statusEdit =(EditText) view1.findViewById(R.id.edit_status_dialog);
         final AlertDialog.Builder alertD = new AlertDialog.Builder(AccountActivity.this);
         alertD.setView(view1);
+        alertD.setCancelable(false);
 
         alertD.setPositiveButton(R.string.btn_add,new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AccountActivity.this, "testDialogue", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(AccountActivity.this, "testDialogue", Toast.LENGTH_SHORT).show();
+                DatabaseReference databaseReference = mStorageRef.child("status");
+                String status = statusEdit.getText().toString();
+                databaseReference.setValue(status);
             }
         });
         alertD.setNegativeButton(R.string.acc_quit, new DialogInterface.OnClickListener() {
@@ -396,5 +402,20 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     public void hidKeyboard(){
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    public void getStatus(){
+        mStorageRef.child("status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userStatus = dataSnapshot.getValue().toString();
+                acc_status.setText(userStatus);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -104,7 +104,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="65dp"
+        android:background="@drawable/background_edit"
         android:fontFamily="@font/font_born"
+        android:padding="4dp"
         android:text="@string/acc_nom"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -117,6 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="@drawable/background_edit"
         android:padding="4dp"
         android:text="Mon statut"
         android:textSize="14sp"
@@ -129,14 +132,17 @@
         android:id="@+id/user_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_edit"
         android:fontFamily="@font/font_born"
+        android:padding="4dp"
         android:text="@string/acc_books"
         android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/user_numberBooks"
-        app:layout_constraintTop_toBottomOf="@+id/user_status"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/user_status" />
 
     <TextView
         android:id="@+id/user_numberBooks"
@@ -144,13 +150,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:fontFamily="@font/font_born"
+        android:padding="4dp"
         android:text="@string/acc_nbr"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/user_status"
+        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/user_book"
         app:layout_constraintLeft_toRightOf="@+id/user_book"
-        app:layout_constraintRight_toRightOf="parent" />
-
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_status" />
 
     <include
         layout="@layout/drawer_account"
@@ -159,7 +166,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
 </android.support.constraint.ConstraintLayout>
 
