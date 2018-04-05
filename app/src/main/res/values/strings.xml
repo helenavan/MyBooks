@@ -82,6 +82,9 @@
     <string name="delivered_text">Delivered</string>
     <string name="sending_text">Sending...</string>
     <string name="failed_text">Failed</string>
+    <string name="discuter">Discuter</string>
+    <string name="d_cliner">Décliner</string>
+    <string name="charge_profil">Charge le profil</string>
 
 
 </resources>

@@ -18,16 +18,27 @@ public class ChatUser implements Serializable{
     private String email;
     private String picChatUser;
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    private String token;
+
     public ChatUser() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public ChatUser(String idUser, String status, String username, String email, String picChatUser) {
+    public ChatUser(String idUser, String status, String username, String email, String picChatUser, String token) {
         this.idUser = idUser;
         this.status = status;
         this.username = username;
         this.email = email;
         this.picChatUser = picChatUser;
+        this.token = token;
     }
 
     public String getIdUser() {

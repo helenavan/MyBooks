@@ -16,10 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainLoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String PREFS_NAME = "preferences";
@@ -38,6 +42,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     private TextInputLayout email_log_parent, password_log_parent;
     private TextView messToast;
     private Button login, auth;
+    private DatabaseReference mUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         auth.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+        mUserData = FirebaseDatabase.getInstance().getReference().child("users");
 
         //to keep connected user
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -94,7 +101,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void messageToast() {
-        Toast toast1 = Toast.makeText(MainLoginActivity.this, " ", Toast.LENGTH_SHORT);
+        Toast toast1 = Toast.makeText(MainLoginActivity.this, "", Toast.LENGTH_SHORT);
         toast1.setGravity(Gravity.CENTER, 0, 0);
         toast1.setView(viewLayout);
         toast1.show();
@@ -107,11 +114,19 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
-                            messageToast();
+                            String current_user_id = mAuth.getCurrentUser().getUid();
+                            String device_token = FirebaseInstanceId.getInstance().getToken();
+
+                            mUserData.child(current_user_id).child("device_token").setValue(device_token).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
+                                    messageToast();
+                                }
+                            });
 
                         } else {
                             // If sign in fails, display a message to the user.

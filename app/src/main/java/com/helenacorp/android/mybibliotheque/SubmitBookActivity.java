@@ -112,7 +112,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //color arrow
-        //Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_arrow_back);
+       // Drawable drawable = ContextCompat.getDrawable(this,R.drawable.ic_arrow_back);
         //getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
 

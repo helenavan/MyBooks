@@ -8,7 +8,7 @@
     tools:context=".ProfileFriendActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/frien_toolbar"
+        android:id="@+id/friend_toolbar"
         style="@style/ToolBarStyle.Event"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
@@ -32,7 +32,7 @@
         android:src="@drawable/background_edit_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frien_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/friend_toolbar" />
 
     <TextView
         android:id="@+id/friend_status"
@@ -49,12 +49,11 @@
         android:id="@+id/friend_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="28dp"
         android:text="friend name"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/friend_status"
-        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="@id/friend_status"
         app:layout_constraintTop_toBottomOf="@+id/friend_status" />
 
@@ -87,11 +86,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_connexion"
-        android:text="Discuter"
+        android:text="@string/discuter"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/friend_btn_decline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friend_numberbooks"
+        app:layout_constraintVertical_bias="0.65" />
+
+    <Button
+        android:id="@+id/friend_btn_decline"
+        style="@style/buttonTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:text="@string/d_cliner"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/friend_numberbooks" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
