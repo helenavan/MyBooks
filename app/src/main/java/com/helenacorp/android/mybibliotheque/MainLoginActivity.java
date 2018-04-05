@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainLoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String PREFS_NAME = "preferences";
@@ -34,6 +36,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     private View viewLayout;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mUserData;
     private TextInputEditText email_log, password_log;
     private TextInputLayout email_log_parent, password_log_parent;
     private TextView messToast;
@@ -63,6 +66,8 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         auth.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+        mUserData = FirebaseDatabase.getInstance().getReference().child("users");
 
         //to keep connected user
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -106,17 +111,20 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            String current_user_id = mAuth.getCurrentUser().getUid();
+                            //String device_token = FirebaseInstanceId.getInstance().getToken();
 
-                            Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
-                            messageToast();
+                                    Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
+                                    messageToast();
 
                         } else {
                             // If sign in fails, display a message to the user.
                             messageToast();
                         }
+
                     }
                 });
     }

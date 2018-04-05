@@ -67,16 +67,23 @@ public class UserList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder usersViewHolder, int i, @NonNull ChatUser chatUser) {
                 usersViewHolder.setName(chatUser.getUsername());
+                usersViewHolder.setStatus(chatUser.getStatus());
                 usersViewHolder.setPic(chatUser.getPicChatUser());
 
+                final String user_id = getRef(i).getKey();
+
                 final String user_name = chatUser.getUsername();
+                final String user_status = chatUser.getStatus();
+                final String user_pic = chatUser.getPicChatUser();
 
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent profileIntent = new Intent(UserList.this, ProfileFriendActivity.class);
-                        profileIntent.putExtra("user_name",user_name);
-                       // profileIntent.putExtra("user_status", user_status);
+                        profileIntent.putExtra("user_id",user_id);
+                        profileIntent.putExtra("username",user_name);
+                        profileIntent.putExtra("status", user_status);
+                        profileIntent.putExtra("picChatUser", user_pic);
                         startActivity(profileIntent);
                     }
                 });
@@ -130,6 +137,11 @@ public class UserList extends AppCompatActivity {
             TextView userName = (TextView) mView.findViewById(R.id.item_name_list);
             userName.setText(name);
 
+        }
+
+        public void setStatus(String status){
+            TextView userStatus = mView.findViewById(R.id.item_status_list);
+            userStatus.setText(status);
         }
 
         public void setPic(String uri){

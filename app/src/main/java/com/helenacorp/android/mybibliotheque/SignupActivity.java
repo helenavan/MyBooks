@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.model.ChatUser;
 
@@ -114,8 +115,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             mUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    final String device_token = FirebaseInstanceId.getInstance().getToken();
                                     // Construct the ChatUser
-                                    ChatUser chatUser = new ChatUser(mUser.getUid(),"status", displayName, email,"default");
+                                    ChatUser chatUser = new ChatUser(mUser.getUid(),"status", displayName, email,"default", device_token);
                                     //ChatUser chatUser = new ChatUser(user.getUid(),displayName, email,true,defaultRoom);
                                     // Setup link to users database
                                     FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).setValue(chatUser).addOnCompleteListener(new OnCompleteListener<Void>() {
