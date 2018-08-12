@@ -3,34 +3,57 @@ package com.helenacorp.android.mybibliotheque;
 import android.app.Application;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by helena on 21/03/2018.
  */
 
 public class ChattApp extends Application {
-    /**
-     * The Class ChattApp is the Main Application class of this app. The onCreate
-     * method of this class initializes the Parse.
-     */
-        /**
-         * The Firebase database
-         */
-        private FirebaseDatabase database;
 
-        /**
-         * Firebase Authentication component
-         */
-        private FirebaseAuth firebaseAuth;
+    private DatabaseReference database;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser mUser;
 
-        /* (non-Javadoc)
-         * @see android.app.Application#onCreate()
-         */
-        @Override
-        public void onCreate() {
-            super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-        }
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        mUser = firebaseAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid());
+
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    database.child("online").onDisconnect().setValue(false);
+                    database.child("online").setValue(true);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }

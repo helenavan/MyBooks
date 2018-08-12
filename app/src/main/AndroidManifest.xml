@@ -50,7 +50,7 @@
         <activity
             android:name=".AccountActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".SignupActivity"
             android:screenOrientation="portrait"
@@ -80,29 +80,17 @@
             android:name=".ViewListBooksActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:targetApi="jelly_bean"/>
+            tools:targetApi="jelly_bean" />
         <activity
-            android:name=".ChatActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="mybibliotheque-46d02.firebaseio.com/"
-                    android:pathPrefix="/message"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Chat"
+            android:name=".UserList"
+            android:parentActivityName=".AccountActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-
-        <activity android:name=".UI.CustomActivity" />
-        <activity android:name=".UserList" />
+            tools:targetApi="jelly_bean" />
+        <activity
+            android:name=".FriendsActivity"
+            android:parentActivityName=".AccountActivity"
+            android:screenOrientation="portrait"
+            tools:targetApi="jelly_bean" />
 
         <service
             android:name="service.MyFirebaseMessagingService"
@@ -111,15 +99,23 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
+        <!--
+            <service
             android:name="service.MyFirebaseInstanceIdService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        -->
 
-        <activity android:name=".ProfileFriendActivity"/>
+        <activity android:name=".ProfileFriendActivity">
+            <intent-filter>
+                <action android:name="com.helenacorp.android.mybibliotheque_TARGET_NOTIFICATION">
+                </action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.model.ChatUser;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -53,9 +55,10 @@ public class UserList extends AppCompatActivity {
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        android.support.v7.widget.Toolbar tlb = findViewById(R.id.toolbar_listUserChat);
+        Toolbar tlb = findViewById(R.id.toolbar_listUserChat);
         setSupportActionBar(tlb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Query query = FirebaseDatabase.getInstance().getReference().child("users");
         FirebaseRecyclerOptions<ChatUser> options =
                 new FirebaseRecyclerOptions.Builder<ChatUser>()
@@ -107,6 +110,7 @@ public class UserList extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
         firebaseRecyclerAdapter.startListening();
 
     }
@@ -117,7 +121,7 @@ public class UserList extends AppCompatActivity {
         firebaseRecyclerAdapter.stopListening();
     }
 
-    public static class UsersViewHolder extends RecyclerView.ViewHolder {
+    public class UsersViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
         private Context context;

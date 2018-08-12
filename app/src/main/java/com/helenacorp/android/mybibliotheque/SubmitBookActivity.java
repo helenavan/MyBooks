@@ -228,9 +228,9 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                String imageDownloadUrl = taskSnapshot.getDownloadUrl().toString();
+                String imageDownloadUrl = userPic.getDownloadUrl().toString();
                 BookModel bookModel = new BookModel(titleName.getText().toString(), category.getText().toString(), isbn.getText().toString(),
-                        lastName.getText().toString(), userName, null, ratingBar.getRating(), taskSnapshot.getDownloadUrl().toString(), resum.getText().toString());
+                        lastName.getText().toString(), userName, null, ratingBar.getRating(), userPic.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
                 //keys = name's attribut
                 Map<String, Object> map = new HashMap<>();

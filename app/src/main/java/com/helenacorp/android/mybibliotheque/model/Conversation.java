@@ -56,7 +56,7 @@ public class Conversation {
 
     public boolean isSent()
     {
-        return UserList.user.getIdUser().contentEquals(sender);
+        return UserList.user.getUser_id().contentEquals(sender);
     }
 
     public Date getDate() {

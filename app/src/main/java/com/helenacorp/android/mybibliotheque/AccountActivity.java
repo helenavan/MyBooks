@@ -50,10 +50,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Animation.AnimationListener {
     public static final String LIST_BOOKS = "listItems";
@@ -100,6 +103,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         // retrieve number of books in listview firebase
         mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        mStorageRef.keepSynced(true);
+
         mStorageRef.child("books").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -213,6 +218,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         } else if (id ==R.id.nav_status){
             setDialogue();
             hidKeyboard();
+        } else if(id == R.id.nav_friends){
+            Intent i = new Intent(AccountActivity.this, FriendsActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
@@ -256,14 +264,25 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onSuccess(Uri uri) {
-                Transformation transformation = new RoundedTransformationBuilder()
+            public void onSuccess(final Uri uri) {
+                final Transformation transformation = new RoundedTransformationBuilder()
                         .borderColor(Color.WHITE)
                         .borderWidthDp(3)
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-                Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+               // Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                    }
+                });
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -299,8 +318,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    final String download_url= taskSnapshot.getDownloadUrl().toString();
+                    Task<Uri> downloadUrl = userPicref.getDownloadUrl();
+                    final String download_url= userPicref.getDownloadUrl().toString();
                     //créer un attribut image dans user firebase
                     image_profil.child("picChatUser").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -314,6 +333,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                                         .build();
                                 Picasso.with(AccountActivity.this)
                                         .load(download_url)
+                                        .placeholder(R.drawable.ic_face_blue_grey_800_24dp)
                                         .fit().transform(transformation)
                                         .into(userPic);
                                 Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
@@ -406,9 +426,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     public void getStatus(){
         mStorageRef.child("status").addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userStatus = dataSnapshot.getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userStatus = Objects.requireNonNull(dataSnapshot.getValue()).toString();
                 acc_status.setText(userStatus);
             }
 

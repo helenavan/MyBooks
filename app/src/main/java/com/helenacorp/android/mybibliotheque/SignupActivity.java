@@ -124,7 +124,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                messToast.setText(R.string.mlog_bvn);
+                                               // messToast.setText(R.string.mlog_bvn);
+                                                messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
                                                 messageToast();
                                                 Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

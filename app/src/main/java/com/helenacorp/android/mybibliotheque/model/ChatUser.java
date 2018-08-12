@@ -12,40 +12,40 @@ import java.io.Serializable;
  */
 @IgnoreExtraProperties
 public class ChatUser implements Serializable{
-    private String idUser;
+    private String user_id;
     private String status;
     private String username;
     private String email;
     private String picChatUser;
-    private String token;
+    private String device_token;
 
-    public String getToken() {
-        return token;
+    public String getDevice_token() {
+        return device_token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setDevice_token(String device_token) {
+        this.device_token = device_token;
     }
 
     public ChatUser() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public ChatUser(String idUser, String status, String username, String email, String picChatUser, String token) {
-        this.idUser = idUser;
+    public ChatUser(String user_id, String status, String username, String email, String picChatUser, String device_token) {
+        this.user_id = user_id;
         this.status = status;
         this.username = username;
         this.email = email;
         this.picChatUser = picChatUser;
-        this.token = token;
+        this.device_token = device_token;
     }
 
-    public String getIdUser() {
-        return idUser;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getStatus() {

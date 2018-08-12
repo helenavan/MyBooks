@@ -22,37 +22,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
 
-        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getClickAction(), remoteMessage.getData().get("from_user_id"));
-        // Handle data payload of FCM messages.
-        Log.d(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
-        Log.d(TAG, "FCM Notification Message: " + remoteMessage.getNotification());
-        Log.d(TAG, "FCM Data Message: " + remoteMessage.getData());
-    }
+        String notification_title = remoteMessage.getNotification().getTitle();
+        String notification_message = remoteMessage.getNotification().getTitle();
+        String click_action = remoteMessage.getNotification().getClickAction();
+        String from_user_id = remoteMessage.getData().get("from_user_id");
 
-    private void sendNotification(String title, String messageBody, String click, String from_user) {
-
-        Intent intent = new Intent(click);
-        intent.putExtra("user_id", from_user);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon_mybooks)
-                .setContentTitle(title)
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentTitle(notification_title)
+                .setContentText(notification_message);
 
-        notificationBuilder.setContentIntent(pendingIntent);
-        //sets an ID for the notification
+        Intent resultIntent = new Intent(click_action);
+        resultIntent.putExtra("user_id", from_user_id);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
         int mNotificationId = (int) System.currentTimeMillis();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        notificationManager.notify(mNotificationId, notificationBuilder.build());
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
+
+
 }

@@ -22,6 +22,10 @@
             android:id="@+id/nav_status"
             android:icon="@drawable/ic_face_blue_grey_800_24dp"
             android:title="@string/drawer_statut" />
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/ic_people_grey_800_24dp"
+            android:title="@string/mes_potes"/>
 
     </group>
 
