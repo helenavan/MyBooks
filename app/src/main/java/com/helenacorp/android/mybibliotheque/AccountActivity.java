@@ -50,8 +50,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -257,7 +255,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     }
 
     //download and uploadload photoprofil
-    private boolean downloadAvatar() {
+    private void downloadAvatar() {
         // Create a storage reference from our app
         StorageReference storageRef = firebaseStorage.getReference();
 
@@ -271,8 +269,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-               // Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
-                Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
+                Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                /*Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -282,7 +280,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                     public void onError() {
                         Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
                     }
-                });
+                });*/
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -292,7 +290,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
             }
         });
-        return true;
     }
 
     private void uploadImage() {
@@ -325,7 +322,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Transformation transformation = new RoundedTransformationBuilder()
+                                downloadAvatar();
+                                /*Transformation transformation = new RoundedTransformationBuilder()
                                         .borderColor(Color.WHITE)
                                         .borderWidthDp(3)
                                         .cornerRadiusDp(55)
@@ -335,7 +333,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                                         .load(download_url)
                                         .placeholder(R.drawable.ic_face_blue_grey_800_24dp)
                                         .fit().transform(transformation)
-                                        .into(userPic);
+                                        .into(userPic);*/
                                 Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
                             }
                         }
