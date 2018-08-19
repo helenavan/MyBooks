@@ -132,7 +132,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             uID = user.getUid();
             userPseudo = user.getDisplayName();
             userEmail = user.getEmail();
-            imageUri = user.getPhotoUrl();
+            if (imageUri != null) imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
             userPic.setImageURI(imageUri);
             //sharedpreference
@@ -212,13 +212,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             showFileChooser();
         } else if (id == R.id.nav_countBooks) {
             displayListBooks();
-        } else if (id == R.id.nav_chat){
+        } else if (id == R.id.nav_chat) {
             Intent i = new Intent(AccountActivity.this, UserList.class);
             startActivity(i);
-        } else if (id ==R.id.nav_status){
+        } else if (id == R.id.nav_status) {
             setDialogue();
             hidKeyboard();
-        } else if(id == R.id.nav_friends){
+        } else if (id == R.id.nav_friends) {
             Intent i = new Intent(AccountActivity.this, FriendsActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_disconnect) {
@@ -271,7 +271,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-              //  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                //  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
                 Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -296,48 +296,43 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     private void uploadImage() {
 
-        if (imageUri != null) {
-            final DatabaseReference image_profil = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-            StorageReference storageReference = firebaseStorage.getReference();
-            final StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
-            userPic.setDrawingCacheEnabled(true);
-            userPic.buildDrawingCache();
-            bitmap = userPic.getDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = userPicref.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        final DatabaseReference image_profil = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        StorageReference storageReference = firebaseStorage.getReference();
+        final StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
+        userPic.setDrawingCacheEnabled(true);
+        userPic.buildDrawingCache();
+        bitmap = userPic.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = userPicref.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Task<Uri> downloadUrl = userPicref.getDownloadUrl();
-                    final String download_url= userPicref.getDownloadUrl().toString();
-                    //créer un attribut image dans user firebase
-                    image_profil.child("picChatUser").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                downloadAvatar();
-                                Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
-                            }
+                Task<Uri> downloadUrl = userPicref.getDownloadUrl();
+                final String download_url = userPicref.getDownloadUrl().toString();
+                //créer un attribut image dans user firebase
+                image_profil.child("picChatUser").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            downloadAvatar();
+                            Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
 
-                    Log.d("downloadUrl-->", "" + downloadUrl);
+                Log.d("downloadUrl-->", "" + downloadUrl);
 
-                }
-            });
-        } else {
-
-            Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
     }
 
     private void showFileChooser() {

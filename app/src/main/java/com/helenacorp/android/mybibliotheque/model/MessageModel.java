@@ -6,29 +6,29 @@ package com.helenacorp.android.mybibliotheque.model;
 
 public class MessageModel {
 
-    private String id;
-    private String message;
-    private String userNameModel;
-    private String userPic;
-    private String imageUserUrl;
+    private String message, type;
+    private long  time;
+    private boolean seen;
 
-    public MessageModel(){
+    private String from;
+
+    public MessageModel(String from) {
+        this.from = from;
     }
 
-    public MessageModel(String id, String message, String userNameModel, String userPic, String imageUserUrl) {
-        this.id = id;
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public MessageModel(String message, String type, long time, boolean seen) {
         this.message = message;
-        this.userNameModel = userNameModel;
-        this.userPic = userPic;
-        this.imageUserUrl = imageUserUrl;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.type = type;
+        this.time = time;
+        this.seen = seen;
     }
 
     public String getMessage() {
@@ -39,27 +39,31 @@ public class MessageModel {
         this.message = message;
     }
 
-    public String getUserNameModel() {
-        return userNameModel;
+    public String getType() {
+        return type;
     }
 
-    public void setUserName(String userName) {
-        this.userNameModel = userNameModel;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getUserPic() {
-        return userPic;
+    public long getTime() {
+        return time;
     }
 
-    public void setUserPic(String userPic) {
-        this.userPic = userPic;
+    public void setTime(long time) {
+        this.time = time;
     }
 
-    public String getImageUserUrl() {
-        return imageUserUrl;
+    public boolean isSeen() {
+        return seen;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUserUrl = imageUrl;
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
+    public MessageModel(){
+
     }
 }

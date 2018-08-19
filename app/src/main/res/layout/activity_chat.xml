@@ -4,89 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.helenacorp.android.mybibliotheque.ChatActivity">
+    tools:context=".ChatActivity">
+    <include
+        android:id="@+id/chat_app_bar"
+        layout="@layout/app_bar_layout" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/message_toolbar"
-        style="@style/ToolBarStyle.Event"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/rougeD"
-        android:elevation="4dp"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white">
-
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/message_RecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/message_EditText"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_toolbar"
-        />
-    <ImageView
-        android:id="@+id/back_addMessage"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/message_swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/bleu_gray"
-        app:layout_constraintStart_toStartOf="@id/addMessageImageView"
-        app:layout_constraintEnd_toEndOf="@id/message_btn_send"
-        app:layout_constraintBottom_toBottomOf="@+id/message_EditText"
-        app:layout_constraintTop_toTopOf="@+id/message_EditText"/>
-    <ImageView
-        android:id="@+id/addMessageImageView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:src="@drawable/ic_add_white_48dp"
-        android:tint="@color/darkgray1"
-        app:layout_constraintBottom_toBottomOf="@+id/message_RecyclerView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/message_EditText"
-        app:layout_constraintTop_toTopOf="@+id/message_EditText"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chat_app_bar">
 
-    <EditText
-        android:id="@+id/message_EditText"
-        android:layout_width="180dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:background="@drawable/background_edit_submit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/addMessageImageView"
-        app:layout_constraintRight_toLeftOf="@+id/message_btn_send"
-        app:layout_constraintTop_toBottomOf="@+id/message_RecyclerView"
-        app:layout_constraintVertical_bias="1.0" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messages_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/linearLayout"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/chat_app_bar"></android.support.v7.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/message_btn_send"
-        android:layout_width="wrap_content"
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="envoyer"
-        android:theme="@style/buttonTheme"
-        app:layout_constraintBaseline_toBaselineOf="@+id/message_EditText"
-        app:layout_constraintLeft_toRightOf="@+id/message_EditText"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        <ImageButton
+            android:id="@+id/chat_add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:alpha="0.5"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            app:srcCompat="@drawable/ic_playlist_add_blue_grey_800_18dp" />
+
+        <EditText
+            android:id="@+id/chat_message_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Enter Message..."
+            android:inputType="textPersonName"
+            android:paddingBottom="12dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="14dp" />
+
+        <ImageButton
+            android:id="@+id/chat_send_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:alpha="0.5"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            app:srcCompat="@drawable/ic_people_grey_800_24dp" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

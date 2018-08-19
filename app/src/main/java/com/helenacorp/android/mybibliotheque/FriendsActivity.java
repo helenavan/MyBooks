@@ -41,6 +41,7 @@ public class FriendsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String mCurrent_user_id;
     private View mMainView;
+    private String list_user_id;
 
 
     @Override
@@ -68,6 +69,8 @@ public class FriendsActivity extends AppCompatActivity {
         mFriendList.setHasFixedSize(true);
         mFriendList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+
+
         Query query = FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrent_user_id);
         query.keepSynced(true);
         FirebaseRecyclerOptions<Friends> options =
@@ -81,7 +84,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                 friendsViewHolder.setDate(friends.getDate());
 
-                String list_user_id = getRef(i).getKey();
+                list_user_id = getRef(i).getKey();
 
                 final String user_name = friends.getDate();
 
@@ -93,7 +96,7 @@ public class FriendsActivity extends AppCompatActivity {
                         String userPic = dataSnapshot.child("picChatUser").getValue().toString();
 
                         if(dataSnapshot.hasChild("online")){
-                            Boolean userOnline = (boolean) dataSnapshot.child("online").getValue();
+                            String userOnline =  dataSnapshot.child("online").getValue().toString();
                             friendsViewHolder.setOnline(userOnline);
 
                         }
@@ -160,6 +163,22 @@ public class FriendsActivity extends AppCompatActivity {
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Intent intent = new Intent(getApplicationContext(), ProfileFriendActivity.class );
+                                        intent.putExtra("user_id", list_user_id);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                            if(which == 1){
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                     }
 
@@ -168,8 +187,6 @@ public class FriendsActivity extends AppCompatActivity {
 
                                     }
                                 });
-                                Intent intent = new Intent(mView.getContext(), ProfileFriendActivity.class );
-                               // intent.putExtra("user_id", list_user_id);
                             }
                         }
                     });
@@ -178,44 +195,45 @@ public class FriendsActivity extends AppCompatActivity {
             });
         }
 
-        public void setDate(String date){
-            TextView userNameView = mView.findViewById(R.id.item_friends_date);
-            userNameView.setText(date);
-        }
+            public void setDate(String date) {
+                TextView userNameView = mView.findViewById(R.id.item_friends_date);
+                userNameView.setText(date);
+            }
 
-        public void setName(String name){
+            public void setName(String name) {
 
-            TextView userName = (TextView) mView.findViewById(R.id.item_name_list_friends);
-            userName.setText(name);
+                TextView userName = (TextView) mView.findViewById(R.id.item_name_list_friends);
+                userName.setText(name);
 
-        }
-        public void setPic(String uri, Context context){
-            context = userPic.getContext();
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .borderColor(R.color.vertD)
-                    .borderWidthDp(3)
-                    .cornerRadiusDp(30)
-                    .oval(false)
-                    .build();
+            }
 
-            Picasso.with(context)
-                    .load(uri)
-                    .placeholder(R.drawable.ic_user)
-                    .fit()
-                    .transform(transformation)
-                    .into(userPic);
-        }
+            public void setPic(String uri, Context context) {
 
-        public void setOnline(boolean online_status){
-            ImageView userOnlineView = mView.findViewById(R.id.item_ic_status_friends);
-            if(online_status == true){
-                userOnlineView.setVisibility(View.VISIBLE);
-            }else{
-                userOnlineView.setVisibility(View.INVISIBLE);
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(R.color.vertD)
+                        .borderWidthDp(3)
+                        .cornerRadiusDp(30)
+                        .oval(false)
+                        .build();
+
+                Picasso.with(context)
+                        .load(uri)
+                        .placeholder(R.drawable.ic_user)
+                        .fit()
+                        .transform(transformation)
+                        .into(userPic);
+            }
+
+            public void setOnline(String online_status) {
+                ImageView userOnlineView = mView.findViewById(R.id.item_ic_status_friends);
+                if (online_status.equals("true")) {
+                    userOnlineView.setVisibility(View.VISIBLE);
+                } else {
+                    userOnlineView.setVisibility(View.INVISIBLE);
+                }
+
             }
 
         }
 
     }
-
-}

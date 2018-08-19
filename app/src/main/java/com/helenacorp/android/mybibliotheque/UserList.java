@@ -89,6 +89,8 @@ public class UserList extends AppCompatActivity {
                 final String user_status = chatUser.getStatus();
                 final String user_pic = chatUser.getPicChatUser();
 
+
+
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

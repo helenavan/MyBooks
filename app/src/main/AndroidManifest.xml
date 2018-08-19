@@ -22,6 +22,7 @@
         android:required="false" />
 
     <application
+        android:name=".ChattApp"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/icon_mybooks"
@@ -29,8 +30,7 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeBase"
-        android:name=".ChattApp">
+        android:theme="@style/AppThemeBase">
         <meta-data
             android:name="com.google.android.book.API_KEY"
             android:value="@string/google_key" />
@@ -112,11 +112,13 @@
 
         <activity android:name=".ProfileFriendActivity">
             <intent-filter>
-                <action android:name="com.helenacorp.android.mybibliotheque_TARGET_NOTIFICATION">
-                </action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="com.helenacorp.android.mybibliotheque_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".StatusActivity"></activity>
     </application>
 
 </manifest>
