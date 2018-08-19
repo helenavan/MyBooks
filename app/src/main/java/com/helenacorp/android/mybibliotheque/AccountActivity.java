@@ -50,6 +50,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -269,8 +271,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-                Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
-                /*Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
+              //  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -280,7 +282,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                     public void onError() {
                         Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
                     }
-                });*/
+                });
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -323,17 +325,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 downloadAvatar();
-                                /*Transformation transformation = new RoundedTransformationBuilder()
-                                        .borderColor(Color.WHITE)
-                                        .borderWidthDp(3)
-                                        .cornerRadiusDp(55)
-                                        .oval(false)
-                                        .build();
-                                Picasso.with(AccountActivity.this)
-                                        .load(download_url)
-                                        .placeholder(R.drawable.ic_face_blue_grey_800_24dp)
-                                        .fit().transform(transformation)
-                                        .into(userPic);*/
                                 Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -437,4 +428,31 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             }
         });
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser == null){
+            Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+
+            mStorageRef.child("online").setValue(true);
+        }
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+
+        }
+            mStorageRef.child("online").setValue(false);
+
+    }
+
 }

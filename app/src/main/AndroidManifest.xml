@@ -29,7 +29,8 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeBase">
+        android:theme="@style/AppThemeBase"
+        android:name=".ChattApp">
         <meta-data
             android:name="com.google.android.book.API_KEY"
             android:value="@string/google_key" />

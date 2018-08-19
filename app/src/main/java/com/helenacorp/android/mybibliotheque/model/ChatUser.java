@@ -18,6 +18,16 @@ public class ChatUser implements Serializable{
     private String email;
     private String picChatUser;
     private String device_token;
+    private boolean online;
+
+    public boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
 
     public String getDevice_token() {
         return device_token;
@@ -31,13 +41,14 @@ public class ChatUser implements Serializable{
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public ChatUser(String user_id, String status, String username, String email, String picChatUser, String device_token) {
+    public ChatUser(String user_id, String status, String username, String email, String picChatUser, String device_token, boolean online) {
         this.user_id = user_id;
         this.status = status;
         this.username = username;
         this.email = email;
         this.picChatUser = picChatUser;
         this.device_token = device_token;
+        this.online = online;
     }
 
     public String getUser_id() {

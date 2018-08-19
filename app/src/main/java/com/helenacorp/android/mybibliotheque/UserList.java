@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +20,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.model.ChatUser;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -30,26 +34,31 @@ import com.squareup.picasso.Transformation;
  */
 
 public class UserList extends AppCompatActivity {
-    /** Users database reference */
+    /**
+     * Users database reference
+     */
     private DatabaseReference database;
+    private StorageReference mStorage;
     private RecyclerView mRecyclerview;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
-    private ImageView imagePic;
-    /** The user. */
+
+    /**
+     * The user.
+     */
     public static ChatUser user;
 
     /* (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_list);
 
-        imagePic = findViewById(R.id.item_list_picUser);
         // Get reference to the Firebase database
-        database  = FirebaseDatabase.getInstance().getReference().child("users");
+        database = FirebaseDatabase.getInstance().getReference().child("users");
+
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         mRecyclerview = findViewById(R.id.list_users);
         mRecyclerview.setHasFixedSize(true);
@@ -65,13 +74,14 @@ public class UserList extends AppCompatActivity {
                         .setQuery(query, ChatUser.class)
                         .build();
 
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ChatUser,UsersViewHolder>(options) {
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ChatUser, UsersViewHolder>(options) {
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder usersViewHolder, int i, @NonNull ChatUser chatUser) {
+
                 usersViewHolder.setName(chatUser.getUsername());
                 usersViewHolder.setStatus(chatUser.getStatus());
-                usersViewHolder.setPic(chatUser.getPicChatUser());
+                usersViewHolder.setPic(chatUser.getPicChatUser(), getApplicationContext());
 
                 final String user_id = getRef(i).getKey();
 
@@ -83,8 +93,8 @@ public class UserList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent profileIntent = new Intent(UserList.this, ProfileFriendActivity.class);
-                        profileIntent.putExtra("user_id",user_id);
-                        profileIntent.putExtra("username",user_name);
+                        profileIntent.putExtra("user_id", user_id);
+                        profileIntent.putExtra("username", user_name);
                         profileIntent.putExtra("status", user_status);
                         profileIntent.putExtra("picChatUser", user_pic);
                         startActivity(profileIntent);
@@ -108,7 +118,7 @@ public class UserList extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
 
         firebaseRecyclerAdapter.startListening();
@@ -116,7 +126,7 @@ public class UserList extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         firebaseRecyclerAdapter.stopListening();
     }
@@ -124,31 +134,25 @@ public class UserList extends AppCompatActivity {
     public class UsersViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
-        private Context context;
-        private ImageView userPic;
 
         public UsersViewHolder(View itemView) {
             super(itemView);
-
             mView = itemView;
-
-            userPic = mView.findViewById(R.id.item_list_picUser);
-
         }
 
-        public void setName(String name){
-
+        public void setName(String name) {
             TextView userName = (TextView) mView.findViewById(R.id.item_name_list);
             userName.setText(name);
-
         }
 
-        public void setStatus(String status){
+        public void setStatus(String status) {
             TextView userStatus = mView.findViewById(R.id.item_status_list);
             userStatus.setText(status);
         }
 
-        public void setPic(String uri){
+        public void setPic(String uri, Context context) {
+            ImageView userPic = mView.findViewById(R.id.item_list_picUser);
+
             context = userPic.getContext();
             Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(R.color.vertD)
@@ -160,6 +164,7 @@ public class UserList extends AppCompatActivity {
             Picasso.with(context)
                     .load(uri)
                     .placeholder(R.drawable.ic_user)
+                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .fit()
                     .transform(transformation)
                     .into(userPic);

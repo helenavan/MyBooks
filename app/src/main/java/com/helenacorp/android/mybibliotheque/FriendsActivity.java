@@ -2,9 +2,12 @@ package com.helenacorp.android.mybibliotheque;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,7 +60,10 @@ public class FriendsActivity extends AppCompatActivity {
 
         mCurrent_user_id = mAuth.getCurrentUser().getUid();
 
+        mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrent_user_id);
+        mFriendsDatabase.keepSynced(true);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersDatabase.keepSynced(true);
 
         mFriendList.setHasFixedSize(true);
         mFriendList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -75,7 +81,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                 friendsViewHolder.setDate(friends.getDate());
 
-                final String list_user_id = getRef(i).getKey();
+                String list_user_id = getRef(i).getKey();
 
                 final String user_name = friends.getDate();
 
@@ -85,11 +91,18 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String userName = dataSnapshot.child("username").getValue().toString();
                         String userPic = dataSnapshot.child("picChatUser").getValue().toString();
- //                       String userOnline = dataSnapshot.child("online").getValue().toString();
+
+                        if(dataSnapshot.hasChild("online")){
+                            Boolean userOnline = (boolean) dataSnapshot.child("online").getValue();
+                            friendsViewHolder.setOnline(userOnline);
+
+                        }
+                    //    String userOnline = dataSnapshot.child("online").getValue().toString();
 
                         friendsViewHolder.setName(userName);
-                        friendsViewHolder.setPic(userPic);
-//                        friendsViewHolder.setOnline(userOnline);
+                        friendsViewHolder.setPic(userPic, getApplicationContext());
+
+
                     }
 
                     @Override
@@ -120,19 +133,49 @@ public class FriendsActivity extends AppCompatActivity {
 
     }
 
-    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
+    public class FriendsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
 
-        private Context context;
         private ImageView userPic;
 
-        public FriendsViewHolder(View itemView) {
+        private FriendsViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;
 
             userPic = mView.findViewById(R.id.item_list_picFriends);
+
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CharSequence option[] = new CharSequence[]{"Open Profile", "send message"};
+                    final Query query = FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrent_user_id);
+                    AlertDialog.Builder builder= new AlertDialog.Builder(mView.getContext());
+                    builder.setTitle("Select Option");
+                    builder.setItems(option, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(which == 0){
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                                Intent intent = new Intent(mView.getContext(), ProfileFriendActivity.class );
+                               // intent.putExtra("user_id", list_user_id);
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            });
         }
 
         public void setDate(String date){
@@ -146,7 +189,7 @@ public class FriendsActivity extends AppCompatActivity {
             userName.setText(name);
 
         }
-        public void setPic(String uri){
+        public void setPic(String uri, Context context){
             context = userPic.getContext();
             Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(R.color.vertD)
@@ -163,15 +206,16 @@ public class FriendsActivity extends AppCompatActivity {
                     .into(userPic);
         }
 
-        public void setOnline(String online_status){
+        public void setOnline(boolean online_status){
             ImageView userOnlineView = mView.findViewById(R.id.item_ic_status_friends);
-            if(online_status.equals("true")){
+            if(online_status == true){
                 userOnlineView.setVisibility(View.VISIBLE);
             }else{
                 userOnlineView.setVisibility(View.INVISIBLE);
             }
 
         }
+
     }
 
 }
