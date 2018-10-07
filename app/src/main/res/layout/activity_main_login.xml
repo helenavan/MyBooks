@@ -56,7 +56,7 @@
             android:inputType="textEmailAddress"
             android:paddingLeft="20dp"
             android:paddingStart="20dp"
-            android:text="helena@marce.com" />
+            />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout

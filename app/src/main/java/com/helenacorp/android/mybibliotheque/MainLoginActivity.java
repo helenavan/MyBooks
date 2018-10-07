@@ -16,15 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.helenacorp.android.mybibliotheque.model.ChatUser;
 
 public class MainLoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String PREFS_NAME = "preferences";
@@ -39,12 +34,10 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
     private View viewLayout;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mUserData, mOnlineData;
     private TextInputEditText email_log, password_log;
     private TextInputLayout email_log_parent, password_log_parent;
     private TextView messToast;
     private Button login, auth;
-    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +63,6 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         auth.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-
-
-        mUserData = FirebaseDatabase.getInstance().getReference().child("users");
-        mOnlineData = FirebaseDatabase.getInstance().getReference().child("users");
 
         //to keep connected user
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -111,38 +100,23 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         toast1.show();
     }
 
-    private void sigIn(final String email, String password) {
+    private void sigIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            mUser = mAuth.getCurrentUser();
-                            final String current_user_id = mAuth.getCurrentUser().getUid();
-                            final String device_token = FirebaseInstanceId.getInstance().getToken();
-                            final String displayname = mUser.getDisplayName();
-
-                            mOnlineData.child(current_user_id).child("online").setValue("true").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                   /* ChatUser chatUser = new ChatUser(current_user_id, "status", displayname, email, "default", device_token, true);
-                                    // Setup link to users database
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).child("online").setValue(chatUser);*/
-                                    // messToast.setText(R.string.mlog_bvn);
-                                    Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
-                                    messageToast();
-                                    finish();
-                                }
-
-                            });
+                            // Sign in success, update UI with the signed-in user's information
+                            Intent intent = new Intent(MainLoginActivity.this, AccountActivity.class);
+                            startActivity(intent);
+                            messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
+                            messageToast();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            //  mUserData.child(mAuth.getCurrentUser().getUid()).child("online").setValue(true);
+                            //Intent intent = new Intent(MainLoginActivity.this, SignupActivity.class);
+                            // startActivity(intent);
+                            messToast.setText(R.string.mlog_count);
                             messageToast();
                         }
 
@@ -162,7 +136,6 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
-            // mUserData.child(mAuth.getCurrentUser().getUid()).child("online").setValue(false);
         }
     }
 

@@ -14,18 +14,6 @@
             android:id="@+id/nav_countBooks"
             android:icon="@drawable/ic_playlist_add_blue_grey_800_18dp"
             android:title="@string/drawer_livres" />
-        <item
-            android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_chat_black"
-            android:title="@string/drawer_chat"/>
-        <item
-            android:id="@+id/nav_status"
-            android:icon="@drawable/ic_face_blue_grey_800_24dp"
-            android:title="@string/drawer_statut" />
-        <item
-            android:id="@+id/nav_friends"
-            android:icon="@drawable/ic_people_grey_800_24dp"
-            android:title="@string/mes_potes"/>
 
     </group>
 

@@ -28,12 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.helenacorp.android.mybibliotheque.model.BookModel;
-import com.helenacorp.android.mybibliotheque.model.ChatUser;
 
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,10 +36,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
+    private FirebaseUser user;
     private DatabaseReference ref;
-    private FirebaseDatabase mDatabase;
-    private ArrayList<BookModel> mBooks;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private TextInputEditText authName, authEmail, authPassw;
     private TextInputLayout authNameParent, authEmailParent, authPassParent;
@@ -95,45 +88,28 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         loginAccount(displayName = authName.getText().toString(), authEmail.getText().toString(), authPassw.getText().toString());
     }
 
-    private void loginAccount(final String name, final String email, String password) {
+    private void loginAccount(final String name, String email, String password) {
         // START create_user_with_email
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            final ArrayList<String> defaultRoom = new ArrayList<String>();
-                            defaultRoom.add("home");
                             // Sign in success, update UI with the signed-in user's information
                             messToast.setText(R.string.mlog_bvn);
                             messageToast();
-                            mUser = mAuth.getCurrentUser();
-                          //  mUser = task.getResult().getUser();
+                            user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(displayName)
                                     .build();
-                            mUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    final String device_token = FirebaseInstanceId.getInstance().getToken();
-                                    // Construct the ChatUser
-                                    ChatUser chatUser = new ChatUser(mUser.getUid(),"status", displayName, email,"default", device_token,true);
-                                    //ChatUser chatUser = new ChatUser(user.getUid(),displayName, email,true,defaultRoom);
-                                    // Setup link to users database
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid()).setValue(chatUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                               // messToast.setText(R.string.mlog_bvn);
-                                                messToast.setText("Bonjour " + mAuth.getCurrentUser().getDisplayName());
-                                                messageToast();
-                                                Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        }
-                                    });
+                                    messToast.setText(R.string.mlog_bvn);
+                                    messageToast();
+                                    Intent intent = new Intent(SignupActivity.this, AccountActivity.class);
+                                    finish();
+                                    startActivity(intent);
                                 }
                             });
 
@@ -211,7 +187,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
     @Override
     public void onStart(){
         super.onStart();

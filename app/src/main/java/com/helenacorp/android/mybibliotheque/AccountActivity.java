@@ -2,7 +2,6 @@ package com.helenacorp.android.mybibliotheque;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -18,27 +17,20 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +42,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -66,8 +57,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private SharedPreferences sp;
-    private TextView acc_username, acc_numlist, btn_upload, acc_status;
-    private String uID, userEmail, userPseudo, nbrBooks, userStatus;
+    private TextView acc_username, acc_numlist, btn_upload;
+    private String uID, userEmail, userPseudo, nbrBooks;
     private ImageView userPic;
     private ProgressBar mBar;
     private DatabaseReference mStorageRef;
@@ -80,6 +71,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private ProgressDialog mDialog;
     private DrawerLayout drawer;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -88,24 +80,21 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
         acc_username = (TextView) findViewById(R.id.user_name);
         acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
-        acc_status = findViewById(R.id.user_status);
         userPic = (ImageView) findViewById(R.id.user_pic);
         cloudL = findViewById(R.id.user_cloudL);
         cloudM = findViewById(R.id.user_cloudM);
         cloudR = findViewById(R.id.user_cloudR);
 
         mDialog = new ProgressDialog(AccountActivity.this);
-        mDialog.setMessage("charge");
+        mDialog.setMessage("en charge");
         mDialog.show();
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         // retrieve number of books in listview firebase
-        mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        mStorageRef.keepSynced(true);
-
-        mStorageRef.child("books").addListenerForSingleValueEvent(new ValueEventListener() {
+        mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        mStorageRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mDialog.dismiss();
@@ -118,8 +107,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
             }
         });
-        //to fetch user's status
-        getStatus();
+
+
 
         if (user == null) {
             // User is signed out
@@ -127,12 +116,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
             startActivity(intent);
 
+
         } else {
             // User is signed in
             uID = user.getUid();
             userPseudo = user.getDisplayName();
             userEmail = user.getEmail();
-            if (imageUri != null) imageUri = user.getPhotoUrl();
+            imageUri = user.getPhotoUrl();
             acc_username.setText(userPseudo);
             userPic.setImageURI(imageUri);
             //sharedpreference
@@ -205,6 +195,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
         if (id == R.id.nav_mylist) {
             Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
             startActivity(intent);
@@ -212,21 +203,12 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             showFileChooser();
         } else if (id == R.id.nav_countBooks) {
             displayListBooks();
-        } else if (id == R.id.nav_chat) {
-            Intent i = new Intent(AccountActivity.this, UserList.class);
-            startActivity(i);
-        } else if (id == R.id.nav_status) {
-            setDialogue();
-            hidKeyboard();
-        } else if (id == R.id.nav_friends) {
-            Intent i = new Intent(AccountActivity.this, FriendsActivity.class);
-            startActivity(i);
         } else if (id == R.id.nav_disconnect) {
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
             startActivity(i);
         }
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -257,32 +239,21 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     }
 
     //download and uploadload photoprofil
-    private void downloadAvatar() {
+    private boolean downloadAvatar() {
         // Create a storage reference from our app
         StorageReference storageRef = firebaseStorage.getReference();
 
         storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onSuccess(final Uri uri) {
-                final Transformation transformation = new RoundedTransformationBuilder()
+            public void onSuccess(Uri uri) {
+                Transformation transformation = new RoundedTransformationBuilder()
                         .borderColor(Color.WHITE)
                         .borderWidthDp(3)
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-                //  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
-                Picasso.with(AccountActivity.this).load(uri).networkPolicy(NetworkPolicy.OFFLINE).fit().transform(transformation).into(userPic, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
-                    }
-                });
+                  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -292,47 +263,51 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 // Toast.makeText(AccountActivity.this, exception.toString() + "!!!", Toast.LENGTH_SHORT).show();
             }
         });
+        return true;
     }
 
     private void uploadImage() {
 
-        final DatabaseReference image_profil = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        StorageReference storageReference = firebaseStorage.getReference();
-        final StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
-        userPic.setDrawingCacheEnabled(true);
-        userPic.buildDrawingCache();
-        bitmap = userPic.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = userPicref.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        if (imageUri != null) {
 
-                Task<Uri> downloadUrl = userPicref.getDownloadUrl();
-                final String download_url = userPicref.getDownloadUrl().toString();
-                //créer un attribut image dans user firebase
-                image_profil.child("picChatUser").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            downloadAvatar();
-                            Toast.makeText(AccountActivity.this, "Image chargée!!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            StorageReference storageReference = firebaseStorage.getReference();
+            StorageReference userPicref = storageReference.child("images/" + uID + ".jpg");
+            userPic.setDrawingCacheEnabled(true);
+            userPic.buildDrawingCache();
+            bitmap = userPic.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = userPicref.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
+                    Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                    Transformation transformation = new RoundedTransformationBuilder()
+                            .borderColor(Color.WHITE)
+                            .borderWidthDp(3)
+                            .cornerRadiusDp(55)
+                            .oval(false)
+                            .build();
+                    Picasso.with(AccountActivity.this)
+                            .load(downloadUrl)
+                            .fit().transform(transformation)
+                            .into(userPic);
+                    Log.d("downloadUrl-->", "" + downloadUrl);
 
-                Log.d("downloadUrl-->", "" + downloadUrl);
+                }
+            });
+        } else {
 
-            }
-        });
+            Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showFileChooser() {
@@ -376,78 +351,4 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     public void onAnimationRepeat(Animation animation) {
 
     }
-
-    public void setDialogue(){
-        LayoutInflater layoutInflater = LayoutInflater.from(AccountActivity.this);
-        View view1 = layoutInflater.inflate(R.layout.dialog_status, null);
-        final EditText statusEdit =(EditText) view1.findViewById(R.id.edit_status_dialog);
-        final AlertDialog.Builder alertD = new AlertDialog.Builder(AccountActivity.this);
-        alertD.setView(view1);
-        alertD.setCancelable(false);
-
-        alertD.setPositiveButton(R.string.btn_add,new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               // Toast.makeText(AccountActivity.this, "testDialogue", Toast.LENGTH_SHORT).show();
-                DatabaseReference databaseReference = mStorageRef.child("status");
-                String status = statusEdit.getText().toString();
-                databaseReference.setValue(status);
-            }
-        });
-        alertD.setNegativeButton(R.string.acc_quit, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog dialog = alertD.create();
-        dialog.show();
-    }
-
-    public void hidKeyboard(){
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-
-    public void getStatus(){
-        mStorageRef.child("status").addValueEventListener(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userStatus = Objects.requireNonNull(dataSnapshot.getValue()).toString();
-                acc_status.setText(userStatus);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
-            startActivity(intent);
-            finish();
-        }else{
-
-            mStorageRef.child("online").setValue(true);
-        }
-    }
-    @Override
-    public void onStop(){
-        super.onStop();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-
-        }
-            mStorageRef.child("online").setValue(false);
-
-    }
-
 }
