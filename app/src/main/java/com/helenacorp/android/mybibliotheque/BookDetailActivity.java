@@ -5,13 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,12 +13,16 @@ import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +34,12 @@ import com.squareup.picasso.Transformation;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class BookDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -55,7 +58,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private RatingBar ratingBar;
     ConstraintLayout constraintLayout;
     private FrameLayout framelayoutTitle;
-    private LinearLayout linearlayoutTitle;
+    private LinearLayoutCompat linearlayoutTitle;
     private Toolbar toolbar;
     private FloatingActionButton edit_detail;
     private FirebaseAuth mAuth;
@@ -82,7 +85,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         name = findViewById(R.id.autorLastName_item);
         ratingBar = findViewById(R.id.ratingbar);
         constraintLayout = findViewById(R.id.container);
-        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
+        linearlayoutTitle = (LinearLayoutCompat) findViewById(R.id.linearlayout_title);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appbar = (AppBarLayout) findViewById(R.id.app_bar);

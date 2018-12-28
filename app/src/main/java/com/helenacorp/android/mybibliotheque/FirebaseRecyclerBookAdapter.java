@@ -1,20 +1,23 @@
 package com.helenacorp.android.mybibliotheque;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
+        import android.util.Log;
+        import android.view.ViewGroup;
+        import android.widget.Filter;
+        import android.widget.Filterable;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
+        import com.google.firebase.database.ChildEventListener;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.Query;
+        import com.helenacorp.android.mybibliotheque.model.BookModel;
+
+        import java.lang.reflect.ParameterizedType;
+        import java.util.ArrayList;
+        import java.util.List;
+
+        import androidx.annotation.Nullable;
+        import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Matteo on 24/08/2015.
@@ -340,5 +343,4 @@ public abstract class FirebaseRecyclerBookAdapter<ViewHolder extends RecyclerVie
 
         return filter;
     }
-
 }

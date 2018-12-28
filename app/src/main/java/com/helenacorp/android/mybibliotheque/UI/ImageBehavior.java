@@ -2,13 +2,14 @@ package com.helenacorp.android.mybibliotheque.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toolbar;
 
 import com.helenacorp.android.mybibliotheque.R;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * Created by helena on 19/01/2018.

@@ -4,15 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.transition.Scene;
-import android.support.transition.TransitionInflater;
-import android.support.transition.TransitionManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +32,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Scene;
+import androidx.transition.TransitionInflater;
+import androidx.transition.TransitionManager;
 
 
 /**
@@ -76,27 +78,39 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
         holder.resume.setText(model.getInfo());
         holder.isbnNumber.setText(model.getIsbn());
         holder.ratingBar.setRating(model.getRating());
-        holder.keyBook.setText(model.getUserid());
+        holder.keyBook.setText(model.getBookid());
         holder.pic.getContext();
-
-        Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(R.color.vertD)
-                .borderWidthDp(3)
-                .cornerRadiusDp(30)
-                .oval(false)
-                .build();
-
-        Picasso.with(holder.context)
-                .load(model.getImageUrl())
-                .fit()
-                .transform(transformation)
-                .into(holder.pic);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        // Create a reference to the file to delete
         final StorageReference desertRef = storageReference.child("couvertures/" + user.getUid() + holder.txtTitle.getText().toString().trim() + ".jpg");
+
+        desertRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(R.color.vertD)
+                        .borderWidthDp(3)
+                        .cornerRadiusDp(30)
+                        .oval(false)
+                        .build();
+
+                Picasso.with(holder.context)
+                        .load(uri)
+                        .fit()
+                        .transform(transformation)
+                        .into(holder.pic);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+        // Create a reference to the file to delete
         final String idBooks = holder.isbnNumber.getText().toString();
         Log.e("tag", idBooks);
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
@@ -177,7 +191,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
                     String resume = model.getInfo();
                     String isbn = model.getIsbn();
                     Float rating = model.getRating();
-                    String bookKey = model.getUserid();
+                    String bookKey = model.getBookid();
 
                     Intent intent = new Intent(holder.context, BookDetailActivity.class);
                     intent.putExtra("bookid", bookKey);

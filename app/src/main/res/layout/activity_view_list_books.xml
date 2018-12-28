@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.helenacorp.android.mybibliotheque.ViewListBooksActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_list"
         style="@style/ToolBarStyle.Event"
         android:layout_width="0dp"
@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
     <!--
         <Button
             android:id="@+id/btn_listbookcreat"
@@ -28,7 +28,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     -->
-    <android.support.v7.widget.SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/mSearch"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -40,9 +40,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-    </android.support.v7.widget.SearchView>
+    </androidx.appcompat.widget.SearchView>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -55,16 +55,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mSearch">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_listbookcreat"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:focusable="true"
-        android:scaleType="centerCrop"
         app:backgroundTint="@color/colorAccent"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -72,4 +71,4 @@
         app:srcCompat="@drawable/ic_add_white_48dp"
         tools:ignore="VectorDrawableCompat" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
