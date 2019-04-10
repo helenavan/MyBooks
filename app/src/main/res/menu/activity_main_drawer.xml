@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_myAccount"
+            android:icon="@drawable/ic_face_blue_grey_800_24dp"
+            android:title="@string/drawer_account" />
         <item
             android:id="@+id/nav_mylist"
             android:icon="@drawable/ic_list_blue_grey_800_18dp"
@@ -19,11 +25,12 @@
 
     <item android:title="">
         <menu>
-            <item
-                android:id="@+id/nav_disconnect"
-                android:icon="@drawable/ic_exit_to_app_blue_grey_800_18dp"
-                android:title="@string/drawer_deco" />
-
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_disconnect"
+                    android:icon="@drawable/ic_exit_to_app_blue_grey_800_18dp"
+                    android:title="@string/drawer_deco" />
+            </group>
         </menu>
     </item>
 

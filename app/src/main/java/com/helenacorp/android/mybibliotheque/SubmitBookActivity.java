@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.service.BookLookupService;
 import com.squareup.picasso.Picasso;
@@ -366,7 +367,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
                         lastName.setText(book.getAuthors().get(0).toString());
                         resum.setText(book.getDescription().toString());
                         mImageBookVisible.setAdjustViewBounds(true);
-                        Picasso.with(SubmitBookActivity.this)
+                        Picasso.get()
                                 .load(book.getImageLinks().getThumbnail())
                                 .error(R.drawable.acc_profil)
                                 .into(mImageBookVisible);

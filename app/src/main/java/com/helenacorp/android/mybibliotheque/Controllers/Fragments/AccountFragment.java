@@ -1,6 +1,6 @@
-package com.helenacorp.android.mybibliotheque;
+package com.helenacorp.android.mybibliotheque.Controllers.Fragments;
 
-import android.annotation.SuppressLint;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,11 +9,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -23,7 +29,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,23 +39,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.MainLoginActivity;
+import com.helenacorp.android.mybibliotheque.R;
+import com.helenacorp.android.mybibliotheque.SubmitBookActivity;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import static android.content.Context.MODE_PRIVATE;
 
-public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Animation.AnimationListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class AccountFragment extends Fragment implements Animation.AnimationListener {
     public static final String LIST_BOOKS = "listItems";
     public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
@@ -72,21 +75,25 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private ProgressDialog mDialog;
     private DrawerLayout drawer;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    @SuppressLint("ResourceType")
+    public static AccountFragment newInstance() {
+        // Required empty public constructor
+        return(new AccountFragment());
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        acc_username = (TextView) view.findViewById(R.id.user_name);
+        acc_numlist = (TextView) view.findViewById(R.id.user_numberBooks);
+        userPic = (ImageView) view.findViewById(R.id.user_pic);
+        cloudL = view.findViewById(R.id.user_cloudL);
+        cloudM = view.findViewById(R.id.user_cloudM);
+        cloudR = view.findViewById(R.id.user_cloudR);
 
-        acc_username = (TextView) findViewById(R.id.user_name);
-        acc_numlist = (TextView) findViewById(R.id.user_numberBooks);
-        userPic = (ImageView) findViewById(R.id.user_pic);
-        cloudL = findViewById(R.id.user_cloudL);
-        cloudM = findViewById(R.id.user_cloudM);
-        cloudR = findViewById(R.id.user_cloudR);
-
-        mDialog = new ProgressDialog(AccountActivity.this);
+        mDialog = new ProgressDialog(getContext());
         mDialog.setMessage("en charge");
         mDialog.show();
 
@@ -109,12 +116,10 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             }
         });
 
-
-
         if (user == null) {
             // User is signed out
-            finish();
-            Intent intent = new Intent(AccountActivity.this, MainLoginActivity.class);
+            this.getActivity().finish();
+            Intent intent = new Intent(getContext(), MainLoginActivity.class);
             startActivity(intent);
 
 
@@ -127,7 +132,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             acc_username.setText(userPseudo);
             userPic.setImageURI(imageUri);
             //sharedpreference
-            sp = PreferenceManager.getDefaultSharedPreferences(this);
+            sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sp.edit();
 
             if (sp.contains(USER_PIC)) {
@@ -136,107 +141,20 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                 downloadAvatar();
             }
             if (LIST_BOOKS.isEmpty()) {
-                sp = getPreferences(MODE_PRIVATE);
+                sp = this.getActivity().getPreferences(MODE_PRIVATE);
             } else {
                 editor.putString(LIST_BOOKS, String.valueOf(MODE_PRIVATE));
             }
             editor.apply();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        animateCloud(cloudL);
+/*        animateCloud(cloudL);
         cloudTranslate.setStartOffset(500);
         animateCloud(cloudM);
         cloudTranslate.setStartOffset(100);
-        animateCloud(cloudR);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-     /*   if (id == R.id.setting) {
-            return true;
-        }*/
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_mylist) {
-            Intent intent = new Intent(AccountActivity.this, ViewListBooksActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-            showFileChooser();
-        } else if (id == R.id.nav_countBooks) {
-            displayListBooks();
-        } else if (id == R.id.nav_disconnect) {
-            FirebaseAuth.getInstance().signOut();
-            Intent i = new Intent(AccountActivity.this, MainLoginActivity.class);
-            startActivity(i);
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(resultCode, requestCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                imageUri = data.getData();
-                try {
-                    //getting image from gallery
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                    userPic.setImageBitmap(bitmap);
-                    uploadImage();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        if (requestCode == LIST_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                String returnValue = data.getStringExtra(LIST_BOOKS);
-                acc_numlist.setText(returnValue);
-            }
-        }
+        animateCloud(cloudR);*/
+        // Inflate the layout for this fragment
+        return view;
     }
 
     //download and uploadload photoprofil
@@ -254,7 +172,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                         .cornerRadiusDp(20)
                         .oval(true)
                         .build();
-                  Picasso.with(AccountActivity.this).load(uri).fit().transform(transformation).into(userPic);
+                Picasso.get().load(uri).fit().transform(transformation).into(userPic);
             }
 
         }).addOnFailureListener(new OnFailureListener() {
@@ -283,13 +201,13 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AccountActivity.this, "Pas d'image profil", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Pas d'image profil", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(AccountActivity.this, "Uploading Done!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getUploadSessionUri();
                     Transformation transformation = new RoundedTransformationBuilder()
                             .borderColor(Color.WHITE)
@@ -297,7 +215,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
                             .cornerRadiusDp(55)
                             .oval(false)
                             .build();
-                    Picasso.with(AccountActivity.this)
+                    Picasso.get()
                             .load(downloadUrl)
                             .fit().transform(transformation)
                             .into(userPic);
@@ -307,7 +225,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
             });
         } else {
 
-            Toast.makeText(AccountActivity.this, "Faut choisir", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Faut choisir", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -321,7 +239,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
 
     private void displayListBooks() {
         //retrieve count of books from listview
-        Intent intent2 = new Intent(AccountActivity.this, SubmitBookActivity.class);
+        Intent intent2 = new Intent(getContext(), SubmitBookActivity.class);
         startActivity(intent2);
       /*  Intent extras = this.getIntent();
         if(extras != null){
@@ -332,8 +250,8 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     }
     //to rotate clouds
     private void animateCloud(ImageView imageView){
-        cloudTranslate =  AnimationUtils.loadAnimation(getApplicationContext(),R.anim.cloud_right);
-        cloudTranslate.setAnimationListener(AccountActivity.this);
+        cloudTranslate =  AnimationUtils.loadAnimation(getContext(),R.anim.cloud_right);
+        cloudTranslate.setAnimationListener(AccountFragment.this);
         imageView.startAnimation(cloudTranslate);
     }
 

@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+
+
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -108,7 +110,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
                 .cornerRadiusDp(20)
                 .oval(false)
                 .build();
-        Picasso.with(getApplicationContext()).load(url).fit().transform(transformation).into(couv);
+        Picasso.get().load(url).fit().transform(transformation).into(couv);
 
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);

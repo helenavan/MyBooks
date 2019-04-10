@@ -23,9 +23,6 @@
     <string name="error_email">Est-ce un Email?</string>
     <string name="error_password">Il faut 6 caractères, au moins!</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <!-- activity_account -->
     <string name="acc_upload">upload</string>
     <string name="acc_bjr">Bonjour : </string>
@@ -43,6 +40,7 @@
     <string name="drawer_chat">Mon chat</string>
     <string name="drawer_statut">Mon statut</string>
     <string name="drawer_deco">Déconnexion</string>
+    <string name="drawer_account">Mon compte</string>
 
     <!-- MainLoginActivity -->
     <string name="mlog_tss">tsss tout n\'est pas là!!!</string>

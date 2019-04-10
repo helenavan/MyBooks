@@ -21,10 +21,10 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
-        android:icon="@mipmap/icon_mybooks"
+        android:icon="@mipmap/books3"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/books3"
         android:supportsRtl="true"
         android:theme="@style/AppThemeBase"
         tools:ignore="GoogleAppIndexingWarning">
@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountActivity"
+            android:name=".Controllers.Activities.AccountActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity

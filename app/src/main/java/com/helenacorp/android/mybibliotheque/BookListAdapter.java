@@ -96,7 +96,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
                         .oval(false)
                         .build();
 
-                Picasso.with(holder.context)
+                Picasso.get()
                         .load(uri)
                         .fit()
                         .transform(transformation)
