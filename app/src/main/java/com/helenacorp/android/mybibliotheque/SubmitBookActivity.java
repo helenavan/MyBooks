@@ -336,7 +336,7 @@ public class SubmitBookActivity extends AppCompatActivity implements View.OnClic
     }
 
     //récupère/extrait les infos sur google books
-    class FetchBookTask extends AsyncTask<String, Void, BookModel> {
+   private class FetchBookTask extends AsyncTask<String, Void, BookModel> {
         private ProgressDialog progressDialog;
 
         @Override
