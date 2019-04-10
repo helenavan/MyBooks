@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_add"
-    tools:context="com.helenacorp.android.mybibliotheque.SubmitBookActivity">
+    tools:context=".Controllers.Fragments.AddBookFragment">
 
     <ImageView
         android:id="@+id/bckgrd_submit"

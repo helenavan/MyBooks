@@ -28,8 +28,6 @@ import com.helenacorp.android.mybibliotheque.BookListAdapter;
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 import com.helenacorp.android.mybibliotheque.OnBookItemClick;
 import com.helenacorp.android.mybibliotheque.R;
-import com.helenacorp.android.mybibliotheque.SubmitBookActivity;
-import com.helenacorp.android.mybibliotheque.ViewListBooksActivity;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
 import java.util.ArrayList;

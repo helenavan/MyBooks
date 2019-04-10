@@ -2,7 +2,6 @@ package com.helenacorp.android.mybibliotheque.Controllers.Fragments;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -47,7 +45,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.helenacorp.android.mybibliotheque.R;
 import com.helenacorp.android.mybibliotheque.SimpleScannerActivity;
-import com.helenacorp.android.mybibliotheque.SubmitBookActivity;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.service.BookLookupService;
 import com.squareup.picasso.Picasso;

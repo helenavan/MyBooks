@@ -175,13 +175,13 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
             public void onClick(View view) {
                 if (position != RecyclerView.NO_POSITION) {
                     ViewGroup container = (ViewGroup) view.findViewById(R.id.container);
-                    TransitionInflater transitionInflater = TransitionInflater.from(holder.context);
+/*                    TransitionInflater transitionInflater = TransitionInflater.from(holder.context);
                     mTransitionManager = transitionInflater.inflateTransitionManager(
                             R.transition.transition_manager, container);
                     mScene1 = Scene.getSceneForLayout(container,
                             R.layout.activity_view_list_books, holder.context);
                     mScene2 = Scene.getSceneForLayout(container,
-                            R.layout.activity_book_detail, holder.context);
+                            R.layout.activity_book_detail, holder.context);*/
                     //  goToScene2(view);
                     //send data to detailbookactivity
                     String img = model.getImageUrl();

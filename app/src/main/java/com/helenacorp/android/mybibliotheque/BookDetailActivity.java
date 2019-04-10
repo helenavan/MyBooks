@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 
@@ -163,7 +164,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BookDetailActivity.this, ViewListBooksActivity.class);
+                Intent intent = new Intent(BookDetailActivity.this, AccountActivity.class);
                 startActivity(intent);
             }
         });

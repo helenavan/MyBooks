@@ -41,7 +41,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.helenacorp.android.mybibliotheque.MainLoginActivity;
 import com.helenacorp.android.mybibliotheque.R;
-import com.helenacorp.android.mybibliotheque.SubmitBookActivity;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -237,17 +236,6 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    private void displayListBooks() {
-        //retrieve count of books from listview
-        Intent intent2 = new Intent(getContext(), SubmitBookActivity.class);
-        startActivity(intent2);
-      /*  Intent extras = this.getIntent();
-        if(extras != null){
-            String values = extras.getStringExtra("list");
-            acc_numlist.setText(values);
-        }*/
-
-    }
     //to rotate clouds
     private void animateCloud(ImageView imageView){
         cloudTranslate =  AnimationUtils.loadAnimation(getContext(),R.anim.cloud_right);
