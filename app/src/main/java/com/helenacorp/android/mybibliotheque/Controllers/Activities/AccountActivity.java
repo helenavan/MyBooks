@@ -23,8 +23,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class AccountActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         ListBooksFragment.OnButtonClickedListener {
@@ -39,6 +37,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private Fragment accountFragment;
     private Fragment addBookFragment;
     private Fragment listBookFragment;
+
     //2.identify each fragment with a number
     private static final int FRAGMENT_ACCOUNT = 0;
     private static final int FRAGMENT_ADD = 1;

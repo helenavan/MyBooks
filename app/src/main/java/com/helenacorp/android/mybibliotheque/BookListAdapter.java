@@ -90,7 +90,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
             @Override
             public void onSuccess(Uri uri) {
                 Transformation transformation = new RoundedTransformationBuilder()
-                        .borderColor(R.color.vertD)
+                        .borderColor(R.color.orange)
                         .borderWidthDp(3)
                         .cornerRadiusDp(30)
                         .oval(false)

@@ -53,13 +53,15 @@
 
     <style name="ToolBarStyle.Event" parent="ToolBarStyle">
         <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>
+        <item name="android:fontFamily">@font/font_skybird</item>
+<!--        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>-->
     </style>
 
     <style name="TextAppearance.Widget.Event.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!--Any text styling can be done here-->
         <item name="android:textStyle">bold</item>
+        <item name="android:titleTextColor">@color/white_smoke</item>
         <item name="android:fontFamily">@font/font_skybird</item>
     </style>
 

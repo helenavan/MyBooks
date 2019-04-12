@@ -1,6 +1,5 @@
 package com.helenacorp.android.mybibliotheque.Controllers.Fragments;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,12 +15,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,13 +47,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment implements Animation.AnimationListener {
+public class AccountFragment extends Fragment implements Animation.AnimationListener, View.OnClickListener {
     public static final String LIST_BOOKS = "listItems";
     public static final int LIST_REQUEST = 0;
     private static final int PICK_IMAGE_REQUEST = 111;
@@ -73,6 +76,7 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
     private Animation cloudTranslate;
     private ProgressDialog mDialog;
     private DrawerLayout drawer;
+    private Button photoProfil;
 
     public static AccountFragment newInstance() {
         // Required empty public constructor
@@ -88,6 +92,8 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         acc_username = (TextView) view.findViewById(R.id.user_name);
         acc_numlist = (TextView) view.findViewById(R.id.user_numberBooks);
         userPic = (ImageView) view.findViewById(R.id.user_pic);
+        photoProfil = (Button) view.findViewById(R.id.user_photo);
+        photoProfil.setOnClickListener(this);
         cloudL = view.findViewById(R.id.user_cloudL);
         cloudM = view.findViewById(R.id.user_cloudM);
         cloudR = view.findViewById(R.id.user_cloudR);
@@ -103,21 +109,21 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         mStorageRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mDialog.dismiss();
                 nbrBooks = String.valueOf(dataSnapshot.getChildrenCount());
                 acc_numlist.setText(nbrBooks);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
         if (user == null) {
             // User is signed out
-            this.getActivity().finish();
+            Objects.requireNonNull(this.getActivity()).finish();
             Intent intent = new Intent(getContext(), MainLoginActivity.class);
             startActivity(intent);
 
@@ -147,11 +153,11 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
             editor.apply();
         }
 
-/*        animateCloud(cloudL);
+        animateCloud(cloudL);
         cloudTranslate.setStartOffset(500);
         animateCloud(cloudM);
         cloudTranslate.setStartOffset(100);
-        animateCloud(cloudR);*/
+        animateCloud(cloudR);
         // Inflate the layout for this fragment
         return view;
     }
@@ -236,6 +242,31 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(resultCode, requestCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                imageUri = data.getData();
+                try {
+                    //getting image from gallery
+                    bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(this.getActivity()).getContentResolver(), imageUri);
+                    userPic.setImageBitmap(bitmap);
+                    uploadImage();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (requestCode == LIST_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String returnValue = data.getStringExtra(LIST_BOOKS);
+                acc_numlist.setText(returnValue);
+            }
+        }
+    }
     //to rotate clouds
     private void animateCloud(ImageView imageView){
         cloudTranslate =  AnimationUtils.loadAnimation(getContext(),R.anim.cloud_right);
@@ -257,5 +288,13 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == photoProfil){
+            showFileChooser();
+            uploadImage();
+        }
     }
 }

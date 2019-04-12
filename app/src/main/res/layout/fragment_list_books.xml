@@ -5,15 +5,15 @@
     android:id="@+id/fragment_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/searchview"
-    android:layout_marginRight="@dimen/searchview"
     tools:context=".Controllers.Fragments.ListBooksFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/mSearch"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginLeft="@dimen/searchview"
+        android:layout_marginRight="@dimen/searchview"
+        android:layout_marginTop="@dimen/margindTopView"
         android:background="@drawable/background_edit_submit"
         app:defaultQueryHint="Search.."
         app:layout_constraintLeft_toLeftOf="parent"
@@ -40,12 +40,11 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_float"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:focusable="true"
-        app:layout_anchorGravity="bottom|right|end"
+        app:srcCompat="@drawable/ic_add_white_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:ignore="VectorDrawableCompat" />

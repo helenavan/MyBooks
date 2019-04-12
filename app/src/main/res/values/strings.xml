@@ -27,7 +27,8 @@
     <string name="acc_upload">upload</string>
     <string name="acc_bjr">Bonjour : </string>
     <string name="acc_nom">Mon nom : </string>
-    <string name="acc_books">Nombre de livres : </string>
+    <string name="acc_books">J\'ai  </string>
+    <string name="acc_numberBooksInBiblio"> livres</string>
     <string name="acc_nbr">Mon nombre</string>
     <string name="acc_btn_status">Mon statut</string>
     <string name="acc_status_dialog">Mon statut</string>

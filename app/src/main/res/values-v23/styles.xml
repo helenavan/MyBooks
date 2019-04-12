@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ToolBarStyle.Event" parent="ToolBarStyle">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
+        <item name="android:titleTextColor"></item>
+        <!--        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+                <item name="homeAsUpIndicator">@drawable/ic_arrow_back</item>-->
+    </style>
+</resources>

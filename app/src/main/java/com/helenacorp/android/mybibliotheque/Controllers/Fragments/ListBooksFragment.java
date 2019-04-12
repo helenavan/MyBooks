@@ -81,6 +81,7 @@ public class ListBooksFragment extends Fragment implements View.OnClickListener{
         bookListAdapter.notifyDataSetChanged();
 
         floatingActionButton = view.findViewById(R.id.btn_float);
+        //floatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_plus));
         floatingActionButton.setOnClickListener(this);
 
         btn = view.findViewById(R.id.btn_float);

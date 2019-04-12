@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginTop="@dimen/margindTopView"
         android:background="@drawable/background_edit_submit"
         android:hint="@string/title_sub"
         android:inputType="text"

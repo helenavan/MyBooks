@@ -84,7 +84,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_book, container, false);
 
@@ -354,16 +354,18 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
                         lastName.setText(book.getAuthors().get(0).toString());
                         resum.setText(book.getDescription().toString());
                         mImageBookVisible.setAdjustViewBounds(true);
-                        Picasso.get()
-                                .load(book.getImageLinks().getThumbnail())
-                                .error(R.drawable.acc_profil)
+                        Picasso.get().load(book.getImageLinks().getThumbnail())
+                                //.load("http://books.google.com/books/content?id=r6hhDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
+                                .placeholder(R.drawable.ic_user)
+                               //.error(R.drawable.acc_profil)
+                                .resize(48,48)
                                 .into(mImageBookVisible);
                     }
                 } else {
-                    showMessage("Ce livre n'ai pas dans la base de données");
+                    showMessage("Ce livre n'est pas dans la base de données");
                 }
             } catch (Exception e) {
-                Log.e("Tag", "====>image");
+                Log.e("Tag", "====>pas d\'image");
             }
             progressDialog.dismiss();
         }
