@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,10 +59,11 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
     private OnBookItemClick onBookItemClick;
     private ArrayList<BookModel> mItems = new ArrayList<>();
     private ArrayList<BookModel> mItemFilter = new ArrayList<>();
+    private RequestManager glide;
 
     public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
-                           OnBookItemClick bookItemClick) {
-        super(query, bookModelArrayList, keys, bookItemClick);
+                           OnBookItemClick bookItemClick,RequestManager glide) {
+        super(query, bookModelArrayList, keys, bookItemClick, glide);
     }
 
     @Override
@@ -89,18 +93,8 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
         desertRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Transformation transformation = new RoundedTransformationBuilder()
-                        .borderColor(R.color.orange)
-                        .borderWidthDp(3)
-                        .cornerRadiusDp(30)
-                        .oval(false)
-                        .build();
+                Glide.with(holder.context).load(uri).apply(RequestOptions.circleCropTransform()).into(holder.pic);
 
-                Picasso.get()
-                        .load(uri)
-                        .fit()
-                        .transform(transformation)
-                        .into(holder.pic);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

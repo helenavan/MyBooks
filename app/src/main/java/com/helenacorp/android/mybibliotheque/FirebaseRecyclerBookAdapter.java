@@ -6,6 +6,7 @@ package com.helenacorp.android.mybibliotheque;
         import android.widget.Filter;
         import android.widget.Filterable;
 
+        import com.bumptech.glide.RequestManager;
         import com.google.firebase.database.ChildEventListener;
         import com.google.firebase.database.DataSnapshot;
         import com.google.firebase.database.DatabaseError;
@@ -51,8 +52,9 @@ public abstract class FirebaseRecyclerBookAdapter<ViewHolder extends RecyclerVie
      * @param bookModelArrayList
      * @param keys
      * @param bookItemClick
+     * @param glide
      */
-    public FirebaseRecyclerBookAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick) {
+    public FirebaseRecyclerBookAdapter(Query query, ArrayList<com.helenacorp.android.mybibliotheque.model.BookModel> bookModelArrayList, ArrayList<String> keys, OnBookItemClick bookItemClick, RequestManager glide) {
         this(query, (ArrayList<BookModel>) null, null, null);
     }
 

@@ -25,6 +25,7 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/books3"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppThemeBase"
         tools:ignore="GoogleAppIndexingWarning">
 

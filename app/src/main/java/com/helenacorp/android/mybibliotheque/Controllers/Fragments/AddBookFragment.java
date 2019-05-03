@@ -30,6 +30,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,8 +46,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.GoogleBooksApi;
 import com.helenacorp.android.mybibliotheque.R;
 import com.helenacorp.android.mybibliotheque.SimpleScannerActivity;
+import com.helenacorp.android.mybibliotheque.model.Book;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.service.BookLookupService;
 import com.squareup.picasso.Picasso;
@@ -59,7 +64,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddBookFragment extends Fragment implements View.OnClickListener{
+public class AddBookFragment extends Fragment implements View.OnClickListener, BookLookupService.Callbacks {
     private static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final int ZXING_CAMERA_PERMISSION = 1;
 
@@ -76,6 +81,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
     private ImageView mImageBook, mImageBookVisible;
     private Uri imguri;
     private DatabaseReference databaseReference;
+    private RequestManager glide;
 
     public static AddBookFragment newInstance() {
         return (new AddBookFragment());
@@ -254,7 +260,8 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if (view == btnVerif) {
-          new FetchBookTask().execute(getISBN());
+        //  new FetchBookTask().execute(getISBN());
+            this.executeHttpRequestWithRetrofit();
         }
         if (view == btnAdd) {
             validation();
@@ -322,8 +329,53 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
         Toast.makeText(this.getContext().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void executeHttpRequestWithRetrofit(){
+       // this.updateUIWhenStartingHTTPRequest();
+        BookLookupService.fetchBookByISBN(this, getISBN());
+        Log.e("AddBookFragment","getISBN : => "+getISBN());
+    }
+
+    @Override
+    public void onReponse(Book book) {
+        if (book != null) {
+            titleName.setText(book.getItems().get(0).getVolumeInfo().getTitle());
+            if (book.getItems().get(0).getVolumeInfo().getDescription() != null || book.getItems().get(0).getVolumeInfo().getAuthors() != null || book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail() != null) {
+                lastName.setText(book.getItems().get(0).getVolumeInfo().getAuthors().get(0).toString());
+                resum.setText(book.getItems().get(0).getVolumeInfo().getDescription().toString());
+               // mImageBookVisible.setAdjustViewBounds(true);
+                Glide.with(this).load(book.getItems().get(0).getVolumeInfo().getImageLinks().getSmallThumbnail()).apply(RequestOptions.circleCropTransform())
+                        .into(mImageBookVisible);
+
+            }
+            Log.e("AddBookFragment ", "Title => " + book);
+        }
+    }
+
+    @Override
+    public void onFailure() {
+
+    }
+
+    //UPDATE UI
+    private void updateUIWhenStartingHTTPRequest(){
+
+    }
+
+    private void updateUIWithListOfUsers(BookModel bookModel){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        updateUIWhenStopingHTTPRequest(stringBuilder.toString());
+    }
+
+    private void updateUIWhenStopingHTTPRequest(String response){
+        this.isbn.setText(response);
+    }
+
+
+
     //récupère/extrait les infos sur google books
-    class FetchBookTask extends AsyncTask<String, Void, BookModel> {
+    /*class FetchBookTask extends AsyncTask<String, Void, BookModel> {
         private ProgressDialog progressDialog;
 
         @Override
@@ -371,6 +423,6 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-
+*/
 
 }

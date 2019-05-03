@@ -17,6 +17,8 @@ public class BookModel {
     @Expose
     private String description;
     private String category;
+    @SerializedName("isbn")
+    @Expose
     private String isbn;
     private String lastnameAutor;
     private String firstNameAutor;

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,7 +76,7 @@ public class ListBooksFragment extends Fragment implements View.OnClickListener{
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
-        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, mOnBook);
+        bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, mOnBook, Glide.with(this));
         recyclerView.setAdapter(bookListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         bookListAdapter.notifyDataSetChanged();
