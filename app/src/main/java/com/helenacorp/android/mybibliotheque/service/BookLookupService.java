@@ -7,36 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import com.helenacorp.android.mybibliotheque.GoogleBooksApi;
-import com.helenacorp.android.mybibliotheque.Result;
-import com.helenacorp.android.mybibliotheque.Results;
 import com.helenacorp.android.mybibliotheque.model.Book;
-import com.helenacorp.android.mybibliotheque.model.BookModel;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import feign.Feign;
-import feign.Logger;
-import feign.Util;
-import feign.codec.Decoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static feign.Util.ensureClosed;
-
-/**
- * Created by helena on 15/01/2018.
- */
 
 public class BookLookupService {
     public interface Callbacks {
@@ -44,27 +25,31 @@ public class BookLookupService {
         void onFailure();
     }
 
-    public static void fetchBookByISBN(Callbacks callback, String isbn) {
-        // final GoogleBooksApi googleBooksApi = connect();
-        //  final Map<String, Object> queryParameters = new HashMap<>();
-        //  queryParameters.put("q", "isbn:" + isbn);
+    public static void fetchBookByISBN(Callbacks callback, String isbn){
+        final Map<String, Object> queryParameters = new HashMap<>();
+        queryParameters.put("q", "isbn:" + isbn);
         final WeakReference<Callbacks> callbacksWeakReference = new WeakReference<>(callback);
 
-        Call<Book> call = GoogleBooksApi.retrofit.create(GoogleBooksApi.class).findBookByISBN(isbn);
+        final Call<Book> call = GoogleBooksApi.retrofit.create(GoogleBooksApi.class).findBookByISBN(queryParameters);
 
         call.enqueue(new Callback<Book>() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onResponse(@NonNull Call<Book> call, @NonNull Response<Book> response) {
-                if (callbacksWeakReference.get() != null) callbacksWeakReference.get().onReponse(response.body());
+                if(response.body() != null && response.body().getTotalItems() > 0){
+                    if (callbacksWeakReference.get() != null)
+                        callbacksWeakReference.get().onReponse(response.body());
 
-             //   Log.e("BookLooupService ", " => " + response + " book : " + model.getItems().get(0).getVolumeInfo().getTitle().toString());
+                }
+                Log.e("BookLooupService ", " => " + response.body().getTotalItems().toString());
+
             }
 
             @Override
-            public void onFailure(Call<Book> call, Throwable t) {
+            public void onFailure(@NonNull Call<Book> call, @NonNull Throwable t) {
                 if (callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
             }
+
         });
 
         /*final Results apiResponse = googleBooksApi.findBookByISBN(queryParameters);

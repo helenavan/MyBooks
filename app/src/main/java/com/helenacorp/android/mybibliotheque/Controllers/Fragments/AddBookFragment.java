@@ -2,13 +2,11 @@ package com.helenacorp.android.mybibliotheque.Controllers.Fragments;
 
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -55,9 +53,14 @@ import com.helenacorp.android.mybibliotheque.service.BookLookupService;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -159,6 +162,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
             }
         }
     }
+
     //validate label from autor and title
     public void validation() {
         if (titleName.getText().length() == 0 || lastName.length() == 0 || validationIsbn()) {
@@ -260,7 +264,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     @Override
     public void onClick(View view) {
         if (view == btnVerif) {
-        //  new FetchBookTask().execute(getISBN());
+            //  new FetchBookTask().execute(getISBN());
             this.executeHttpRequestWithRetrofit();
         }
         if (view == btnAdd) {
@@ -330,48 +334,64 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void executeHttpRequestWithRetrofit(){
-       // this.updateUIWhenStartingHTTPRequest();
+    private void executeHttpRequestWithRetrofit() {
+        // this.updateUIWhenStartingHTTPRequest();
         BookLookupService.fetchBookByISBN(this, getISBN());
-        Log.e("AddBookFragment","getISBN : => "+getISBN());
+        Log.e("AddBookFragment", "getISBN from editText : => " + getISBN());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReponse(Book book) {
-        if (book != null) {
-            titleName.setText(book.getItems().get(0).getVolumeInfo().getTitle());
-            if (book.getItems().get(0).getVolumeInfo().getDescription() != null || book.getItems().get(0).getVolumeInfo().getAuthors() != null || book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail() != null) {
-                lastName.setText(book.getItems().get(0).getVolumeInfo().getAuthors().get(0).toString());
-                resum.setText(book.getItems().get(0).getVolumeInfo().getDescription().toString());
-               // mImageBookVisible.setAdjustViewBounds(true);
-                Glide.with(this).load(book.getItems().get(0).getVolumeInfo().getImageLinks().getSmallThumbnail()).apply(RequestOptions.circleCropTransform())
-                        .into(mImageBookVisible);
+        if(!getISBN().isEmpty() || book.getTotalItems() != 0){
+            Log.e("AddBookFragment ", "apres book != null " + "TotalItems : "+ book.getTotalItems().toString());
+            if(book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(1).getIdentifier().equals(getISBN())){
 
+                if (!book.getItems().get(0).getVolumeInfo().getTitle().isEmpty() || !book.getItems().get(0).getVolumeInfo().getAuthors().isEmpty()) {
+
+                  //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(0).getIdentifier());
+                    titleName.setText(book.getItems().get(0).getVolumeInfo().getTitle());
+                    lastName.setText(book.getItems().get(0).getVolumeInfo().getAuthors().get(0).toString());
+
+                    if (book.getItems().get(0).getVolumeInfo().getDescription() != null) {
+                        resum.setText(book.getItems().get(0).getVolumeInfo().getDescription().toString());
+                        if (book.getItems().get(0).getVolumeInfo().getImageLinks() != null) {
+                            Glide.with(Objects.requireNonNull(getContext())).load(book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail()).apply(RequestOptions.circleCropTransform()).into(mImageBookVisible);
+                            Log.e("AddBookFragment ", "img => " + book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail());
+                        }
+                    }
+                }
+        }else {
+                Toast.makeText(getContext(), "Pas de livres dans la base ", Toast.LENGTH_LONG).show();
             }
-            Log.e("AddBookFragment ", "Title => " + book);
+
+        }else{
+            Toast.makeText(getContext(), " isbn non renseigné ", Toast.LENGTH_LONG).show();
         }
+
+
     }
 
     @Override
     public void onFailure() {
-
+        Log.e("AddBookFragment ", " failure");
+                Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
     }
 
     //UPDATE UI
-    private void updateUIWhenStartingHTTPRequest(){
+    private void updateUIWhenStartingHTTPRequest() {
 
     }
 
-    private void updateUIWithListOfUsers(BookModel bookModel){
+    private void updateUIWithListOfUsers(BookModel bookModel) {
         StringBuilder stringBuilder = new StringBuilder();
 
         updateUIWhenStopingHTTPRequest(stringBuilder.toString());
     }
 
-    private void updateUIWhenStopingHTTPRequest(String response){
+    private void updateUIWhenStopingHTTPRequest(String response) {
         this.isbn.setText(response);
     }
-
 
 
     //récupère/extrait les infos sur google books

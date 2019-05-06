@@ -54,6 +54,9 @@ public class VolumeInfo {
     @SerializedName("canonicalVolumeLink")
     @Expose
     private String canonicalVolumeLink;
+    @SerializedName("industryIdentifiers")
+    @Expose
+    private List<IndustryIdentifier> industryIdentifiers = null;
 
     /**
      * No args constructor for use in serialization
@@ -81,7 +84,9 @@ public class VolumeInfo {
      * @param publishedDate
      * @param maturityRating
      */
-    public VolumeInfo(String title, List<String> authors, String publisher, String publishedDate, String description, Integer pageCount, String printType, List<String> categories, String maturityRating, Boolean allowAnonLogging, String contentVersion, ImageLinks imageLinks, String language, String previewLink, String infoLink, String canonicalVolumeLink) {
+    public VolumeInfo(String title, List<String> authors, String publisher, String publishedDate, String description, Integer pageCount, String printType, List<String> categories, String maturityRating, Boolean allowAnonLogging, String contentVersion,
+                      ImageLinks imageLinks, String language, String previewLink,
+                      String infoLink, String canonicalVolumeLink, List<IndustryIdentifier> industryIdentifiers) {
         super();
         this.title = title;
         this.authors = authors;
@@ -99,6 +104,7 @@ public class VolumeInfo {
         this.previewLink = previewLink;
         this.infoLink = infoLink;
         this.canonicalVolumeLink = canonicalVolumeLink;
+        this.industryIdentifiers =industryIdentifiers;
     }
 
     public String getTitle() {
@@ -227,5 +233,13 @@ public class VolumeInfo {
 
     public void setCanonicalVolumeLink(String canonicalVolumeLink) {
         this.canonicalVolumeLink = canonicalVolumeLink;
+    }
+
+    public List<IndustryIdentifier> getIndustryIdentifiers() {
+        return industryIdentifiers;
+    }
+
+    public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
+        this.industryIdentifiers = industryIdentifiers;
     }
 }
