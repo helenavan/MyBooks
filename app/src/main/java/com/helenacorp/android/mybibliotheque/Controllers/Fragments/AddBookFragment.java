@@ -9,13 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +20,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -44,23 +43,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.helenacorp.android.mybibliotheque.GoogleBooksApi;
 import com.helenacorp.android.mybibliotheque.R;
 import com.helenacorp.android.mybibliotheque.SimpleScannerActivity;
 import com.helenacorp.android.mybibliotheque.model.Book;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.helenacorp.android.mybibliotheque.service.BookLookupService;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -230,7 +222,8 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
                         lastName.getText().toString(), userName, null, ratingBar.getRating(), userPic.getDownloadUrl().toString(), resum.getText().toString());
                 //Save image info in to firebase database
                 //keys = name's attribut
-                Map<String, Object> map = new HashMap<>();
+                databaseReference.setValue(bookModel);
+               /* Map<String, Object> map = new HashMap<>();
                 map.put("title", bookModel.getTitle());
                 map.put("isbn", bookModel.getIsbn());
                 map.put("lastnameAutor", bookModel.getLastnameAutor());
@@ -239,7 +232,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
                 map.put("category", bookModel.getCategory());
                 map.put("info", bookModel.getInfo());
                 map.put("bookid", databaseReference.getKey());
-                databaseReference.setValue(map);
+                databaseReference.setValue(map);*/
                 Toast.makeText(getContext(), "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -336,7 +329,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void executeHttpRequestWithRetrofit() {
         // this.updateUIWhenStartingHTTPRequest();
-        BookLookupService.fetchBookByISBN(this, getISBN());
+        BookLookupService.fetchBookByISBN(this, getISBN(), getContext());
         Log.e("AddBookFragment", "getISBN from editText : => " + getISBN());
     }
 
@@ -392,57 +385,5 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     private void updateUIWhenStopingHTTPRequest(String response) {
         this.isbn.setText(response);
     }
-
-
-    //récupère/extrait les infos sur google books
-    /*class FetchBookTask extends AsyncTask<String, Void, BookModel> {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("recherche dans la base de données");
-            progressDialog.show();
-        }
-
-        @Override
-        protected BookModel doInBackground(String... params) {
-            final String isbn = params[0];
-            try {
-                return new BookLookupService().fetchBookByISBN(isbn);
-            } catch (Exception e) {
-                Log.e("fetchBookByISBN", e.toString());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(BookModel book) {
-            try {
-                if (book != null) {
-                    //showMessage("Got book: " + book.getTitle());
-                    titleName.setText(book.getTitle());
-                    if (book.getDescription() != null || book.getAuthors() != null || book.getImageLinks().getThumbnail() != null) {
-                        lastName.setText(book.getAuthors().get(0).toString());
-                        resum.setText(book.getDescription().toString());
-                        mImageBookVisible.setAdjustViewBounds(true);
-                        Picasso.get().load(book.getImageLinks().getThumbnail())
-                                //.load("http://books.google.com/books/content?id=r6hhDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
-                                .placeholder(R.drawable.ic_user)
-                               //.error(R.drawable.acc_profil)
-                                .resize(48,48)
-                                .into(mImageBookVisible);
-                    }
-                } else {
-                    showMessage("Ce livre n'est pas dans la base de données");
-                }
-            } catch (Exception e) {
-                Log.e("Tag", "====>pas d\'image");
-            }
-            progressDialog.dismiss();
-        }
-    }
-
-*/
 
 }
