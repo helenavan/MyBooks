@@ -136,8 +136,8 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
                 try {
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), imguri);
                     // mImageBook.setVisibility(View.INVISIBLE);
-                    mImageBookVisible.setMaxWidth(78);
-                    mImageBookVisible.setMaxHeight(78);
+                    mImageBookVisible.setMaxWidth(80);
+                    mImageBookVisible.setMaxHeight(80);
                     mImageBookVisible.setAdjustViewBounds(true);
                     mImageBookVisible.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     mImageBookVisible.setImageBitmap(imageBitmap);
@@ -156,7 +156,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
     //validate label from autor and title
-    public void validation() {
+    private void validation() {
         if (titleName.getText().length() == 0 || lastName.length() == 0 || validationIsbn()) {
             if (titleName.getText().length() == 0 || lastName.length() == 0) {
                 Context context = getContext();
@@ -170,7 +170,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
     //if isbn of book exist
-    public boolean validationIsbn() {
+    private boolean validationIsbn() {
         String isbnId = isbn.getText().toString();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -195,7 +195,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
     //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
-    public void sendBookcover() {
+    private void sendBookcover() {
         final String userName = user.getDisplayName();
         mImageBookVisible.setDrawingCacheEnabled(true);
         mImageBookVisible.buildDrawingCache();
@@ -238,11 +238,11 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
         });
     }
 
-    public void clearEditText(EditText editText) {
+    private void clearEditText(EditText editText) {
         editText.setText("");
     }
 
-    public void cleanCouv(ImageView img) {
+    private void cleanCouv(ImageView img) {
         if (img != null) {
             img.setImageResource(R.drawable.clean_image_submit);
             img.setMaxWidth(80);
@@ -279,7 +279,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
         }
     }
 
-    public void shooseToCamera() {
+    private void shooseToCamera() {
         Intent intent = new Intent();
         //change intent.setType("images/*") by ("*/*")
         intent.setType("*/*");
@@ -288,7 +288,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void launchActivity(Class<?> clss) {
+    private void launchActivity(Class<?> clss) {
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(this.getContext()), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             mClss = clss;
@@ -336,13 +336,13 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReponse(Book book) {
-        if(!getISBN().isEmpty() || book.getTotalItems() != 0){
-            Log.e("AddBookFragment ", "apres book != null " + "TotalItems : "+ book.getTotalItems().toString());
-            if(book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(1).getIdentifier().equals(getISBN())){
+        if (!getISBN().isEmpty()) {
+            Log.e("AddBookFragment ", "apres book != null " + "TotalItems : " + book.getTotalItems().toString());
+            if (book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(1).getIdentifier().equals(getISBN())) {
 
                 if (!book.getItems().get(0).getVolumeInfo().getTitle().isEmpty() || !book.getItems().get(0).getVolumeInfo().getAuthors().isEmpty()) {
 
-                  //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(0).getIdentifier());
+                    //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(0).getIdentifier());
                     titleName.setText(book.getItems().get(0).getVolumeInfo().getTitle());
                     lastName.setText(book.getItems().get(0).getVolumeInfo().getAuthors().get(0).toString());
 
@@ -354,36 +354,17 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
                         }
                     }
                 }
-        }else {
-                Toast.makeText(getContext(), "Pas de livres dans la base ", Toast.LENGTH_LONG).show();
             }
-
-        }else{
+        } else {
             Toast.makeText(getContext(), " isbn non renseigné ", Toast.LENGTH_LONG).show();
         }
-
 
     }
 
     @Override
     public void onFailure() {
         Log.e("AddBookFragment ", " failure");
-                Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
-    }
-
-    //UPDATE UI
-    private void updateUIWhenStartingHTTPRequest() {
-
-    }
-
-    private void updateUIWithListOfUsers(BookModel bookModel) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        updateUIWhenStopingHTTPRequest(stringBuilder.toString());
-    }
-
-    private void updateUIWhenStopingHTTPRequest(String response) {
-        this.isbn.setText(response);
+        Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
     }
 
 }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +27,7 @@ public class BookLookupService {
         void onFailure();
     }
 
-    public static void fetchBookByISBN(Callbacks callback, String isbn, Context mContext){
+    public static void fetchBookByISBN(Callbacks callback, String isbn, final Context mContext){
         final Map<String, Object> queryParameters = new HashMap<>();
         queryParameters.put("q", "isbn:" + isbn);
         final WeakReference<Callbacks> callbacksWeakReference = new WeakReference<>(callback);
@@ -46,6 +47,8 @@ public class BookLookupService {
                     if (callbacksWeakReference.get() != null)
                         callbacksWeakReference.get().onReponse(response.body());
 
+                }else{
+                    Toast.makeText(mContext, "Le livre n'existe pas dans la base ", Toast.LENGTH_LONG).show();
                 }
                 Log.e("BookLooupService ", " => " + response.body().getTotalItems().toString());
             }

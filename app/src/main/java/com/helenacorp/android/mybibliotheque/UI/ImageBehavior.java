@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.Toolbar;
 
 import com.helenacorp.android.mybibliotheque.R;
 
+import androidx.annotation.RequiresApi;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
@@ -50,6 +52,7 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
     private int mStartHeight;
     private int mFinalXPosition;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, ImageView child, View dependency) {
         return dependency instanceof Toolbar;
