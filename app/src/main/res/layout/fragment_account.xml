@@ -7,9 +7,19 @@
     tools:context=".Controllers.Fragments.AccountFragment">
 
     <ImageView
+        android:layout_margin="16dp"
+        android:background="@drawable/bckgrd_account"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
         android:id="@+id/user_bcrg"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="170dp"
         android:background="@drawable/head1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -82,6 +92,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_bcrg" />
 
+
     <TextView
         android:id="@+id/user_upload_pic"
         android:layout_width="wrap_content"
@@ -98,61 +109,44 @@
 
     <Button
         android:id="@+id/user_photo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/ic_camera"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/user_pic"
         app:layout_constraintTop_toBottomOf="@+id/user_bcrg" />
 
-    <ImageView
-        android:id="@+id/user_ic_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="36dp"
-        android:src="@drawable/ic_face_blue_grey_800_24dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/user_name"
-        app:layout_constraintTop_toBottomOf="@+id/user_photo" />
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/font_born"
         android:padding="4dp"
         android:text="@string/acc_nom"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/user_ic_name"
-        app:layout_constraintLeft_toRightOf="@id/user_ic_name"
-        app:layout_constraintTop_toTopOf="@+id/user_ic_name" />
-
-
-    <ImageView
-        android:id="@+id/user_ic_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_book_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/user_ic_name"
-        app:layout_constraintTop_toBottomOf="@+id/user_ic_name" />
+        app:layout_constraintEnd_toEndOf="@+id/user_pic"
+        app:layout_constraintStart_toStartOf="@+id/user_pic"
+        app:layout_constraintTop_toBottomOf="@+id/user_pic" />
 
     <TextView
         android:id="@+id/user_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="5dp"
         android:fontFamily="@font/font_born"
         android:text="@string/acc_books"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/user_ic_book"
-        app:layout_constraintLeft_toRightOf="@+id/user_ic_book"
-        app:layout_constraintTop_toTopOf="@+id/user_ic_book" />
+        android:textSize="20sp"
+        app:layout_constraintRight_toLeftOf="@+id/user_numberBooks"
+        app:layout_constraintTop_toBottomOf="@+id/user_name"
+        app:layout_constraintLeft_toLeftOf="@+id/user_name"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/user_numberBooks"
@@ -162,20 +156,22 @@
         android:fontFamily="@font/font_born"
         android:padding="4dp"
         android:text="@string/acc_nbr"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginRight="5dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/user_book"
         app:layout_constraintLeft_toRightOf="@+id/user_book"
-        app:layout_constraintRight_toLeftOf="@+id/user_biblio" />
+        app:layout_constraintRight_toLeftOf="@+id/user_biblio"/>
 
     <TextView
         android:id="@+id/user_biblio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:fontFamily="@font/font_born"
         android:text="@string/acc_numberBooksInBiblio"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintRight_toRightOf="@+id/user_name"
         app:layout_constraintBaseline_toBaselineOf="@+id/user_numberBooks"
         app:layout_constraintLeft_toRightOf="@+id/user_numberBooks" />
 

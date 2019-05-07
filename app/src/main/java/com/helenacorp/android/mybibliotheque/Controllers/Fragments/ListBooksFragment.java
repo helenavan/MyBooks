@@ -81,14 +81,6 @@ public class ListBooksFragment extends Fragment implements View.OnClickListener{
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         bookListAdapter.notifyDataSetChanged();
 
-        floatingActionButton = view.findViewById(R.id.btn_float);
-        //floatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_plus));
-        floatingActionButton.setOnClickListener(this);
-
-        btn = view.findViewById(R.id.btn_float);
-        btn.setOnClickListener(this);
-        bookListAdapter.notifyDataSetChanged();
-
         // retrieve number of books in listview firebase
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -130,7 +122,7 @@ public class ListBooksFragment extends Fragment implements View.OnClickListener{
         Fragment fragment = new AddBookFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.activity_account_frame, fragment);
+      //  fragmentTransaction.replace(R.id.activity_account_frame, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

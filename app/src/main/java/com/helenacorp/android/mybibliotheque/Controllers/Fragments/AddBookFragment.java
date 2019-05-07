@@ -2,6 +2,7 @@ package com.helenacorp.android.mybibliotheque.Controllers.Fragments;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -43,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 import com.helenacorp.android.mybibliotheque.R;
 import com.helenacorp.android.mybibliotheque.SimpleScannerActivity;
 import com.helenacorp.android.mybibliotheque.model.Book;
@@ -83,6 +86,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -100,6 +104,9 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
         mImageBookVisible = (ImageView) view.findViewById(R.id.submit_viewpic);
         btnIsbn = (Button) view.findViewById(R.id.submit_btn_isbn);
         isbn = view.findViewById(R.id.isbn);
+
+/*        Toolbar toolbar = (Toolbar) Objects.requireNonNull(getActivity()).findViewById(R.id.activity_account_toolbar);
+        toolbar.setBackgroundColor(R.color.white);*/
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -223,16 +230,6 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
                 //Save image info in to firebase database
                 //keys = name's attribut
                 databaseReference.setValue(bookModel);
-               /* Map<String, Object> map = new HashMap<>();
-                map.put("title", bookModel.getTitle());
-                map.put("isbn", bookModel.getIsbn());
-                map.put("lastnameAutor", bookModel.getLastnameAutor());
-                map.put("rating", bookModel.getRating());
-                map.put("imageUrl", bookModel.getImageUrl());
-                map.put("category", bookModel.getCategory());
-                map.put("info", bookModel.getInfo());
-                map.put("bookid", databaseReference.getKey());
-                databaseReference.setValue(map);*/
                 Toast.makeText(getContext(), "Enregistré!!", Toast.LENGTH_SHORT).show();
             }
         });

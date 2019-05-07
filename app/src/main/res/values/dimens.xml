@@ -25,5 +25,5 @@
     <dimen name="txt_20sp">20sp</dimen>
 
     <dimen name="searchview">8dp</dimen>
-    <dimen name="margindTopView">66dp</dimen>
+    <dimen name="margindTopView">26dp</dimen>
 </resources>
