@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -28,6 +29,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
+import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,9 +46,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 import com.helenacorp.android.mybibliotheque.MainLoginActivity;
 import com.helenacorp.android.mybibliotheque.R;
+import com.helenacorp.android.mybibliotheque.SignupActivity;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -76,7 +85,8 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
     private Animation cloudTranslate;
     private ProgressDialog mDialog;
     private DrawerLayout drawer;
-    private Button photoProfil;
+    private Button photoProfil, btnDeconnect;
+    private FirebaseAuth.AuthStateListener mAuthListerner;
 
     public static AccountFragment newInstance() {
         // Required empty public constructor
@@ -93,7 +103,9 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         acc_numlist = (TextView) view.findViewById(R.id.user_numberBooks);
         userPic = (ImageView) view.findViewById(R.id.user_pic);
         photoProfil = (Button) view.findViewById(R.id.user_photo);
+        btnDeconnect = view.findViewById(R.id.user_deconnect);
         photoProfil.setOnClickListener(this);
+        btnDeconnect.setOnClickListener(this);
         cloudL = view.findViewById(R.id.user_cloudL);
         cloudM = view.findViewById(R.id.user_cloudM);
         cloudR = view.findViewById(R.id.user_cloudR);
@@ -107,6 +119,7 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
 
         // retrieve number of books in listview firebase
         mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        mStorageRef.keepSynced(true);
         mStorageRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -170,8 +183,8 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
         storageRef.child("images/" + uID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onSuccess(Uri uri) {
-                Transformation transformation = new RoundedTransformationBuilder()
+            public void onSuccess(final Uri uri) {
+                final Transformation transformation = new RoundedTransformationBuilder()
                         .borderColor(Color.WHITE)
                         .borderWidthDp(3)
                         .cornerRadiusDp(20)
@@ -214,7 +227,10 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(getContext(), "Uploading Done!!!", Toast.LENGTH_SHORT).show();
                     Uri downloadUrl = taskSnapshot.getUploadSessionUri();
-                    Transformation transformation = new RoundedTransformationBuilder()
+                    Glide.with(Objects.requireNonNull(getContext())).load(downloadUrl)
+                            .apply(RequestOptions.circleCropTransform()).into(userPic);
+
+                   /* Transformation transformation = new RoundedTransformationBuilder()
                             .borderColor(Color.WHITE)
                             .borderWidthDp(3)
                             .cornerRadiusDp(55)
@@ -223,7 +239,7 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
                     Picasso.get()
                             .load(downloadUrl)
                             .fit().transform(transformation)
-                            .into(userPic);
+                            .into(userPic);*/
                     Log.d("downloadUrl-->", "" + downloadUrl);
 
                 }
@@ -290,11 +306,25 @@ public class AccountFragment extends Fragment implements Animation.AnimationList
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View v) {
         if(v == photoProfil){
             showFileChooser();
             uploadImage();
+        }else if(v == btnDeconnect){
+
+            try {
+                if(user != null) {
+                    mAuth.signOut();
+                    Intent intent = new Intent(getContext(), MainLoginActivity.class);
+                    startActivity(intent);
+                    ActivityCompat.finishAffinity(getActivity());
+                    Toast.makeText(getContext(), "User Sign out!", Toast.LENGTH_SHORT).show();
+                }
+            }catch (Exception e) {
+                Log.e("AcoountActivity", "onClick: Exception "+e.getMessage(),e );
+            }
         }
     }
 }

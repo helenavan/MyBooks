@@ -33,6 +33,8 @@ import com.helenacorp.android.mybibliotheque.model.BookModel;
 
 import java.util.ArrayList;
 
+import io.reactivex.disposables.Disposable;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -70,10 +72,12 @@ public class ListBooksFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_books, container, false);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).child("books");
+        mDatabase.keepSynced(true);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         bookListAdapter = new BookListAdapter(mDatabase, mAdapterItems, mAdapterKeys, mOnBook, Glide.with(this));

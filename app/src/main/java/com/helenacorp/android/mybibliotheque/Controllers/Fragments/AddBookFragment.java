@@ -80,6 +80,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
     private Uri imguri;
     private DatabaseReference databaseReference;
     private RequestManager glide;
+    private BookModel bookModel;
 
     public static AddBookFragment newInstance() {
         return (new AddBookFragment());
@@ -226,8 +227,9 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 String imageDownloadUrl = userPic.getDownloadUrl().toString();
                 BookModel bookModel = new BookModel(titleName.getText().toString(), category.getText().toString(), isbn.getText().toString(),
-                        lastName.getText().toString(), userName, null, ratingBar.getRating(), userPic.getDownloadUrl().toString(), resum.getText().toString());
-                //Save image info in to firebase database
+                        lastName.getText().toString(), userName, null, ratingBar.getRating(),
+                        userPic.getDownloadUrl().toString(), resum.getText().toString());
+                //                //Save image info in to firebase database
                 //keys = name's attribut
                 databaseReference.setValue(bookModel);
                 Toast.makeText(getContext(), "Enregistré!!", Toast.LENGTH_SHORT).show();
@@ -339,17 +341,20 @@ public class AddBookFragment extends Fragment implements View.OnClickListener, B
 
                 if (!book.getItems().get(0).getVolumeInfo().getTitle().isEmpty() || !book.getItems().get(0).getVolumeInfo().getAuthors().isEmpty()) {
 
-                    //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo().getIndustryIdentifiers().get(0).getIdentifier());
+                    //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo()
+                    //  .getIndustryIdentifiers().get(0).getIdentifier());
                     titleName.setText(book.getItems().get(0).getVolumeInfo().getTitle());
                     lastName.setText(book.getItems().get(0).getVolumeInfo().getAuthors().get(0).toString());
 
                     if (book.getItems().get(0).getVolumeInfo().getDescription() != null) {
                         resum.setText(book.getItems().get(0).getVolumeInfo().getDescription().toString());
                         if (book.getItems().get(0).getVolumeInfo().getImageLinks() != null) {
-                            Glide.with(Objects.requireNonNull(getContext())).load(book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail()).apply(RequestOptions.circleCropTransform()).into(mImageBookVisible);
-                            Log.e("AddBookFragment ", "img => " + book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail());
+                            Glide.with(Objects.requireNonNull(getContext())).load(book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail())
+                                    .apply(RequestOptions.circleCropTransform()).into(mImageBookVisible);
+                          //  Log.e("AddBookFragment ", "img => " + book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail());
                         }
                     }
+
                 }
             }
         } else {

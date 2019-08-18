@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
 
 import androidx.annotation.NonNull;
@@ -83,7 +84,7 @@ public class MainLoginActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         };
-
+      //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     public void validation() {

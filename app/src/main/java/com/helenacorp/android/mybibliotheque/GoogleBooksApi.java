@@ -8,13 +8,16 @@ import androidx.annotation.RequiresApi;
 import com.helenacorp.android.mybibliotheque.model.Book;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 
+import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 

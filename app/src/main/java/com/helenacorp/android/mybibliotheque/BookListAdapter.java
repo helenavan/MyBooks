@@ -60,6 +60,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
     private ArrayList<BookModel> mItems = new ArrayList<>();
     private ArrayList<BookModel> mItemFilter = new ArrayList<>();
     private RequestManager glide;
+    private Uri img_uri;
 
     public BookListAdapter(Query query, @Nullable ArrayList<BookModel> bookModelArrayList, @Nullable ArrayList<String> keys,
                            OnBookItemClick bookItemClick,RequestManager glide) {
@@ -93,8 +94,8 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
         desertRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
+                img_uri = uri;
                 Glide.with(holder.context).load(uri).apply(RequestOptions.circleCropTransform()).into(holder.pic);
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -108,6 +109,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
         final String idBooks = holder.isbnNumber.getText().toString();
         Log.e("tag", idBooks);
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        databaseReference.keepSynced(true);
         final Query booksQuery = databaseReference.child("books").orderByChild("isbn").equalTo(idBooks);
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -178,7 +180,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
                             R.layout.activity_book_detail, holder.context);*/
                     //  goToScene2(view);
                     //send data to detailbookactivity
-                    String img = model.getImageUrl();
+
                     String title = model.getTitle();
                     String name = model.getLastnameAutor();
                     String categorie = model.getCategory();
@@ -194,7 +196,7 @@ public class BookListAdapter extends FirebaseRecyclerBookAdapter<BookListAdapter
                     intent.putExtra("category", categorie);
                     intent.putExtra("info", resume);
                     intent.putExtra("isbn", isbn);
-                    intent.putExtra("imageUrl", img);
+                   // intent.putExtra("imageUrl", img_uri.toString());
                     intent.putExtra("rating", rating);
 
                     holder.context.startActivity(intent);

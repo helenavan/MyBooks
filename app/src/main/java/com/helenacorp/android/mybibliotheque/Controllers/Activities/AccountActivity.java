@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.helenacorp.android.mybibliotheque.Controllers.Fragments.AccountFragment;
 import com.helenacorp.android.mybibliotheque.Controllers.Fragments.AddBookFragment;
 import com.helenacorp.android.mybibliotheque.Controllers.Fragments.ListBooksFragment;
@@ -27,11 +29,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-public class AccountActivity extends AppCompatActivity  implements ListBooksFragment.OnButtonClickedListener{
+public class AccountActivity extends AppCompatActivity implements ListBooksFragment.OnButtonClickedListener {
     public static final String LIST_BOOKS = "listItems";
-   // private DrawerLayout drawer;
+    // private DrawerLayout drawer;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private Button btnExit;
 
     public static final String EXTRA_BUTTON_TAG =
             "com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity.EXTRA_BUTTON_TAG";
@@ -54,9 +57,9 @@ public class AccountActivity extends AppCompatActivity  implements ListBooksFrag
 
         this.configureToolBar();
         this.configureViewPagerAndTabs();
-       // this.configureDrawerLayout();
-       // this.configureNavigationView();
-       // this.showFirstFragment();
+        // this.configureDrawerLayout();
+        // this.configureNavigationView();
+        // this.showFirstFragment();
 
     }
 
@@ -102,14 +105,14 @@ public class AccountActivity extends AppCompatActivity  implements ListBooksFrag
         toolbar.setBackgroundResource(R.color.orangeD);
     }
 
-    private void configureViewPagerAndTabs(){
+    private void configureViewPagerAndTabs() {
         //Get ViewPager from layout
-        ViewPager pager = (ViewPager)findViewById(R.id.activity_main_viewpager);
+        ViewPager pager = (ViewPager) findViewById(R.id.activity_main_viewpager);
         //Set Adapter PageAdapter and glue it together
         pager.setAdapter(new PageAdapter(getSupportFragmentManager()));
 
         // 1 - Get TabLayout from layout
-        TabLayout tabs= (TabLayout)findViewById(R.id.activity_main_tabs);
+        TabLayout tabs = (TabLayout) findViewById(R.id.activity_main_tabs);
         // 2 - Glue TabLayout and ViewPager together
         tabs.setupWithViewPager(pager);
         // 3 - Design purpose. Tabs have the same width

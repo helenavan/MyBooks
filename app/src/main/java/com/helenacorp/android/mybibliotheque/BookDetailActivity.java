@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -28,6 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity;
+import com.helenacorp.android.mybibliotheque.Controllers.Fragments.AccountFragment;
+import com.helenacorp.android.mybibliotheque.Controllers.Fragments.ListBooksFragment;
 import com.helenacorp.android.mybibliotheque.model.BookModel;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 
@@ -37,6 +42,7 @@ import com.squareup.picasso.Transformation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,6 +74,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
     private FirebaseUser mUser;
     private DatabaseReference ref;
     private String key;
+    private BookModel bookModel;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -78,9 +85,9 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
 
         arrow = findViewById(R.id.arrow_detail);
         edit_detail = findViewById(R.id.edit_detail);
-        supportPostponeEnterTransition();
+      //  supportPostponeEnterTransition();
         final BookModel bookItem = getIntent().getParcelableExtra(EXTRA_CAR_ITEM);
-        couv = findViewById(R.id.pic_item);
+    //    couv = findViewById(R.id.pic_detail);
         category = findViewById(R.id.category_item);
         title = findViewById(R.id.title_item);
         title_two = findViewById(R.id.title_item_two);
@@ -101,17 +108,20 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         resume.setMovementMethod(new ScrollingMovementMethod());
         name.setText(bundle.getString("lastnameAutor"));
         ratingBar.setRating(bundle.getFloat("rating"));
-        final String url = bundle.getString("imageUrl");
+       // final String url = bundle.getString("imageUrl");
         //retrieve key's child of books node
         key = bundle.getString("bookid");
 
-        Transformation transformation = new RoundedTransformationBuilder()
+/*        Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(R.color.bleu_gray)
                 .borderWidthDp(3)
                 .cornerRadiusDp(20)
                 .oval(false)
                 .build();
-        Picasso.get().load(url).fit().transform(transformation).into(couv);
+        Picasso.get().load(url).fit().transform(transformation).into(couv);*/
+
+     //   Glide.with(this).load(url).into(couv);
+     //   Log.e("BookDetail ", "image url : "+url);
 
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
