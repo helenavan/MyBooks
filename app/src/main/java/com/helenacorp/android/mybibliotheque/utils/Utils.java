@@ -14,23 +14,7 @@ import java.util.Iterator;
  */
 
 public class Utils {
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param btn1
-     *            the btn1
-     * @param btn2
-     *            the btn2
-     * @param listener1
-     *            the listener1
-     * @param listener2
-     *            the listener2
-     * @return the alert dialog
-     */
+
     public static AlertDialog showDialog(Context ctx, String msg, String btn1,
                                          String btn2, DialogInterface.OnClickListener listener1,
                                          DialogInterface.OnClickListener listener2)
@@ -49,23 +33,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param btn1
-     *            the btn1
-     * @param btn2
-     *            the btn2
-     * @param listener1
-     *            the listener1
-     * @param listener2
-     *            the listener2
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, int msg, int btn1,
                                          int btn2, DialogInterface.OnClickListener listener1,
                                          DialogInterface.OnClickListener listener2)
@@ -76,21 +43,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param btn1
-     *            the btn1
-     * @param btn2
-     *            the btn2
-     * @param listener
-     *            the listener
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, String msg, String btn1,
                                          String btn2, DialogInterface.OnClickListener listener)
     {
@@ -107,21 +59,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param btn1
-     *            the btn1
-     * @param btn2
-     *            the btn2
-     * @param listener
-     *            the listener
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, int msg, int btn1,
                                          int btn2, DialogInterface.OnClickListener listener)
     {
@@ -131,17 +68,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param listener
-     *            the listener
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, String msg,
                                          DialogInterface.OnClickListener listener)
     {
@@ -150,17 +76,6 @@ public class Utils {
                 listener, null);
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @param listener
-     *            the listener
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, int msg,
                                          DialogInterface.OnClickListener listener)
     {
@@ -169,15 +84,6 @@ public class Utils {
                 ctx.getString(android.R.string.ok), null, listener, null);
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, String msg)
     {
 
@@ -192,15 +98,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param msg
-     *            the msg
-     * @return the alert dialog
-     */
     public static AlertDialog showDialog(Context ctx, int msg)
     {
 
@@ -208,18 +105,6 @@ public class Utils {
 
     }
 
-    /**
-     * Show dialog.
-     *
-     * @param ctx
-     *            the ctx
-     * @param title
-     *            the title
-     * @param msg
-     *            the msg
-     * @param listener
-     *            the listener
-     */
     public static void showDialog(Context ctx, int title, int msg,
                                   DialogInterface.OnClickListener listener)
     {
@@ -232,12 +117,7 @@ public class Utils {
         alert.show();
     }
 
-    /**
-     * Hide keyboard.
-     *
-     * @param ctx
-     *            the ctx
-     */
+
     public static final void hideKeyboard(Activity ctx)
     {
 
@@ -250,14 +130,6 @@ public class Utils {
         }
     }
 
-    /**
-     * Hide keyboard.
-     *
-     * @param ctx
-     *            the ctx
-     * @param v
-     *            the v
-     */
     public static final void hideKeyboard(Activity ctx, View v)
     {
 
