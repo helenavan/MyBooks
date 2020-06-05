@@ -125,7 +125,6 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

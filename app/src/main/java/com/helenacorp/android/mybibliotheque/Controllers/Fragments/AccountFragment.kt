@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.helenacorp.android.mybibliotheque.R
 import com.helenacorp.android.mybibliotheque.model.User
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -53,8 +54,6 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     private var userPseudo: String? = null
     private var nbrBooks: String? = null
     private var userPic: ImageView? = null
-    private val mBar: ProgressBar? = null
-    private var mStorageRef: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
     private var mAuthListener: AuthStateListener? = null
     private lateinit var user: FirebaseUser
@@ -90,41 +89,17 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         user = mAuth!!.currentUser!!
         mFirestore = Firebase.firestore
         // retrieve number of books in listview firebase
-        //  mStorageRef = FirebaseDatabase.getInstance().getReference("users").child(user!!.uid).child("books")
+       // getnumberBooks()
+        getSnapnumberBook()
         //  mStorageRef!!.keepSynced(true)
-/*        mStorageRef!!.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                mDialog!!.dismiss()
-                nbrBooks = dataSnapshot.childrenCount.toString()
-                acc_numlist!!.text = nbrBooks
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {}
-        })*/
         downloadAvatar()
         // User is signed in
         uID = user!!.uid
         userPseudo = user!!.displayName
         userEmail = user!!.email
+        Log.e(TAG,"email : $userEmail")
         imageUri = user!!.photoUrl
         acc_username!!.text = userPseudo
-        //  userPic!!.setImageURI(imageUri)
-        Log.e(TAG, "1 - image URI :$imageUri")
-        //sharedpreference
-/*        sp = PreferenceManager.getDefaultSharedPreferences(activity)
-        val editor = sp!!.edit()
-        if (sp!!.contains(USER_PIC)) {
-            Log.e(TAG,"2 - image URI :$imageUri")
-            userPic!!.setImageURI(imageUri)
-        } else {
-            downloadAvatar()
-        }
-        if (LIST_BOOKS.isEmpty()) {
-            sp = this.activity!!.getPreferences(Context.MODE_PRIVATE)
-        } else {
-            editor.putString(LIST_BOOKS, Context.MODE_PRIVATE.toString())
-        }
-        editor.apply()*/
 
         animateCloud(cloudL)
         cloudTranslate!!.startOffset = 500
@@ -133,6 +108,25 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         animateCloud(cloudR)
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun getnumberBooks() {
+        val ref = mFirestore!!.collection("users")
+                .document(user!!.uid).collection("books")
+        ref.get().addOnCompleteListener { task->
+            acc_numlist!!.text= task.result!!.count().toString()
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error getting documents: ", exception)
+        }
+
+    }
+
+    private fun getSnapnumberBook(){
+        val ref = mFirestore!!.collection("users")
+                .document(user!!.uid).collection("books")
+        ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            acc_numlist!!.text= querySnapshot!!.count().toString()
+        }
     }
 
     //download and uploadload photoprofil
@@ -153,7 +147,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
 
     private fun uploadImage() {
         Log.e(TAG, "uploadImage - image URI :$imageUri")
-       // var downloadUrl: Uri? = null
+        // var downloadUrl: Uri? = null
         if (imageUri != null) {
             val storageReference = firebaseStorage.reference
             val userPicref = storageReference.child("images/$uID.jpg")
@@ -167,7 +161,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
             }.addOnCompleteListener { taskSnapshot ->
                 Toast.makeText(activity, "Uploading Done!!!", Toast.LENGTH_SHORT).show()
                 updateProfilUser(imageUri!!)
-                val downloadUrl  = taskSnapshot.result.toString()
+                val downloadUrl = taskSnapshot.result.toString()
                 val users = User(downloadUrl!!)
                 mFirestore.collection("users").document(user.uid).set(users)
                 Log.e(TAG, "downloadUrl : ${downloadUrl.toString()}")
@@ -184,8 +178,8 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
                 .build()
         user.updateProfile(profileUpdate)
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                       val p = imagePhoto.path
+                    if (task.isSuccessful) {
+                        val p = imagePhoto.path
                         Glide.with(Objects.requireNonNull(activity)!!).load(imagePhoto)
                                 .apply(RequestOptions.circleCropTransform()).into(userPic!!)
                         Log.e(TAG, "success update profil")
