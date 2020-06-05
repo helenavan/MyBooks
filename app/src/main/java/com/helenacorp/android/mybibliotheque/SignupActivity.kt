@@ -24,8 +24,11 @@ import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
-import com.helenacorp.android.mybibliotheque.SignupActivity
+import com.helenacorp.android.mybibliotheque.model.User
 import java.util.regex.Pattern
 
 class SignupActivity : AppCompatActivity(), View.OnClickListener {
@@ -37,6 +40,7 @@ class SignupActivity : AppCompatActivity(), View.OnClickListener {
     private var authName: TextInputEditText? = null
     private var authEmail: TextInputEditText? = null
     private var authPassw: TextInputEditText? = null
+    private lateinit var mFirestore:FirebaseFirestore
     private var authNameParent: TextInputLayout? = null
     private var authEmailParent: TextInputLayout? = null
     private var authPassParent: TextInputLayout? = null
@@ -71,6 +75,7 @@ class SignupActivity : AppCompatActivity(), View.OnClickListener {
         authEmail!!.addTextChangedListener(MyTextWatcher(authEmail))
         authPassw!!.addTextChangedListener(MyTextWatcher(authPassw))
         mAuth = FirebaseAuth.getInstance()
+        mFirestore = Firebase.firestore
     }
 
     fun validation() {
@@ -95,6 +100,8 @@ class SignupActivity : AppCompatActivity(), View.OnClickListener {
                         messToast!!.setText(R.string.mlog_bvn)
                         messageToast()
                         user = mAuth!!.currentUser
+                        val users = User(user!!.uid,displayName, email,null,null)
+                        mFirestore.collection("users").document().set(users)
                         val profileUpdates = UserProfileChangeRequest.Builder()
                                 .setDisplayName(displayName)
                                 .build()

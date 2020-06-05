@@ -43,12 +43,15 @@ class BookModel {
     @Expose
     var author: String? = null
 
+    @SerializedName("idUSER")
+    @Expose
+    var idBookUser: String? = null
 
     constructor() {}
 
     constructor(title: String?,author:String?, category: String?, isbn: String?,
                rating: Float, imageUrl: String?,
-                islend:Boolean,isread:Boolean, info: String?) {
+                islend:Boolean,isread:Boolean, info: String, idBookUser:String? ) {
         this.title = title
         this.author = author
         this.category = category
@@ -58,6 +61,7 @@ class BookModel {
         this.islend = islend
         this.isread = isread
         this.info = info
+        this.idBookUser = idBookUser
     }
 
     constructor(info: String?) {

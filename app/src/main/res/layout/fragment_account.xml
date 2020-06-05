@@ -84,8 +84,8 @@
 
     <ImageView
         android:id="@+id/user_pic"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="107dp"
+        android:layout_height="107dp"
         android:layout_marginTop="113dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/user_bcrg"

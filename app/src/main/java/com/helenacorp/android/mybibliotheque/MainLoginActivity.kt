@@ -1,27 +1,29 @@
 package com.helenacorp.android.mybibliotheque
 
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import android.widget.TextView
-import android.os.Bundle
-import com.helenacorp.android.mybibliotheque.R
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.google.firebase.auth.FirebaseUser
 import android.content.Intent
-import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
-import android.widget.Toast
+import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.widget.Toolbar
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.helenacorp.android.mybibliotheque.SignupActivity
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
+import com.helenacorp.android.mybibliotheque.model.User
+
+const val TAG = "MainLoginActivity"
 
 class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
     private val DefaultUnameValue = ""
@@ -30,14 +32,16 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
     private val PasswordValue: String? = null
     private var viewLayout: View? = null
     private var mAuth: FirebaseAuth? = null
-    private var mAuthListener: AuthStateListener? = null
+    private lateinit var mAuthListener: AuthStateListener
+    private lateinit var  user:FirebaseUser
+    private lateinit var auth: FirebaseAuth
     private var email_log: TextInputEditText? = null
     private var password_log: TextInputEditText? = null
     private var email_log_parent: TextInputLayout? = null
     private var password_log_parent: TextInputLayout? = null
     private var messToast: TextView? = null
     private var login: Button? = null
-    private var auth: Button? = null
+    private var btnauth: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_login)
@@ -54,27 +58,42 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
         password_log_parent = findViewById(R.id.log_password_parent)
         login = findViewById<View>(R.id.log_btn) as Button
         login!!.setOnClickListener(this)
-        auth = findViewById(R.id.log_sign_btn)
-        auth!!.setOnClickListener(this)
+        btnauth = findViewById(R.id.log_sign_btn)
+        btnauth!!.setOnClickListener(this)
         mAuth = FirebaseAuth.getInstance()
-
-        //to keep connected user
+        auth = Firebase.auth
         mAuthListener = AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
+            if (user != null) {
+                val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
+                startActivity(intent)
+                Log.e(TAG, "onAuthStateChanged:signed_in:" + user.uid)
+            } else {
+                Log.e(TAG, "onAuthStateChanged:signed_out")
+            }
+
+        }
+        //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
+
+    private fun updateUI(user:FirebaseUser){
+        //to keep connected user
+        mAuthListener = AuthStateListener { firebaseAuth ->
+          //  user = Firebase.auth!!.currentUser!!
             if (user != null) {
                 // User is signed in
                 val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
                 startActivity(intent)
             } else {
+                Log.e("main","user $user")
                 // User is signed out
                 // messToast.setText(R.string.mlog_count);
                 // messageToast();
             }
         }
-        //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
-    fun validation() {
+    private fun validation() {
         if (email_log!!.text!!.length == 0 ||
                 password_log!!.text!!.length == 0) {
             messToast!!.setText(R.string.mlog_tss)
@@ -95,6 +114,8 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
         mAuth!!.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        user = mAuth!!.currentUser!!
+                        updateUI(user!!)
                         // Sign in success, update UI with the signed-in user's information
                         val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
                         startActivity(intent)
@@ -113,6 +134,7 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
     //keep loginuser connected
     public override fun onStart() {
         super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
         mAuth!!.addAuthStateListener(mAuthListener!!)
     }
 
