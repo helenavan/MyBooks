@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -26,15 +28,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.helenacorp.android.mybibliotheque.R
 import com.helenacorp.android.mybibliotheque.model.User
-import kotlinx.android.synthetic.main.fragment_account.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -129,7 +128,6 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         }
     }
 
-    //download and uploadload photoprofil
     private fun downloadAvatar() {
         // Create a storage reference from our app
         val storageRef = firebaseStorage.reference
@@ -255,7 +253,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
                     //  val intent = Intent(activity, MainLoginActivity::class.java)
                     // startActivity(intent)
                     // ActivityCompat.finishAffinity(activity!!)
-                    Toast.makeText(activity, "User Sign out!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Déconnecté !", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Log.e("AccountActivity", "onClick: Exception " + e.message, e)

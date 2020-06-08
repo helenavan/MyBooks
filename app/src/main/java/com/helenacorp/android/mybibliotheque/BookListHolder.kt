@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.helenacorp.android.mybibliotheque.model.BookModel
 
+private const val TAG = "BookListHolder"
 class BookListHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     var txtTitle: TextView? = null
@@ -58,6 +59,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v) {
         pic!!.context
         category!!.text = book.category
         resume!!.text = book.description
+        Log.e(TAG,"Holder title : $txtTitle")
         val storageReference = Firebase.storage.reference
         val desertRef = storageReference.child("couvertures/" + user!!.uid + txtTitle!!.text.toString().trim { it <= ' ' } + ".jpg")
         desertRef.downloadUrl.addOnSuccessListener(OnSuccessListener { uri ->

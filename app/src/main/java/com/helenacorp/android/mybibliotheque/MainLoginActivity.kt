@@ -23,7 +23,7 @@ import com.google.firebase.ktx.Firebase
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
 import com.helenacorp.android.mybibliotheque.model.User
 
-const val TAG = "MainLoginActivity"
+private const val TAG = "MainLoginActivity"
 
 class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
     private val DefaultUnameValue = ""
