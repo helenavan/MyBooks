@@ -1,5 +1,6 @@
 package com.helenacorp.android.mybibliotheque
 
+import android.util.Log
 import android.widget.Filter
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.helenacorp.android.mybibliotheque.model.BookModel
@@ -9,7 +10,9 @@ import kotlin.collections.ArrayList
 /**
  * Created by helena on 28/08/2017.
  */
-class CustomFilter(var adapter: FirebaseRecyclerAdapter<*, *>, var filterList: ArrayList<BookModel>? = null) : Filter() {
+private const val TAG = "CustomFilter"
+
+open class CustomFilter(var adapter: BookListAdapter, var filterList: ArrayList<BookModel>? = null) : Filter() {
 
     //filtering ocurs
     override fun performFiltering(charSequence: CharSequence): FilterResults {
@@ -38,9 +41,9 @@ class CustomFilter(var adapter: FirebaseRecyclerAdapter<*, *>, var filterList: A
     }
 
     override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-
-    //    adapter.items= filterResults.values as ArrayList<BookModel>
-        // filterList = (ArrayList<BookModel>) filterResults.values;
+        Log.e(TAG, "publishResult")
+        //   adapter.items= filterResults.values as ArrayList<BookModel>
+        filterList = filterResults.values as ArrayList<BookModel>?
         adapter.notifyDataSetChanged()
     }
 

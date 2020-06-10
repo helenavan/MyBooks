@@ -73,32 +73,6 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
         recyclerView!!.layoutManager = LinearLayoutManager(activity)
         recyclerView!!.adapter = mAdapter
         mAdapter!!.notifyDataSetChanged()
-        //  mAdapter = BookListAdapter(options,mListItems)
-        //loadBookList()
-        /* firestoreListener = docRef!!
-                 .addSnapshotListener { snapshot, e ->
-                     if (e != null) {
-                         return@addSnapshotListener
-                     }
-                     if (snapshot != null) {
-                         for (document in snapshot!!) {
-                             val book = document.toObject(BookModel::class.java)
-                             mListItems.add(book)
-                             Log.e(TAG, "List Books : $mListItems")
-                         }
-                     }
-                     for (dc in snapshot!!.documentChanges) {
-                         when (dc.type) {
-                             DocumentChange.Type.ADDED -> Log.d(TAG, "New city: " + dc.document.data)
-                             DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
-                             DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
-                         }
-                     }
-                     //recyclerView!!.setHasFixedSize(true)
-                  //   mAdapter!!.notifyDataSetChanged()
-                  //   recyclerView!!.adapter = mAdapter
-
-                 }*/
 
         //SEARCH
         searchView = view.findViewById(R.id.mSearch)
@@ -109,7 +83,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
             override fun onQueryTextChange(query: String): Boolean {
                 //FILTER AS YOU TYPE
-                //   bookListAdapter!!.filter!!.filter(query)
+                mAdapter!!.filter!!.filter(query)
                 return false
             }
         })
@@ -144,6 +118,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 /*                                mListItems.removeAt(position)
                                 mAdapter!!.notifyItemRemoved(position)
                                 mAdapter!!.notifyItemRangeChanged(position, mListItems.size)*/
+                                mAdapter!!.notifyItemRemoved(position)
                                 Toast.makeText(activity, "Ce livre a été supprimé!", Toast.LENGTH_SHORT).show()
                             }
                                     .addOnFailureListener { e -> Log.e(TAG, "Error deleting document", e) }
@@ -158,32 +133,6 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
                         return true
                     }
 
-                })
-    }
-
-    private fun updateBookData() {
-        docRef!!
-                .addSnapshotListener(com.google.firebase.firestore.EventListener<QuerySnapshot> { snapshots, e ->
-                    if (e != null) {
-                        Log.w(TAG, "listen:error", e)
-                        return@EventListener
-                    }
-                    for (doc in snapshots!!) {
-                        val bookModel = doc.toObject(BookModel::class.java)
-
-                        mListItems.add(bookModel)
-                    }
-                    // instead of simply using the entire query snapshot
-                    // see the actual changes to query results between query snapshots (added, removed, and modified)
-                    for (dc in snapshots.documentChanges) {
-                        when (dc.type) {
-                            DocumentChange.Type.ADDED ->
-
-                                Log.d(TAG, "New city: " + dc.document.data)
-                            DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
-                            DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
-                        }
-                    }
                 })
     }
 

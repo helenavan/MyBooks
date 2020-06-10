@@ -67,4 +67,5 @@ class BookModel {
     constructor(info: String?) {
         this.info = info
     }
+
 }

@@ -75,13 +75,13 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
         appbar = findViewById<View>(R.id.app_bar) as AppBarLayout
         //retrieve extra in bundle
         val bundle = intent.extras
-        category!!.setText(bundle!!.getString("category"))
-        title!!.setText(bundle.getString("title"))
-        title_two!!.setText(bundle.getString("title"))
-        resume!!.setText(bundle.getString("info"))
-        resume!!.setMovementMethod(ScrollingMovementMethod())
-        name!!.setText(bundle.getString("lastnameAutor"))
-        ratingBar!!.setRating(bundle.getFloat("rating"))
+        category!!.text = bundle!!.getString("category")
+        title!!.text = bundle.getString("title")
+        title_two!!.text = bundle.getString("title")
+        resume!!.text = bundle.getString("info")
+        resume!!.movementMethod = ScrollingMovementMethod()
+        name!!.text = bundle.getString("lastnameAutor")
+        ratingBar!!.rating = bundle.getFloat("rating")
         // final String url = bundle.getString("imageUrl");
         //retrieve key's child of books node
         key = bundle.getString("bookid")
