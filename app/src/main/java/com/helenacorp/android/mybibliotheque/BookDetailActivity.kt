@@ -82,19 +82,13 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
 
         prefs = applicationContext.getSharedPreferences("book", 0)
 
-        var bundle = intent.extras
-        var position: Int? = 2
-        if (bundle != null) {
-            position = bundle.getInt("viewpager_position")
-        }
-
-        // pager!!.adapter = SectionsPagerAdapter(this@BookDetailActivity, supportFragmentManager)
         arrow = findViewById(R.id.arrow_detail)
         arrow!!.setOnClickListener {
-            prefs!!.edit().clear().apply()
-
+          //  prefs!!.edit().clear().apply()
+            val intent = Intent(this, AccountActivity::class.java)
+            intent.putExtra("frag","2")
+            startActivity(intent)
             //TODO
-
         }
 
         mAuth = Firebase.auth
@@ -164,56 +158,6 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
             alertD.create()
             alertD.show()
         }
-/*        val bundle = intent.extras
-        category!!.text = bundle!!.getString("category")
-        title!!.text = bundle.getString("title")
-        title_two!!.text = bundle.getString("title")
-        resume!!.text = bundle.getString("info")
-        resume!!.movementMethod = ScrollingMovementMethod()
-        name!!.text = bundle.getString("lastnameAutor")
-        ratingBar!!.rating = bundle.getFloat("rating")
-        // final String url = bundle.getString("imageUrl");
-        //retrieve key's child of books node
-        key = bundle.getString("bookid")
-
-        //   Glide.with(this).load(url).into(couv);
-        //   Log.e("BookDetail ", "image url : "+url);
-        toolbar!!.title = ""
-        appbar!!.addOnOffsetChangedListener(this)
-        setSupportActionBar(toolbar)
-        startAlphaAnimation(title_two, 0, View.INVISIBLE)
-        mAuth = FirebaseAuth.getInstance()
-        mUser = mAuth!!.currentUser
-        ref = FirebaseDatabase.getInstance().getReference("users").child(mUser!!.uid).child("books")
-        edit_detail!!.setOnClickListener(View.OnClickListener {
-            val layoutInflater = LayoutInflater.from(this@BookDetailActivity)
-            val view1 = layoutInflater.inflate(R.layout.dialog_detail, null)
-            val alertD = AlertDialog.Builder(this@BookDetailActivity)
-            alertD.setView(view1)
-            val resume_dialog = view1.findViewById<EditText>(R.id.resum_dialog)
-            resume_dialog.setText(resume!!.getText())
-            val head = findViewById<ImageView>(R.id.head_dialog)
-            val headTxt = view1.findViewById<TextView>(R.id.title_dialog)
-            headTxt.text = title!!.getText()
-            alertD.setPositiveButton("Enregistrer\nles modifs") { dialogInterface, i ->
-                //retrieve resume , change it, save in view and upgrade in firebase
-                //pass de string key as child in datareference
-                val infoDb = ref!!.child(key!!)
-                val updateResum = resume_dialog.text.toString()
-                resume!!.setText(updateResum)
-                val map: MutableMap<String, Any> = HashMap()
-                map["info"] = updateResum
-                infoDb.updateChildren(map)
-                Toast.makeText(this@BookDetailActivity, "RE-enregistré", Toast.LENGTH_SHORT).show()
-            }
-            alertD.setNegativeButton("Quitter") { dialogInterface, i -> dialogInterface.cancel() }
-            val dialog = alertD.create()
-            dialog.show()
-        })
-        arrow!!.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this@BookDetailActivity, AccountActivity::class.java)
-            startActivity(intent)
-        })*/
     }
 
     private fun configureViewPagerAndTabs() {
@@ -229,8 +173,7 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
         // 3 - Design purpose. Tabs have the same width
         tabs.tabMode = TabLayout.MODE_FIXED
 
-        pager!!.offscreenPageLimit = 3
-        pager!!.currentItem = 0
+        pager!!.currentItem = (pager.currentItem) - 1
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -293,5 +236,10 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
             alphaAnimation.fillAfter = true
             v!!.startAnimation(alphaAnimation)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.e(TAG, "onbackpressed")
     }
 }

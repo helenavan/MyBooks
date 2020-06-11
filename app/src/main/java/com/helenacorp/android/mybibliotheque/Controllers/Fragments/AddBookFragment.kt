@@ -240,28 +240,33 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         var cover:String? = null
         mImageBookVisible!!.isDrawingCacheEnabled = true
         mImageBookVisible!!.buildDrawingCache()
+        if(mImageBookVisible != null){
+            val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
 
-        val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
-
-        val data = baos.toByteArray()
-        // val uploadTask = userPic.putBytes(data)
-        if (imguri != null) {
-            val storageReference = FirebaseStorage.getInstance().reference
-            var userPic = storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
-            val uploadTask = userPic.putBytes(data)
-            uploadTask.addOnFailureListener() {}
-                    .addOnSuccessListener() { task ->
-                       cover = task.uploadSessionUri.toString()
-                       val truc = mDB!!.collection("users").document(user!!.uid)
-                                .collection("book").document().id
-                        mDB!!.collection("users").document(user!!.uid)
-                                .collection("book").document(truc).update("imageUrl",cover)
-                        // addUploadRecordToDb(downloadUri.toString())
-                        Log.e(TAG, " image telechargée ! : $truc")
-                    }
+            val data = baos.toByteArray()
+            // val uploadTask = userPic.putBytes(data)
+            if (imguri != null) {
+                val storageReference = FirebaseStorage.getInstance().reference
+                var userPic = storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
+                val uploadTask = userPic.putBytes(data)
+                uploadTask.addOnFailureListener() {}
+                        .addOnSuccessListener() { task ->
+                            cover = task.uploadSessionUri.toString()
+                            val truc = mDB!!.collection("users").document(user!!.uid)
+                                    .collection("book").document().id
+                            mDB!!.collection("users").document(user!!.uid)
+                                    .collection("book").document(truc).update("imageUrl",cover)
+                            // addUploadRecordToDb(downloadUri.toString())
+                            Log.e(TAG, " image telechargée ! : $truc")
+                        }
+            }else{
+                Toast.makeText(activity, "pas image", Toast.LENGTH_SHORT).show()
+            }
         }
+
+
     }
 
     private fun addBook(model: BookModel) {

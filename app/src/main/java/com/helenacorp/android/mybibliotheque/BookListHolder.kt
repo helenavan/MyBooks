@@ -84,6 +84,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         categorie = book.category
         category!!.text = categorie
         info = book.description
+        info = book.info
         resume!!.text = info
         urlImage = book.imageUrl
         Log.e(TAG, "Holder title : $txtTitle")
@@ -105,16 +106,17 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         var idBook = "null"
         ref.get()
                 .addOnSuccessListener { book ->
+
                     for (document in book) {
                         idBook = document.id
-                        sharedPref!!.edit().putString("idBook", idBook)
-                        sharedPref!!.edit().putString("name", lastname)
-                        sharedPref!!.edit().putString("category", categorie)
-                        sharedPref!!.edit().putString("title", title)
-                        sharedPref!!.edit().putString("info", info)
-                        sharedPref!!.edit().putString("urlImage", urlImage)
-                        sharedPref!!.edit().putFloat("rating", mrating!!)
-                        sharedPref!!.edit().commit()
+                        sharedPref!!.edit().putString("idBook", idBook).commit()
+                        sharedPref!!.edit().putString("name", lastname).commit()
+                        sharedPref!!.edit().putString("category", categorie).commit()
+                        sharedPref!!.edit().putString("title", title).commit()
+                        sharedPref!!.edit().putString("info", info).commit()
+                        sharedPref!!.edit().putString("urlImage", urlImage).commit()
+                        sharedPref!!.edit().putFloat("rating", mrating!!).commit()
+
                         Log.e(TAG, "1 - idBook : $idBook")
                     }
                 }.addOnFailureListener { exception ->
@@ -130,11 +132,11 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         val context = itemView.context
         val ref = mFireStore!!.collection("users")
                 .document(user!!.uid).collection("books")
-        var idBook: String? = null
+        var idBookk: String? = null
         ref.get()
                 .addOnSuccessListener { book ->
                     for (document in book) {
-                        idBook = document.id
+                        idBookk = document.id
 
                     }
                 }.addOnFailureListener { exception ->
@@ -144,7 +146,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage("Voulez-vous supprimer ?").setCancelable(false)
         builder.setPositiveButton("Oui") { dialog, which -> // Delete the file
-            ref.document(idBook!!).delete().addOnCompleteListener {
+            ref.document(idBookk!!).delete().addOnCompleteListener {
 
                 Toast.makeText(context, "Ce livre a été supprimé!", Toast.LENGTH_SHORT).show()
             }
@@ -152,7 +154,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         }
         builder.setNegativeButton("Non") { dialog, which ->
             dialog.cancel()
-            Toast.makeText(context, "Ce livre ID : $idBook", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Ce livre ID : $idBookk", Toast.LENGTH_SHORT).show()
         }
         builder.create()
         builder.setTitle("Confirmer")
