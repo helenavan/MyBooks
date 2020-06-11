@@ -2,9 +2,11 @@ package com.helenacorp.android.mybibliotheque
 
 import android.annotation.TargetApi
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -15,18 +17,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.helenacorp.android.mybibliotheque.BookDetailActivity
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.SectionsPagerAdapter
+import com.helenacorp.android.mybibliotheque.Controllers.Fragments.ListBooksFragment
 import com.helenacorp.android.mybibliotheque.model.BookModel
-import java.util.*
+import kotlinx.android.synthetic.main.dialog_detail.*
+import kotlinx.android.synthetic.main.dialog_detail.view.*
+
+private const val TAG = "BookDetailActivity"
 
 class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
     private var mIsTheTitleVisible = false
@@ -36,11 +49,18 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
     private val couv: ImageView? = null
     private var arrow: ImageView? = null
     private var title: TextView? = null
+    private var mtitle: String? = null
     private var name: TextView? = null
+    private var mname: String? = null
     private var category: TextView? = null
+    private var mcategory: String? = null
     private var resume: TextView? = null
+    private var mresume: String? = null
+    private var mUrl: String? = null
+    private var mrating: Float? = null
     private var title_two: TextView? = null
     private var ratingBar: RatingBar? = null
+    private var idBook:String? = null
     var constraintLayout: ConstraintLayout? = null
     private val framelayoutTitle: FrameLayout? = null
     private var linearlayoutTitle: LinearLayoutCompat? = null
@@ -48,19 +68,44 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
     private var edit_detail: FloatingActionButton? = null
     private var mAuth: FirebaseAuth? = null
     private var mUser: FirebaseUser? = null
-    private var ref: DatabaseReference? = null
     private var key: String? = null
     private val bookModel: BookModel? = null
+    private var prefs: SharedPreferences? = null
+    private var pager: ViewPager? = null
+    private var mFireStore: FirebaseFirestore? = null
+    private var ref :CollectionReference? = null
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_book_detail)
+
+        prefs = applicationContext.getSharedPreferences("book", 0)
+
+        var bundle = intent.extras
+        var position: Int? = 2
+        if (bundle != null) {
+            position = bundle.getInt("viewpager_position")
+        }
+
+        // pager!!.adapter = SectionsPagerAdapter(this@BookDetailActivity, supportFragmentManager)
         arrow = findViewById(R.id.arrow_detail)
+        arrow!!.setOnClickListener {
+            prefs!!.edit().clear().apply()
+
+            //TODO
+
+        }
+
+        mAuth = Firebase.auth
+        mUser = mAuth!!.currentUser
+        mFireStore = Firebase.firestore
+        ref = mFireStore!!.collection("users")
+                .document(mUser!!.uid).collection("books")
+
         edit_detail = findViewById(R.id.edit_detail)
         //  supportPostponeEnterTransition();
-     //   val bookItem: BookModel = intent.getParcelableExtra(EXTRA_CAR_ITEM)
+        //   val bookItem: BookModel = intent.getParcelableExtra(EXTRA_CAR_ITEM)
         //    couv = findViewById(R.id.pic_detail);
         category = findViewById(R.id.category_item)
         title = findViewById(R.id.title_item)
@@ -73,8 +118,53 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
         collapsing = findViewById<View>(R.id.collapsing) as CollapsingToolbarLayout
         toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         appbar = findViewById<View>(R.id.app_bar) as AppBarLayout
-        //retrieve extra in bundle
-        val bundle = intent.extras
+        //retrieve item's values from sharedpreferences
+        mcategory = prefs!!.getString("category", null)
+        mtitle = prefs!!.getString("title", null)
+        mname = prefs!!.getString("name", null)
+        mresume = prefs!!.getString("info", null)
+        idBook = prefs!!.getString("idBook",null)
+        Log.e(TAG, " idBook : $idBook")
+        mUrl = prefs!!.getString("urlImage", null)
+        mrating = prefs!!.getFloat("rating", 0f)
+        Log.e(TAG, " titlte from shared : $mtitle")
+        //set values in layout
+        category!!.text = mcategory
+        title!!.text = mtitle
+        resume!!.text = mresume
+        resume!!.movementMethod = ScrollingMovementMethod()
+        name!!.text = mname
+        title_two!!.text = mname
+        toolbar!!.title = ""
+        ratingBar!!.rating = mrating!!
+        //actionBar
+        appbar!!.addOnOffsetChangedListener(this)
+        setSupportActionBar(toolbar)
+        startAlphaAnimation(title_two, 0, View.INVISIBLE)
+        //change value item
+        edit_detail!!.setOnClickListener {
+            val layoutInflater = LayoutInflater.from(this@BookDetailActivity)
+            val view1 = layoutInflater.inflate(R.layout.dialog_detail, null)
+            val alertD = AlertDialog.Builder(this@BookDetailActivity)
+            alertD.setView(view1)
+            view1.title_dialog.text = mtitle
+          //  val resume_dialog = view1.findViewById<EditText>(R.id.resum_dialog)
+            if (!mresume.isNullOrEmpty()) {
+               view1.resum_dialog.setText(mresume!!)
+            }
+
+            alertD.setPositiveButton("Enregistrer") { dialogInterface, i ->
+                prefs!!.edit().putString("info", view1.resum_dialog!!.text.toString()).apply()
+                val infoBook = prefs!!.getString("info", null)
+                Log.e(TAG, " infoBook : $infoBook")
+                resume!!.text = infoBook
+                ref!!.document(idBook!!).update("info",infoBook)
+            }
+            alertD.setNegativeButton("Quitter") { dialogInterface, i -> dialogInterface.cancel() }
+            alertD.create()
+            alertD.show()
+        }
+/*        val bundle = intent.extras
         category!!.text = bundle!!.getString("category")
         title!!.text = bundle.getString("title")
         title_two!!.text = bundle.getString("title")
@@ -123,7 +213,24 @@ class BookDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
         arrow!!.setOnClickListener(View.OnClickListener {
             val intent = Intent(this@BookDetailActivity, AccountActivity::class.java)
             startActivity(intent)
-        })
+        })*/
+    }
+
+    private fun configureViewPagerAndTabs() {
+        //Get ViewPager from layout
+        val pager = findViewById<View>(R.id.activity_main_viewpager) as ViewPager
+        //Set Adapter PageAdapter and glue it together
+        pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
+
+        // 1 - Get TabLayout from layout
+        val tabs = findViewById<View>(R.id.activity_main_tabs) as TabLayout
+        // 2 - Glue TabLayout and ViewPager together
+        tabs.setupWithViewPager(pager)
+        // 3 - Design purpose. Tabs have the same width
+        tabs.tabMode = TabLayout.MODE_FIXED
+
+        pager!!.offscreenPageLimit = 3
+        pager!!.currentItem = 0
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

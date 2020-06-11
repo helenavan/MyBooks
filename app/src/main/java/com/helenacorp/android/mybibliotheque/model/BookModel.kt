@@ -9,6 +9,11 @@ import com.google.gson.annotations.Expose
  */
 @IgnoreExtraProperties
 class BookModel {
+
+    @SerializedName("id")
+    @Expose
+    var id: String? = null
+
     @SerializedName("title")
     @Expose
     var title: String? = null
@@ -47,11 +52,14 @@ class BookModel {
     @Expose
     var idBookUser: String? = null
 
+
+
     constructor() {}
 
-    constructor(title: String?,author:String?, category: String?, isbn: String?,
+    constructor(id:String?, title: String?,author:String?, category: String?, isbn: String?,
                rating: Float, imageUrl: String?,
                 islend:Boolean,isread:Boolean, info: String, idBookUser:String? ) {
+        this.id = id
         this.title = title
         this.author = author
         this.category = category

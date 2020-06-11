@@ -203,6 +203,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
       //  Log.e(TAG, "path cover in sendBook() :  $path")
         // sendImageCover()
         val bookModel = BookModel(
+                "",
                 titleName!!.text.toString(),
                 author!!.text.toString(),
                 category!!.text.toString(),
