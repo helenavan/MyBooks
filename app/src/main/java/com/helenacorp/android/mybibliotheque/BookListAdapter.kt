@@ -32,7 +32,7 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
     }
 
     override fun getItem(position: Int): BookModel {
-        return super.getItem(itemCount - 1 -position)
+        return super.getItem(position)
     }
 
     override fun getItemId(position: Int): Long {

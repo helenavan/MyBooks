@@ -88,9 +88,9 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         user = mAuth!!.currentUser!!
         mFirestore = Firebase.firestore
         // retrieve number of books in listview firebase
-       // getnumberBooks()
+
         getSnapnumberBook()
-        //  mStorageRef!!.keepSynced(true)
+
         downloadAvatar()
         // User is signed in
         uID = user!!.uid
@@ -196,24 +196,24 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(resultCode, requestCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                imageUri = data!!.data
-                Log.e(TAG, " onActivityResult image URI :$imageUri")
-                try {
-                    //getting image from gallery
-                    Glide.with(Objects.requireNonNull(activity)!!).load(imageUri)
-                            .apply(RequestOptions.circleCropTransform()).into(userPic!!)
-                    uploadImage()
-                    //  userPic!!.setImageURI(imageUri)
-                    //  uploadImage()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e(TAG, "File not found.")
+            super.onActivityResult(resultCode, requestCode, data)
+            if (requestCode == PICK_IMAGE_REQUEST) {
+                if (resultCode == Activity.RESULT_OK) {
+                    imageUri = data!!.data
+                    Log.e(TAG, " onActivityResult image URI :$imageUri")
+                    try {
+                        //getting image from gallery
+                        Glide.with(Objects.requireNonNull(activity)!!).load(imageUri)
+                                .apply(RequestOptions.circleCropTransform()).into(userPic!!)
+                        uploadImage()
+                        //  userPic!!.setImageURI(imageUri)
+                        //  uploadImage()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Log.e(TAG, "File not found.")
+                    }
                 }
             }
-        }
         if (requestCode == LIST_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 val returnValue = data!!.getStringExtra(LIST_BOOKS)

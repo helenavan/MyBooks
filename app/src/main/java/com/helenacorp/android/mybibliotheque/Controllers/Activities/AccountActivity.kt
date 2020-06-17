@@ -53,19 +53,18 @@ class AccountActivity : AppCompatActivity() {
         pager!!.currentItem = 0
     }
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         val pager = findViewById<View>(R.id.activity_main_viewpager) as ViewPager
         //Set Adapter PageAdapter and glue it together
         pager.adapter = SectionsPagerAdapter(this,supportFragmentManager)
         val intent =intent
-        var frag = "2"
+        var frag = ""
         if(intent.extras != null){
-
              frag = intent.getStringExtra("frag")!!
         }
         when(frag){
             "2" -> pager!!.currentItem = 2
         }
-    }
+    }*/
 }

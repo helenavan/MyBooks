@@ -59,7 +59,7 @@ import kotlin.collections.ArrayList
 private const val TAG = "AddBookFragment"
 
 class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Callbacks {
-    var result: String? = null
+
     private var mClss: Class<*>? = null
     private var titleName: EditText? = null
     private var author: EditText? = null
@@ -78,9 +78,6 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var mImageBook: ImageView? = null
     private var mImageBookVisible: ImageView? = null
     private var imguri: Uri? = null
-    private var databaseReference: DatabaseReference? = null
-    private val glide: RequestManager? = null
-    private val bookModel: BookModel? = null
     // private var isValide:Boolean = true
 
     @SuppressLint("ResourceAsColor")
@@ -115,50 +112,10 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         btnVerif!!.setOnClickListener(this)
         btnIsbn!!.setOnClickListener(this)
         mImageBook!!.setOnClickListener(this)
+
         return view
     }
 
-    private fun shooseToGallery() {
-        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        //change intent.setType("image/*") by ("*/*")
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK) {
-                imguri = data!!.data
-                try {
-                    mImageBookVisible!!.maxWidth = 80
-                    mImageBookVisible!!.maxHeight = 80
-                    mImageBookVisible!!.adjustViewBounds = true
-                    mImageBookVisible!!.scaleType = ImageView.ScaleType.CENTER_CROP
-                    val bitmap = BitmapFactory.decodeStream(
-                            activity!!.contentResolver.openInputStream(imguri!!))
-                    // mImageBookVisible!!.setImageURI(imguri)
-                    mImageBookVisible!!.setImageBitmap(bitmap)
-
-                    /*  val baos = ByteArrayOutputStream()
-                      imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos)*/
-                    // mImageBook.setVisibility(View.INVISIBLE);
-
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                val returnValue = data!!.getStringExtra("barcode")
-                isbn!!.setText(returnValue)
-            }
-        }
-    }
 
     //validate label from autor and title
     private fun validation() {
@@ -188,6 +145,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             }
             if (isValide) {
                 sendBook()
+                clearAll()
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "Error getting documents: ", exception)
@@ -198,10 +156,6 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
 
     //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
     private fun sendBook() {
-        val userName = user!!.displayName
-
-      //  Log.e(TAG, "path cover in sendBook() :  $path")
-        // sendImageCover()
         val bookModel = BookModel(
                 "",
                 titleName!!.text.toString(),
@@ -235,15 +189,15 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 }
     }
 
-    private fun  sendImageCover() {
+    private fun sendImageCover() {
         //TODO get image from imageview
-        var cover:String? = null
+        var cover: String? = null
         mImageBookVisible!!.isDrawingCacheEnabled = true
         mImageBookVisible!!.buildDrawingCache()
-        if(mImageBookVisible != null){
+        if (mImageBookVisible!!.drawable != null) {
             val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
             val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
 
             val data = baos.toByteArray()
             // val uploadTask = userPic.putBytes(data)
@@ -257,16 +211,14 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                             val truc = mDB!!.collection("users").document(user!!.uid)
                                     .collection("book").document().id
                             mDB!!.collection("users").document(user!!.uid)
-                                    .collection("book").document(truc).update("imageUrl",cover)
+                                    .collection("book").document(truc).update("imageUrl", cover)
                             // addUploadRecordToDb(downloadUri.toString())
                             Log.e(TAG, " image telechargée ! : $truc")
                         }
-            }else{
+            } else {
                 Toast.makeText(activity, "pas image", Toast.LENGTH_SHORT).show()
             }
         }
-
-
     }
 
     private fun addBook(model: BookModel) {
@@ -279,6 +231,14 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         editText!!.setText("")
     }
 
+    private fun clearAll(){
+        clearEditText(titleName)
+        clearEditText(author)
+        clearEditText(isbn)
+        clearEditText(category)
+        resum!!.text = ""
+        cleanCouv(mImageBookVisible)
+    }
     private fun cleanCouv(img: ImageView?) {
         if (img != null) {
             img.setImageResource(R.drawable.clean_image_submit)
@@ -300,28 +260,35 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             // sendBookcover()
         }
         if (view === btnClean) {
-            clearEditText(titleName)
-            clearEditText(author)
-            clearEditText(isbn)
-            clearEditText(category)
-            resum!!.text = ""
-            cleanCouv(mImageBookVisible)
+            clearAll()
         }
         if (view === mImageBook) {
-            val checkSelfPermission = ContextCompat.checkSelfPermission(activity!!,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
-                //Requests permissions to be granted to this application at runtime
-                ActivityCompat.requestPermissions(activity!!,
-                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            } else {
+            val checkSelfPermission = ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(activity!!, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            }
+            else{
                 shooseToGallery()
             }
-
         }
         if (view === btnIsbn) {
             launchActivity(SimpleScannerActivity::class.java)
         }
+    }
+
+    private fun setupPermissions() {
+        val permission = ContextCompat.checkSelfPermission(activity!!,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission to record denied")
+            makeRequest()
+        }
+    }
+
+    private fun makeRequest() {
+        ActivityCompat.requestPermissions(activity!!,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_IMAGE_CAPTURE)
     }
 
     private fun launchActivity(clss: Class<*>) {
@@ -331,7 +298,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             ActivityCompat.requestPermissions(Objects.requireNonNull(this.activity!!), arrayOf(Manifest.permission.CAMERA), ZXING_CAMERA_PERMISSION)
         } else {
             val intent = Intent(context, clss)
-            startActivityForResult(intent, 1)
+            startActivityForResult(intent, 2)
         }
     }
 
@@ -341,6 +308,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         when (requestCode) {
             ZXING_CAMERA_PERMISSION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (mClss != null) {
+                    Log.e(TAG, " image ZXING ! ")
                     val intent = Intent(activity, mClss)
                     startActivity(intent)
                 }
@@ -354,7 +322,47 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             } else {
                 Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
 
+    private fun shooseToGallery() {
+      //  val intent = Intent(Intent.ACTION_PICK)
+      //  intent.type = "image/*"
+      //  startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+       val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        //change intent.setType("images/*") by ("*/*")
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_IMAGE_CAPTURE -> if (resultCode == Activity.RESULT_OK) {
+                imguri = data!!.data
+                Log.e(TAG, "1 - Cam imguri : $imguri + requestCode = $requestCode")
+                try {
+                    mImageBookVisible!!.maxWidth = 80
+                    mImageBookVisible!!.maxHeight = 80
+                    mImageBookVisible!!.adjustViewBounds = true
+                    mImageBookVisible!!.scaleType = ImageView.ScaleType.CENTER_CROP
+                    val bitmap = BitmapFactory.decodeStream(
+                            activity!!.contentResolver.openInputStream(imguri!!))
+                    // mImageBookVisible!!.setImageURI(imguri)
+                    mImageBookVisible!!.setImageBitmap(bitmap)
+                    Log.e(TAG, "2 - Cam bitmap : $bitmap")
+
+                } catch (e: Exception) {
+                    Log.e(TAG, "error onActitiResult : $e")
+                    e.printStackTrace()
+                }
+            }
+            ZXING_CAMERA_PERMISSION -> if (resultCode == Activity.RESULT_OK) {
+                val returnValue = data!!.getStringExtra("barcode")
+                Log.e(TAG, "1 - Zxing scan : $resultCode + requestCode = $resultCode")
+                isbn!!.setText(returnValue)
+            }
         }
     }
 
@@ -406,9 +414,9 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     }
 
     companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 1000
+        private const val REQUEST_IMAGE_CAPTURE = 1
         private const val PERMISSION_CODE_READ = 1001
-        private const val PERMISSION_CODE_WRITE = 1002
+        private const val PERMISSION_CODE_WRITE = 1003
         private const val ZXING_CAMERA_PERMISSION = 2
 
         private const val ARG_SECTION_NUMBER = "section_number"

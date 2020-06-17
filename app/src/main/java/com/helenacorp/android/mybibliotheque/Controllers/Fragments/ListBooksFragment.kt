@@ -76,7 +76,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
         //SEARCH
         searchView = view.findViewById(R.id.mSearch)
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+/*        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
@@ -86,7 +86,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
                 mAdapter!!.filter!!.filter(query)
                 return false
             }
-        })
+        })*/
         return view
     }
 
@@ -147,7 +147,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
 
-        firestoreListener!!.remove()
+      //  firestoreListener!!.remove()
     }
 
     override fun onStart() {
