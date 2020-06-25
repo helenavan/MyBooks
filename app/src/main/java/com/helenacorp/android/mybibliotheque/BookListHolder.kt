@@ -95,8 +95,8 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         urlImage = book.imageUrl
         isread = book.isread
         isprete = book.islend
-        Log.e(TAG, "Holder isread : $isread")
-        Log.e(TAG, "Holder islend : $isprete")
+      //  Log.e(TAG, "Holder isread : $isread")
+      //  Log.e(TAG, "Holder islend : $isprete")
 
         if(isprete){
             ic_prete!!.setBackgroundResource(R.drawable.ic_prete_valide)
@@ -140,8 +140,8 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                         sharedPref!!.edit().putFloat("rating", mrating!!).commit()
                         sharedPref!!.edit().putBoolean("isread",isread).commit()
                         sharedPref!!.edit().putBoolean("islend",isprete).commit()
-                        Log.e(TAG, "1 - idBook : $idBook")
-                        Log.e(TAG, "1 - isread : $isread")
+                     //   Log.e(TAG, "1 - idBook : $idBook")
+                     //   Log.e(TAG, "1 - isread : $isread")
                     }
                 }.addOnFailureListener { exception ->
                     Log.e(TAG, "Error getting documents: ", exception)

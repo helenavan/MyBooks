@@ -117,10 +117,10 @@ class BookDetailActivity : AppCompatActivity() {
       //  toolbar!!.title = ""
         ratingBar!!.rating = mrating!!
         if (isLend ==  true){
-            chkLu!!.isChecked
+            chKPrete!!.isChecked = true
         }
         if(isLu == true){
-            chKPrete!!.isChecked
+            chkLu!!.isChecked = true
         }
 
         //change value item
@@ -154,11 +154,6 @@ class BookDetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_detail, menu)
         return true
-    }
-
-    companion object {
-        const val EXTRA_CAR_ITEM = "com.helenacorp.android.mybibliotheque"
-
     }
 
     override fun onBackPressed() {

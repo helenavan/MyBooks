@@ -8,6 +8,7 @@ import android.view.View.OnTouchListener
  * Created by helena on 21/03/2018.
  */
 class TouchEffect : OnTouchListener {
+
     /* (non-Javadoc)
 	 * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
 	 */

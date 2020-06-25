@@ -2,10 +2,7 @@ package com.helenacorp.android.mybibliotheque
 
 import android.util.Log
 import android.widget.Filter
-import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.helenacorp.android.mybibliotheque.model.BookModel
-
-import kotlin.collections.ArrayList
 
 /**
  * Created by helena on 28/08/2017.
@@ -28,9 +25,10 @@ open class CustomFilter(var adapter: BookListAdapter, var filterList: ArrayList<
                 //check
                 if (filterList!![i].title!!.toUpperCase().contains(charSequence) || filterList!![i].author!!.toUpperCase().contains(charSequence)
                         || filterList!![i].category!!.toUpperCase().contains(charSequence)) {
-                    filterableBook.add(filterList!![i])
+                    filterList!!.add(filterList!![i])
                 }
             }
+            Log.e(TAG,"1 _publisresult : $filterList")
             results.count = filterableBook.size
             results.values = filterableBook
         } else {
@@ -43,11 +41,14 @@ open class CustomFilter(var adapter: BookListAdapter, var filterList: ArrayList<
     override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
         Log.e(TAG, "publishResult")
         //   adapter.items= filterResults.values as ArrayList<BookModel>
-        filterList = filterResults.values as ArrayList<BookModel>?
+       // filterResults.values = filterList
+        filterResults.values = filterList
+        Log.e(TAG,"2 _publisresult : $filterList")
         adapter.notifyDataSetChanged()
     }
 
     init {
         this.filterList = filterList!!
     }
+
 }

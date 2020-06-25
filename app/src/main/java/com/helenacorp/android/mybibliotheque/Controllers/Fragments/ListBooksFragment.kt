@@ -1,34 +1,28 @@
 package com.helenacorp.android.mybibliotheque.Controllers.Fragments
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.common.ChangeEventType
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.helenacorp.android.mybibliotheque.BookListAdapter
 import com.helenacorp.android.mybibliotheque.BookListHolder
 import com.helenacorp.android.mybibliotheque.R
-import com.helenacorp.android.mybibliotheque.UI.ItemClickSupport
 import com.helenacorp.android.mybibliotheque.model.BookModel
 
 
@@ -48,10 +42,8 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
     private var user: FirebaseUser? = null
     private var docRef: CollectionReference? = null
     private lateinit var query: Query
-    private lateinit var options: FirebaseRecyclerOptions<BookModel>
 
     private var searchView: SearchView? = null
-    private val floatingActionButton: FloatingActionButton? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -76,64 +68,42 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
         //SEARCH
         searchView = view.findViewById(R.id.mSearch)
-/*        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView!!.queryHint = "rechercher"
+      //  searchView!!.findViewById<AutoCompleteTextView>(R.id.mSearch).threshold = 1
+        searchView!!.imeOptions = EditorInfo.IME_ACTION_DONE
+        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
+               // searchdata(query)
+               // mAdapter!!.filter.filter(query)
                 return false
             }
 
-            override fun onQueryTextChange(query: String): Boolean {
-                //FILTER AS YOU TYPE
-                mAdapter!!.filter!!.filter(query)
+            override fun onQueryTextChange(newText: String): Boolean {
+               // mAdapter!!.filter.filter(newText)
+                val filteredListQuery = query.whereGreaterThanOrEqualTo("title",newText)
+                        .whereLessThanOrEqualTo("title",newText+"\uf8ff")
+
+                val filteredListOptions = FirestoreRecyclerOptions.Builder<BookModel>()
+                        .setQuery(filteredListQuery,BookModel::class.java)
+                        .setLifecycleOwner(this@ListBooksFragment)
+                        .build()
+                mAdapter!!.updateOptions(filteredListOptions)
                 return false
             }
-        })*/
+        })
+
         return view
     }
 
-    private fun configureOnClickRecyclerView(listBooks: ArrayList<BookModel>) {
-        var idBook: String? = null
-        ItemClickSupport.addTo(recyclerView!!, R.layout.item_book)!!
-                .setOnItemClickListener(object : ItemClickSupport.OnItemClickListener {
-                    override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-                        val book: BookModel = listBooks[position]
-                        Toast.makeText(activity, "book : ${book.title}", Toast.LENGTH_LONG).show()
-                    }
-                })
-                .setOnItemLongClickListener(object : ItemClickSupport.OnItemLongClickListener {
-                    override fun onItemLongClicked(recyclerView: RecyclerView?, position: Int, v: View?): Boolean {
-                        docRef!!.get()
-                                .addOnSuccessListener { book ->
-                                    for (document in book) {
-                                        idBook = document.id
-                                        Log.e(TAG, "idBook : $idBook")
-                                    }
-                                }.addOnFailureListener { exception ->
-                                    Log.e(TAG, "Error getting documents: ", exception)
-                                }
-
-                        val builder = AlertDialog.Builder(context!!)
-                        builder.setMessage("Voulez-vous supprimer ?").setCancelable(false)
-                        builder.setPositiveButton("Oui") { dialog, which -> // Delete the file
-                            docRef!!.document(idBook!!).delete().addOnCompleteListener {
-/*                                mListItems.removeAt(position)
-                                mAdapter!!.notifyItemRemoved(position)
-                                mAdapter!!.notifyItemRangeChanged(position, mListItems.size)*/
-                                mAdapter!!.notifyItemRemoved(position)
-                                Toast.makeText(activity, "Ce livre a été supprimé!", Toast.LENGTH_SHORT).show()
-                            }
-                                    .addOnFailureListener { e -> Log.e(TAG, "Error deleting document", e) }
-                        }
-                        builder.setNegativeButton("Non") { dialog, which ->
-                            dialog.cancel()
-                            Toast.makeText(activity, "Ce livre ID : $idBook", Toast.LENGTH_SHORT).show()
-                        }
-                        val dialog = builder.create()
-                        dialog.setTitle("Confirmer")
-                        dialog.show()
-                        return true
-                    }
-
-                })
+    private fun searchdata(s:String){
+        query.whereEqualTo("title",s).get().addOnSuccessListener { book ->
+            for (document in book) {
+              val titleBook = document.data["title"]
+                Log.e(TAG, "titlte documents: $titleBook")
+            }
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error getting documents: ", exception)
+        }
     }
 
     private fun updateNote(book: BookModel) {
