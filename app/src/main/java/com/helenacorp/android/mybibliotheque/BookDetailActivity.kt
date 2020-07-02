@@ -127,7 +127,7 @@ class BookDetailActivity : AppCompatActivity() {
         btn_detail.setOnClickListener{
             prefs!!.edit().putString("info", resume!!.text.toString()).apply()
             val infoBook = prefs!!.getString("info", null)
-            //Log.e(TAG, " infoBook : $infoBook")
+            Log.e(TAG, " ID BookDetail : $idBook")
 
             resume!!.text = infoBook
             ref!!.document(idBook!!).update("info",resume!!.text.toString())

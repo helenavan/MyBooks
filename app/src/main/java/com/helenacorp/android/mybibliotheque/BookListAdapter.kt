@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -16,6 +17,8 @@ import com.firebase.ui.firestore.ObservableSnapshotArray
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.helenacorp.android.mybibliotheque.model.BookModel
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -24,9 +27,8 @@ import java.lang.Exception
 private const val TAG = "BookListAdapter"
 
 class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
-    : FirestoreRecyclerAdapter<BookModel, BookListHolder>(options), Filterable, LifecycleObserver {
+    : FirestoreRecyclerAdapter<BookModel, BookListHolder>(options), LifecycleObserver {
 
-    val originalList: ArrayList<BookModel> = ArrayList()
     private var mOptions: FirestoreRecyclerOptions<BookModel>? = null
     private var mSnapshots: ObservableSnapshotArray<BookModel>? = null
     private var mSnapshotsTotal: ArrayList<BookModel>? = null
@@ -50,25 +52,34 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
 
     override fun onBindViewHolder(holder: BookListHolder, position: Int, book: BookModel) {
         holder.updateBooks(book)
+        val docid = snapshots.getSnapshot(position).id
+        val docid2 = mSnapshots!!.getSnapshot(position).id
+        Log.e(TAG, "ID item : $docid + $docid2")
+       // Toast.makeText(context,"iD: $docid", Toast.LENGTH_SHORT).show()
     }
 
-    override fun getItem(position: Int): BookModel {
+     override fun getItem(position: Int): BookModel {
+        super.getItem(position)
+        Log.e(TAG, " getItem : ${mSnapshots!![position]} + $position")
         return mSnapshots!![position]
     }
 
-    override fun getItemId(position: Int): Long {
+ /*  override fun getItemId(position: Int): Long {
         super.getItemId(position)
-        return mSnapshots!![position].isbn!!.toLong()
-    }
+        return position.toLong()
+       // Log.e(TAG, "id position in adapter : ${mSnapshots!![position].isbn!!.toLong()}")
+     //   return snapshots.getSnapshot(position).id.toLong()
+    }*/
 
     override fun getItemCount(): Int {
+        super.getItemCount()
+       // return mSnapshots!!.size
         return if (mSnapshots!!.isListening(this)) mSnapshots!!.size else 0
     }
 
     override fun onError(e: FirebaseFirestoreException) {
         super.onError(e!!)
     }
-
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     override fun startListening() {
@@ -92,7 +103,7 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         return mSnapshots!!
     }
 
-    override fun updateOptions(options: FirestoreRecyclerOptions<BookModel>) {
+/*    override fun updateOptions(options: FirestoreRecyclerOptions<BookModel>) {
         // Tear down old options
         val wasListening = mSnapshots!!.isListening(this)
         if (mOptions!!.owner != null) {
@@ -115,7 +126,7 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
 
     override fun getFilter(): Filter {
         return mFilter
-    }
+    }*/
 
     private val mFilter: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): FilterResults {

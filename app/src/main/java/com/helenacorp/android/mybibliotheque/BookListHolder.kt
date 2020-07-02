@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.firebase.ui.firestore.ObservableSnapshotArray
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -28,8 +29,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.helenacorp.android.mybibliotheque.model.BookModel
+import java.text.FieldPosition
 
 private const val TAG = "BookListHolder"
+private const val NO_POSITION = -1
 
 class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener, View.OnLongClickListener {
 
@@ -58,10 +61,11 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
     private var img_uri: Uri? = null
     private var mFireStore: FirebaseFirestore? = null
     private var storageReference: StorageReference? = null
+    private var ref:CollectionReference? = null
     // private lateinit var idBook:String
-    // private var idBook:String? = null
+     private var idb:String? = null
 
-    init {
+            init {
         txtTitle = v.findViewById<View>(R.id.title_item) as TextView
         txtAutorLastname = v.findViewById<View>(R.id.autorLastName_item) as TextView
         isbnNumber = v.findViewById<View>(R.id.isbn_item) as TextView
@@ -81,6 +85,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
     fun updateBooks(
             book: BookModel
     ) {
+        idb = book.isbn
         title = book.title
         txtTitle!!.text = title
         lastname = book.author
@@ -95,8 +100,12 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         urlImage = book.imageUrl
         isread = book.isread
         isprete = book.islend
-      //  Log.e(TAG, "Holder isread : $isread")
+        //TODO get id item from database
+
+        Log.e(TAG, "Holder ISBN : ${book.isbn} + titre : $title")
       //  Log.e(TAG, "Holder islend : $isprete")
+         ref = mFireStore!!.collection("users")
+                .document(user!!.uid).collection("books")
 
         if(isprete){
             ic_prete!!.setBackgroundResource(R.drawable.ic_prete_valide)
@@ -116,51 +125,52 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
             Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
         })?.addOnFailureListener { Log.e("BookListHolder", "no image couv : error") }
 
-
     }
 
     override fun onClick(v: View?) {
         val context = itemView.context
         val sharedPref = context?.getSharedPreferences(
                 "book", Context.MODE_PRIVATE)
-        val ref = mFireStore!!.collection("users")
-                .document(user!!.uid).collection("books")
-        var idBook = "null"
-        ref.get()
-                .addOnSuccessListener { book ->
 
+        var idBookitem: String? = null
+        ref!!.get()
+                .addOnSuccessListener { book ->
                     for (document in book) {
-                        idBook = document.id
-                        sharedPref!!.edit().putString("idBook", idBook).commit()
-                        sharedPref!!.edit().putString("name", lastname).commit()
-                        sharedPref!!.edit().putString("category", categorie).commit()
-                        sharedPref!!.edit().putString("title", title).commit()
-                        sharedPref!!.edit().putString("info", info).commit()
-                        sharedPref!!.edit().putString("urlImage", urlImage).commit()
-                        sharedPref!!.edit().putFloat("rating", mrating!!).commit()
-                        sharedPref!!.edit().putBoolean("isread",isread).commit()
-                        sharedPref!!.edit().putBoolean("islend",isprete).commit()
-                     //   Log.e(TAG, "1 - idBook : $idBook")
+
+                        val datab = document.data["isbn"]
+                        if(datab == idb){
+                            idBookitem = document.id
+                            sharedPref!!.edit().putString("idBook", idBookitem).commit()
+                            sharedPref!!.edit().putString("name", lastname).commit()
+                            sharedPref!!.edit().putString("category", categorie).commit()
+                            sharedPref!!.edit().putString("title", title).commit()
+                            sharedPref!!.edit().putString("info", info).commit()
+                            sharedPref!!.edit().putString("urlImage", urlImage).commit()
+                            sharedPref!!.edit().putFloat("rating", mrating!!).commit()
+                            sharedPref!!.edit().putBoolean("isread",isread).commit()
+                            sharedPref!!.edit().putBoolean("islend",isprete).commit()
+                            Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
+                            Toast.makeText(context, "Ce livre ID : $idBookitem", Toast.LENGTH_SHORT).show()
+                        }
+
                      //   Log.e(TAG, "1 - isread : $isread")
                     }
                 }.addOnFailureListener { exception ->
                     Log.e(TAG, "Error getting documents: ", exception)
                 }
-
+        Toast.makeText(context,"ID : ${adapterPosition.toString()}",Toast.LENGTH_SHORT).show()
         val intent = Intent(context, BookDetailActivity::class.java)
         context.startActivity(intent)
     }
 
     override fun onLongClick(v: View?): Boolean {
         val context = itemView.context
-        val ref = mFireStore!!.collection("users")
-                .document(user!!.uid).collection("books")
         var idBookk: String? = null
-        ref.get()
+        ref!!.get()
                 .addOnSuccessListener { book ->
                     for (document in book) {
                         idBookk = document.id
-
+                        Log.e(TAG, "ID BookLong : $idBookk")
                     }
                 }.addOnFailureListener { exception ->
                     Log.e(TAG, "Error getting documents: ", exception)
@@ -169,7 +179,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage("Voulez-vous supprimer ?").setCancelable(false)
         builder.setPositiveButton("Oui") { dialog, which -> // Delete the file
-            ref.document(idBookk!!).delete().addOnCompleteListener {
+            ref!!.document(idBookk!!).delete().addOnCompleteListener {
 
                 Toast.makeText(context, "Ce livre a été supprimé!", Toast.LENGTH_SHORT).show()
             }

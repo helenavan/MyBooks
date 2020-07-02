@@ -1,8 +1,9 @@
 package com.helenacorp.android.mybibliotheque.model
 
+import androidx.annotation.NonNull
 import com.google.firebase.database.IgnoreExtraProperties
-import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 /**
  * Created by helena on 09/08/2017.

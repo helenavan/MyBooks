@@ -157,8 +157,8 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
     private fun sendBook() {
         val bookModel = BookModel(
-                "",
-                titleName!!.text.toString(),
+                isbn!!.text.toString(),
+                titleName!!.text.toString().toLowerCase(),
                 author!!.text.toString(),
                 category!!.text.toString(),
                 isbn!!.text.toString(),

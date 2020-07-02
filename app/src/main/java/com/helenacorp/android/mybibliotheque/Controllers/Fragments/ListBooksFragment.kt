@@ -25,10 +25,6 @@ import com.helenacorp.android.mybibliotheque.BookListHolder
 import com.helenacorp.android.mybibliotheque.R
 import com.helenacorp.android.mybibliotheque.model.BookModel
 
-
-/**
- * A simple [Fragment] subclass.
- */
 private const val TAG = "ListBooksFragment"
 
 class ListBooksFragment : Fragment(), View.OnClickListener {
@@ -69,41 +65,35 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
         //SEARCH
         searchView = view.findViewById(R.id.mSearch)
         searchView!!.queryHint = "rechercher"
-      //  searchView!!.findViewById<AutoCompleteTextView>(R.id.mSearch).threshold = 1
+        //  searchView!!.findViewById<AutoCompleteTextView>(R.id.mSearch).threshold = 1
         searchView!!.imeOptions = EditorInfo.IME_ACTION_DONE
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-               // searchdata(query)
-               // mAdapter!!.filter.filter(query)
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
                // mAdapter!!.filter.filter(newText)
-                val filteredListQuery = query.whereGreaterThanOrEqualTo("title",newText)
-                        .whereLessThanOrEqualTo("title",newText+"\uf8ff")
-
-                val filteredListOptions = FirestoreRecyclerOptions.Builder<BookModel>()
-                        .setQuery(filteredListQuery,BookModel::class.java)
+                val filteredListQuery =
+                    query.whereGreaterThanOrEqualTo("title", newText.toLowerCase())
+                            .whereLessThanOrEqualTo("title", newText.toLowerCase() + "\uf8ff")
+                val originalListOptions = FirestoreRecyclerOptions.Builder<BookModel>()
+                        .setQuery(query, BookModel::class.java)
                         .setLifecycleOwner(this@ListBooksFragment)
                         .build()
-                mAdapter!!.updateOptions(filteredListOptions)
+                val filteredListOptions = FirestoreRecyclerOptions.Builder<BookModel>()
+                        .setQuery(filteredListQuery, BookModel::class.java)
+                        .setLifecycleOwner(this@ListBooksFragment)
+                        .build()
+                /*if (newText == "")
+                    mAdapter!!.updateOptions(originalListOptions)
+                else
+                    mAdapter!!.updateOptions(filteredListOptions)*/
                 return false
             }
         })
 
         return view
-    }
-
-    private fun searchdata(s:String){
-        query.whereEqualTo("title",s).get().addOnSuccessListener { book ->
-            for (document in book) {
-              val titleBook = document.data["title"]
-                Log.e(TAG, "titlte documents: $titleBook")
-            }
-        }.addOnFailureListener { exception ->
-            Log.e(TAG, "Error getting documents: ", exception)
-        }
     }
 
     private fun updateNote(book: BookModel) {
@@ -117,12 +107,11 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
 
-      //  firestoreListener!!.remove()
+        //  firestoreListener!!.remove()
     }
 
     override fun onStart() {
         super.onStart()
-
         mAdapter!!.startListening()
     }
 
