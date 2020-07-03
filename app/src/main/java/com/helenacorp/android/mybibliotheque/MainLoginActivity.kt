@@ -10,26 +10,19 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
-import com.helenacorp.android.mybibliotheque.model.User
 
 private const val TAG = "MainLoginActivity"
 
 class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
-    private val DefaultUnameValue = ""
-    private val DefaultPasswordValue = ""
-    private val UnameValue: String? = null
-    private val PasswordValue: String? = null
+
     private var viewLayout: View? = null
     private var mAuth: FirebaseAuth? = null
     private lateinit var mAuthListener: AuthStateListener

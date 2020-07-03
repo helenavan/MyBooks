@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 private const val TAG = "BookListAdapter"
 
 class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
-    : FirestoreRecyclerAdapter<BookModel, BookListHolder>(options), LifecycleObserver {
+    : FirestoreRecyclerAdapter<BookModel, BookListHolder>(options), LifecycleObserver, Filterable {
 
     private var mOptions: FirestoreRecyclerOptions<BookModel>? = null
     private var mSnapshots: ObservableSnapshotArray<BookModel>? = null
@@ -55,25 +55,25 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         val docid = snapshots.getSnapshot(position).id
         val docid2 = mSnapshots!!.getSnapshot(position).id
         Log.e(TAG, "ID item : $docid + $docid2")
-       // Toast.makeText(context,"iD: $docid", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(context,"iD: $docid", Toast.LENGTH_SHORT).show()
     }
 
-     override fun getItem(position: Int): BookModel {
-        super.getItem(position)
+    override fun getItem(position: Int): BookModel {
+        // super.getItem(position)
         Log.e(TAG, " getItem : ${mSnapshots!![position]} + $position")
         return mSnapshots!![position]
     }
 
- /*  override fun getItemId(position: Int): Long {
-        super.getItemId(position)
-        return position.toLong()
-       // Log.e(TAG, "id position in adapter : ${mSnapshots!![position].isbn!!.toLong()}")
-     //   return snapshots.getSnapshot(position).id.toLong()
-    }*/
+    /*  override fun getItemId(position: Int): Long {
+           super.getItemId(position)
+           return position.toLong()
+          // Log.e(TAG, "id position in adapter : ${mSnapshots!![position].isbn!!.toLong()}")
+        //   return snapshots.getSnapshot(position).id.toLong()
+       }*/
 
     override fun getItemCount(): Int {
         super.getItemCount()
-       // return mSnapshots!!.size
+        // return mSnapshots!!.size
         return if (mSnapshots!!.isListening(this)) mSnapshots!!.size else 0
     }
 
@@ -103,7 +103,7 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         return mSnapshots!!
     }
 
-/*    override fun updateOptions(options: FirestoreRecyclerOptions<BookModel>) {
+    override fun updateOptions(options: FirestoreRecyclerOptions<BookModel>) {
         // Tear down old options
         val wasListening = mSnapshots!!.isListening(this)
         if (mOptions!!.owner != null) {
@@ -126,7 +126,7 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
 
     override fun getFilter(): Filter {
         return mFilter
-    }*/
+    }
 
     private val mFilter: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): FilterResults {
@@ -153,17 +153,17 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
             Log.e(TAG, "1 - publishResult mSnapshots : ${results.values} + count : ${results.count}")
-          //  mSnapshots!!.clear()
+            mSnapshots!!.clear()
 
-            try{
+            try {
                 mSnapshotsTotal!!.clear()
                 var listBookModel = ArrayList<BookModel>()/**/
-                  listBookModel = results.values as ArrayList<BookModel>
-              //  @Suppress("UNCHECKED_CAST")
+                listBookModel = results.values as ArrayList<BookModel>
+                //  @Suppress("UNCHECKED_CAST")
                 mSnapshotsTotal!!.addAll(listBookModel)
                 //TODO comment afficher cette fichue liste?
                 Log.e(TAG, "2 - publishResult mSnapshots : $mSnapshotsTotal")
-            }catch(e:Exception){
+            } catch (e: Exception) {
                 Log.e(TAG, "error publisResult: $e")
             }
 

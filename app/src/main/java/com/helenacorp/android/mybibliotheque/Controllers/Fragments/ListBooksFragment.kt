@@ -11,7 +11,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.helenacorp.android.mybibliotheque.BookListAdapter
-import com.helenacorp.android.mybibliotheque.BookListHolder
 import com.helenacorp.android.mybibliotheque.R
 import com.helenacorp.android.mybibliotheque.model.BookModel
 
@@ -31,12 +29,8 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
     private var recyclerView: RecyclerView? = null
     private var mFireStore: FirebaseFirestore? = null
     private var mAdapter: BookListAdapter? = null
-    private val mListItems = ArrayList<BookModel>()
-    private var firestoreListener: ListenerRegistration? = null
-    private val btn: FloatingActionButton? = null
     private var mAuth: FirebaseAuth? = null
     private var user: FirebaseUser? = null
-    private var docRef: CollectionReference? = null
     private lateinit var query: Query
 
     private var searchView: SearchView? = null
@@ -64,8 +58,7 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
         //SEARCH
         searchView = view.findViewById(R.id.mSearch)
-        searchView!!.queryHint = "rechercher"
-        //  searchView!!.findViewById<AutoCompleteTextView>(R.id.mSearch).threshold = 1
+        searchView!!.queryHint = "recherche par titre"
         searchView!!.imeOptions = EditorInfo.IME_ACTION_DONE
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -85,10 +78,10 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
                         .setQuery(filteredListQuery, BookModel::class.java)
                         .setLifecycleOwner(this@ListBooksFragment)
                         .build()
-                /*if (newText == "")
+                if (newText == "")
                     mAdapter!!.updateOptions(originalListOptions)
                 else
-                    mAdapter!!.updateOptions(filteredListOptions)*/
+                    mAdapter!!.updateOptions(filteredListOptions)
                 return false
             }
         })
