@@ -105,7 +105,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         ratingBar = view.findViewById<View>(R.id.submit_rating) as RatingBar
         ratingBar!!.numStars
         ratingBar!!.onRatingBarChangeListener = OnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            Toast.makeText(context, java.lang.Float.toString(rating), Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(context, java.lang.Float.toString(rating), Toast.LENGTH_SHORT).show()
         }
         btnAdd!!.setOnClickListener(this)
         btnClean!!.setOnClickListener(this)
@@ -313,14 +313,14 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                     startActivity(intent)
                 }
             } else {
-                Toast.makeText(activity, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Vous devez accepter la permission de la camera pour utiliser le QR Scanner", Toast.LENGTH_SHORT).show()
             }
             REQUEST_IMAGE_CAPTURE -> if (grantResults.isNotEmpty() && grantResults[0] ==
                     PackageManager.PERMISSION_GRANTED) {
                 //permission from popup granted
                 shooseToGallery()
             } else {
-                Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Permission refusée", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -351,7 +351,6 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                             activity!!.contentResolver.openInputStream(imguri!!))
                     // mImageBookVisible!!.setImageURI(imguri)
                     mImageBookVisible!!.setImageBitmap(bitmap)
-                    Log.e(TAG, "2 - Cam bitmap : $bitmap")
 
                 } catch (e: Exception) {
                     Log.e(TAG, "error onActitiResult : $e")
@@ -385,17 +384,17 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun onReponse(book: Book?) {
         if (!iSBN.isEmpty()) {
-            Log.e("AddBookFragment ", "apres book != null " + "TotalItems : " + book!!.totalItems.toString())
-            if (book.items!![0].volumeInfo!!.industryIdentifiers!![1].identifier == iSBN) {
-                if (!book.items!![0].volumeInfo!!.title!!.isEmpty() || !book.items!![0].volumeInfo!!.authors!!.isEmpty()) {
+           // Log.e("AddBookFragment ", "apres book != null " + "TotalItems : " + book!!.totalItems.toString())
+            if (book!!.items!![0].volumeInfo!!.industryIdentifiers!![1].identifier == iSBN) {
+                if (!book!!.items!![0].volumeInfo!!.title!!.isEmpty() || !book.items!![0].volumeInfo!!.authors!!.isEmpty()) {
 
                     //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo()
                     //  .getIndustryIdentifiers().get(0).getIdentifier());
                     titleName!!.setText(book.items!![0].volumeInfo!!.title)
                     author!!.setText(book.items!![0].volumeInfo!!.authors!![0].toString())
-                    if (book.items!![0].volumeInfo!!.description != null) {
+                    if (book!!.items!![0].volumeInfo!!.description != null) {
                         resum!!.text = book.items!![0].volumeInfo!!.description.toString()
-                        if (book.items!![0].volumeInfo!!.imageLinks != null) {
+                        if (book!!.items!![0].volumeInfo!!.imageLinks != null) {
                             Glide.with(Objects.requireNonNull(context!!)).load(book.items!![0].volumeInfo!!.imageLinks!!.thumbnail)
                                     .apply(RequestOptions.circleCropTransform()).into(mImageBookVisible!!)
                             //  Log.e("AddBookFragment ", "img => " + book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail());

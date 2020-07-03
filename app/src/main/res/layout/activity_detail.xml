@@ -13,10 +13,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_24"/>
+            android:fontFamily="@font/font_skybird"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:text="Détails"/>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -25,8 +28,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/pad_15dp"
+        android:layout_marginStart="@dimen/pad_15dp"
         android:text="Titre"
         android:textSize="24sp"
+        android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_detail" />
@@ -116,10 +122,14 @@
         app:layout_constraintTop_toBottomOf="@+id/rating_detail" />
 
     <Button
+        style="@style/buttonTheme"
+        android:background="@drawable/btn_connexion"
         android:id="@+id/btn_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:paddingEnd="3dp"
+        android:paddingStart="3dp"
         android:text="Sauvegarder"
         app:layout_constraintTop_toBottomOf="@+id/info_detail"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -150,7 +150,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                             sharedPref!!.edit().putBoolean("isread",isread).commit()
                             sharedPref!!.edit().putBoolean("islend",isprete).commit()
                             Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
-                            Toast.makeText(context, "Ce livre ID : $idBookitem", Toast.LENGTH_SHORT).show()
+                          //  Toast.makeText(context, "Ce livre ID : $idBookitem", Toast.LENGTH_SHORT).show()
                         }
 
                      //   Log.e(TAG, "1 - isread : $isread")
@@ -158,7 +158,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                 }.addOnFailureListener { exception ->
                     Log.e(TAG, "Error getting documents: ", exception)
                 }
-        Toast.makeText(context,"ID : ${adapterPosition.toString()}",Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(context,"ID : ${adapterPosition.toString()}",Toast.LENGTH_SHORT).show()
         val intent = Intent(context, BookDetailActivity::class.java)
         context.startActivity(intent)
     }
@@ -169,8 +169,11 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         ref!!.get()
                 .addOnSuccessListener { book ->
                     for (document in book) {
-                        idBookk = document.id
-                        Log.e(TAG, "ID BookLong : $idBookk")
+                        val datab = document.data["isbn"]
+                        if(datab == idb) {
+                            idBookk = document.id
+                            Log.e(TAG, "ID BookLong : $idBookk")
+                        }
                     }
                 }.addOnFailureListener { exception ->
                     Log.e(TAG, "Error getting documents: ", exception)
@@ -187,7 +190,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         }
         builder.setNegativeButton("Non") { dialog, which ->
             dialog.cancel()
-            Toast.makeText(context, "Ce livre ID : $idBookk", Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(context, "Ce livre ID : $idBookk", Toast.LENGTH_SHORT).show()
         }
         builder.create()
         builder.setTitle("Confirmer")
