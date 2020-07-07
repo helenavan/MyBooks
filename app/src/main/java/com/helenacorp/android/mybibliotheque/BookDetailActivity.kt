@@ -4,20 +4,14 @@ import android.annotation.TargetApi
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -25,7 +19,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.helenacorp.android.mybibliotheque.model.BookModel
 import kotlinx.android.synthetic.main.activity_detail.*
 
 private const val TAG = "BookDetailActivity"
@@ -42,11 +35,10 @@ class BookDetailActivity : AppCompatActivity() {
     private var mresume: String? = null
     private var mUrl: String? = null
     private var mrating: Float? = null
-    private var title_two: TextView? = null
+    private var editeur: TextView? = null
     private var ratingBar: RatingBar? = null
     private var idBook: String? = null
     private var toolbar: Toolbar? = null
-    private var edit_detail: FloatingActionButton? = null
     private var mAuth: FirebaseAuth? = null
     private var mUser: FirebaseUser? = null
     private var prefs: SharedPreferences? = null
@@ -70,9 +62,9 @@ class BookDetailActivity : AppCompatActivity() {
         ref = mFireStore!!.collection("users")
                 .document(mUser!!.uid).collection("books")
 
-        edit_detail = findViewById(R.id.edit_detail)
         category = findViewById(R.id.category_detail)
         title = findViewById(R.id.title_detail)
+        editeur = findViewById(R.id.publisher_detail)
         resume = findViewById(R.id.info_detail)
         name = findViewById(R.id.author_detail)
         ratingBar = findViewById(R.id.rating_detail)
@@ -84,7 +76,7 @@ class BookDetailActivity : AppCompatActivity() {
         mcategory = prefs!!.getString("category", null)
         mtitle = prefs!!.getString("title", null)
         mname = prefs!!.getString("name", null)
-        mresume = prefs!!.getString("info", null)
+        mresume = prefs!!.getString("description", null)
         idBook = prefs!!.getString("idBook", null)
         mUrl = prefs!!.getString("urlImage", null)
         mrating = prefs!!.getFloat("rating", 0f)
@@ -93,6 +85,7 @@ class BookDetailActivity : AppCompatActivity() {
         //set values in layout
         category!!.text = mcategory
         title!!.text = mtitle
+        editeur!!.text = prefs!!.getString("editeur",null)
         resume!!.text = mresume
         name!!.text = mname
         ratingBar!!.rating = mrating!!
@@ -105,12 +98,12 @@ class BookDetailActivity : AppCompatActivity() {
 
         //change value item book
         btn_detail.setOnClickListener {
-            prefs!!.edit().putString("info", resume!!.text.toString()).apply()
-            val infoBook = prefs!!.getString("info", null)
+            prefs!!.edit().putString("description", resume!!.text.toString()).apply()
+            val infoBook = prefs!!.getString("description", null)
             Log.e(TAG, " ID BookDetail : $idBook")
 
             resume!!.text = infoBook
-            ref!!.document(idBook!!).update("info", resume!!.text.toString())
+            ref!!.document(idBook!!).update("description", resume!!.text.toString())
             ref!!.document(idBook!!).update("category", category!!.text.toString())
             ref!!.document(idBook!!).update("rating", ratingBar!!.rating!!)
             if (chKPrete!!.isChecked) {

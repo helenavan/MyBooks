@@ -46,7 +46,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/autorLastName_item"
             app:layout_constraintLeft_toRightOf="@id/pic_item"
-            app:layout_constraintRight_toLeftOf="@+id/category_list"
+            app:layout_constraintRight_toLeftOf="@+id/ic_lu"
             app:layout_constraintTop_toBottomOf="@+id/category_list" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_born"
-            android:maxLength="25"
+            android:maxLength="10"
             android:maxLines="1"
             android:text="@string/category"
             android:textSize="13sp"

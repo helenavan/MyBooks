@@ -35,6 +35,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
     private var txtAutorLastname: TextView? = null
     private var lastname: String? = null
     private var isbnNumber: TextView? = null
+    private var editeur:String? = null
     private var info: String? = null
     private var category: TextView? = null
     private var categorie: String? = null
@@ -84,8 +85,9 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         ratingBar!!.rating = book.rating
         pic!!.context
         categorie = book.category
+        editeur = book.publisher
         category!!.text = categorie
-        info = book.info
+        info = book.description
         urlImage = book.imageUrl
         isread = book.isread
         isprete = book.islend
@@ -130,7 +132,8 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                             sharedPref!!.edit().putString("name", lastname).commit()
                             sharedPref!!.edit().putString("category", categorie).commit()
                             sharedPref!!.edit().putString("title", title).commit()
-                            sharedPref!!.edit().putString("info", info).commit()
+                            sharedPref!!.edit().putString("editeur",editeur).commit()
+                            sharedPref!!.edit().putString("description", info).commit()
                             sharedPref!!.edit().putString("urlImage", urlImage).commit()
                             sharedPref!!.edit().putFloat("rating", mrating!!).commit()
                             sharedPref!!.edit().putBoolean("isread", isread).commit()

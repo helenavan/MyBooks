@@ -92,5 +92,6 @@
     <string name="tab_text_1">Mon compte</string>
     <string name="tab_text_2">Ajouter</string>
     <string name="tab_text_3">Ma Liste</string>
+    <string name="editeur">Editeur</string>
 
 </resources>

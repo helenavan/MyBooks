@@ -65,6 +65,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var author: EditText? = null
     private var category: EditText? = null
     private var isbn: EditText? = null
+    private var editeur:EditText? = null
     private var pathCover: String? = null
     private var btnClean: Button? = null
     private var btnAdd: Button? = null
@@ -78,6 +79,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var mImageBook: ImageView? = null
     private var mImageBookVisible: ImageView? = null
     private var imguri: Uri? = null
+    private var pusblisher :String? = null
     // private var isValide:Boolean = true
 
     @SuppressLint("ResourceAsColor")
@@ -88,6 +90,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         titleName = view.findViewById<View>(R.id.title_submit) as EditText
         author = view.findViewById<View>(R.id.autorLastName_submit) as EditText
         category = view.findViewById<View>(R.id.category_submit) as EditText
+        editeur = view.findViewById(R.id.submit_publisher)
         resum = view.findViewById(R.id.submit_resum)
         btnClean = view.findViewById<View>(R.id.btn_clean_submit) as Button
         btnAdd = view.findViewById<View>(R.id.btn_add_submit) as Button
@@ -166,8 +169,10 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 "pathCover",
                 false,
                 false,
+                editeur!!.text.toString(),
                 resum!!.text.toString(),
                 user!!.uid)
+        Log.e(TAG, "editeur : $pusblisher")
         //Save image info in to firebase database
         //keys = name's attribut
         addBook(bookModel)
@@ -236,6 +241,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         clearEditText(author)
         clearEditText(isbn)
         clearEditText(category)
+        clearEditText(editeur)
         resum!!.text = ""
         cleanCouv(mImageBookVisible)
     }
@@ -392,6 +398,8 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                     //  .getIndustryIdentifiers().get(0).getIdentifier());
                     titleName!!.setText(book.items!![0].volumeInfo!!.title)
                     author!!.setText(book.items!![0].volumeInfo!!.authors!![0].toString())
+                    editeur!!.setText(book.items!![0].volumeInfo!!.publisher)
+
                     if (book!!.items!![0].volumeInfo!!.description != null) {
                         resum!!.text = book.items!![0].volumeInfo!!.description.toString()
                         if (book!!.items!![0].volumeInfo!!.imageLinks != null) {

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_add"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_add"
     tools:context=".Controllers.Fragments.AddBookFragment">
 
     <ImageView
         android:id="@+id/bckgrd_submit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:src="@drawable/fond2"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/title_submit"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_height"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginTop="@dimen/margindTopView"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:background="@drawable/background_edit_submit"
         android:hint="@string/title_sub"
         android:inputType="text"
         android:lines="1"
         android:maxLines="1"
         android:theme="@style/EditTextHint"
+        app:layout_constraintBottom_toTopOf="@+id/autorLastName_submit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,17 +42,18 @@
         android:id="@+id/autorLastName_submit"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_height"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:background="@drawable/background_edit_submit"
         android:hint="@string/lastname_sub"
         android:inputType="text"
         android:lines="1"
         android:maxLines="1"
         android:theme="@style/EditTextHint"
+        app:layout_constraintBottom_toTopOf="@+id/isbn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_submit" />
@@ -62,10 +63,10 @@
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginTop="24dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="8dp"
         android:text="@string/btn_clean"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
@@ -92,16 +93,17 @@
         style="@style/buttonTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
         android:background="@drawable/btn_connexion"
         android:text="@string/btn_add"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_clean_submit" />
 
     <EditText
         android:id="@+id/isbn"
@@ -114,6 +116,7 @@
         android:inputType="number"
         android:maxLines="1"
         android:theme="@style/EditTextHint"
+        app:layout_constraintBottom_toTopOf="@+id/submit_publisher"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/submit_btn_isbn"
         app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
@@ -123,8 +126,8 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginTop="14dp"
+        android:layout_marginRight="@dimen/fab_margin"
         android:maxLines="2"
         android:minLines="1"
         android:scrollbars="vertical"
@@ -144,29 +147,48 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/autorLastName_submit" />
 
+    <EditText
+        android:id="@+id/submit_publisher"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_height"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/margindTopView"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:background="@drawable/background_edit_submit"
+        android:hint="@string/editeur"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
+        android:theme="@style/EditTextHint"
+        app:layout_constraintBottom_toTopOf="@+id/submit_rating"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/isbn"
+        app:layout_constraintTop_toBottomOf="@+id/isbn" />
+
     <RatingBar
         android:id="@+id/submit_rating"
         style="?android:ratingBarStyleIndicator"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/edit_height"
-        android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:background="@drawable/background_edit_submit"
         android:isIndicator="false"
         android:numStars="5"
         android:padding="2dp"
         android:rating="1"
         android:stepSize="1"
-        app:layout_constraintRight_toLeftOf="@+id/category_submit"
-        app:layout_constraintBottom_toTopOf="@+id/btn_clean_submit"
+        app:layout_constraintBottom_toTopOf="@+id/submit_viewpic"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isbn"
-        app:layout_constraintVertical_bias="0.04" />
+        app:layout_constraintRight_toLeftOf="@+id/category_submit"
+        app:layout_constraintTop_toBottomOf="@+id/submit_publisher" />
 
     <EditText
         android:id="@+id/category_submit"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_height"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         android:background="@drawable/background_edit_submit"
         android:hint="@string/category"
         android:inputType="text"
@@ -174,11 +196,9 @@
         android:maxLength="25"
         android:maxLines="1"
         android:theme="@style/EditTextHint"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
         app:layout_constraintBottom_toBottomOf="@+id/submit_rating"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/submit_rating"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/submit_rating">
 
     </EditText>
@@ -205,8 +225,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/submit_photoView"
         app:layout_constraintTop_toBottomOf="@+id/submit_rating"
-        app:layout_constraintVertical_bias="0.185"
-        />
+        app:layout_constraintVertical_bias="0.185" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
