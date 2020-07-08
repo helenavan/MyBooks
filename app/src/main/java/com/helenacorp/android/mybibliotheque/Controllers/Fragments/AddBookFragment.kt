@@ -21,6 +21,7 @@ import android.widget.*
 import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.checkSelfPermission
@@ -48,6 +49,7 @@ import com.helenacorp.android.mybibliotheque.model.Book
 import com.helenacorp.android.mybibliotheque.model.BookModel
 import com.helenacorp.android.mybibliotheque.model.User
 import com.helenacorp.android.mybibliotheque.service.BookLookupService
+import kotlinx.android.synthetic.main.fragment_account.*
 import retrofit2.http.Url
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -77,6 +79,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var mAuth: FirebaseAuth? = null
     private var user: FirebaseUser? = null
     private var mImageBook: ImageView? = null
+    private var coverUri: String? = null
     private var mImageBookVisible: ImageView? = null
     private var imguri: Uri? = null
     private var pusblisher :String? = null
@@ -97,7 +100,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         btnVerif = view.findViewById(R.id.btn_verify_isbn_submit)
         mImageBook = view.findViewById<View>(R.id.submit_photoView) as ImageView
         mImageBookVisible = view.findViewById<View>(R.id.submit_viewpic) as ImageView
-        btnIsbn = view.findViewById<View>(R.id.submit_btn_isbn) as Button
+        btnIsbn = view.findViewById(R.id.btn_isbn)
         isbn = view.findViewById(R.id.isbn)
 
 /*        Toolbar toolbar = (Toolbar) Objects.requireNonNull(getActivity()).findViewById(R.id.activity_account_toolbar);
@@ -142,7 +145,8 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 val isbnquery = document.data["isbn"].toString()
                 if (isbnquery == isbnId) {
                     isValide = false
-                    Log.d(TAG, "2 - isvalidate : $isValide")
+                    Toast.makeText(activity,"Ce livre existe déjà dans votre bibliothèque",Toast.LENGTH_SHORT).show()
+                    clearAll()
                     break
                 }
             }
@@ -153,12 +157,13 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         }.addOnFailureListener { exception ->
             Log.d(TAG, "Error getting documents: ", exception)
         }
-        Log.d(TAG, "3 - isvalidate : $isValide")
 
     }
 
     //compresse la photo sélectionnée pour la couverture et l'envoie sur firebase
     private fun sendBook() {
+        Log.e(TAG, " sendBook image uri !  ${sendImageCover()}")
+        val cover = sendImageCover()
         val bookModel = BookModel(
                 isbn!!.text.toString(),
                 titleName!!.text.toString().toLowerCase(),
@@ -166,17 +171,16 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 category!!.text.toString(),
                 isbn!!.text.toString(),
                 ratingBar!!.rating,
-                "pathCover",
+                cover,
                 false,
                 false,
                 editeur!!.text.toString(),
                 resum!!.text.toString(),
                 user!!.uid)
-        Log.e(TAG, "editeur : $pusblisher")
         //Save image info in to firebase database
         //keys = name's attribut
         addBook(bookModel)
-        sendImageCover()
+
     }
 
     private fun addUploadRecordToDb(uri: String) {
@@ -194,9 +198,9 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 }
     }
 
-    private fun sendImageCover() {
+    private fun sendImageCover():String {
         //TODO get image from imageview
-        var cover: String? = null
+
         mImageBookVisible!!.isDrawingCacheEnabled = true
         mImageBookVisible!!.buildDrawingCache()
         if (mImageBookVisible!!.drawable != null) {
@@ -212,18 +216,19 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 val uploadTask = userPic.putBytes(data)
                 uploadTask.addOnFailureListener() {}
                         .addOnSuccessListener() { task ->
-                            cover = task.uploadSessionUri.toString()
-                            val truc = mDB!!.collection("users").document(user!!.uid)
+                            coverUri = task.uploadSessionUri.toString()
+                            val img = mDB!!.collection("users").document(user!!.uid)
                                     .collection("book").document().id
                             mDB!!.collection("users").document(user!!.uid)
-                                    .collection("book").document(truc).update("imageUrl", cover)
+                                    .collection("book").document(img).update("imageUrl", coverUri)
                             // addUploadRecordToDb(downloadUri.toString())
-                            Log.e(TAG, " image telechargée ! : $truc")
+                            Log.e(TAG, " image telechargée ! : $img + coverUri : ${userPic.toString()}")
                         }
             } else {
-                Toast.makeText(activity, "pas image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "pas d\'image", Toast.LENGTH_SHORT).show()
             }
         }
+        return coverUri.toString()
     }
 
     private fun addBook(model: BookModel) {
@@ -405,7 +410,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                         if (book!!.items!![0].volumeInfo!!.imageLinks != null) {
                             Glide.with(Objects.requireNonNull(context!!)).load(book.items!![0].volumeInfo!!.imageLinks!!.thumbnail)
                                     .apply(RequestOptions.circleCropTransform()).into(mImageBookVisible!!)
-                            //  Log.e("AddBookFragment ", "img => " + book.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail());
+                              Log.e("AddBookFragment ", "img => " + book.items!!.get(0).volumeInfo!!.imageLinks!!.thumbnail);
                         }
                     }
                 }

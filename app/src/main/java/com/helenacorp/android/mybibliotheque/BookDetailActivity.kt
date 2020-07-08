@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
@@ -78,7 +79,7 @@ class BookDetailActivity : AppCompatActivity() {
         mname = prefs!!.getString("name", null)
         mresume = prefs!!.getString("description", null)
         idBook = prefs!!.getString("idBook", null)
-        mUrl = prefs!!.getString("urlImage", null)
+      //  mUrl = prefs!!.getString("urlImage", null)
         mrating = prefs!!.getFloat("rating", 0f)
         isLu = prefs!!.getBoolean("isread", false)
         isLend = prefs!!.getBoolean("islend", false)
@@ -100,7 +101,6 @@ class BookDetailActivity : AppCompatActivity() {
         btn_detail.setOnClickListener {
             prefs!!.edit().putString("description", resume!!.text.toString()).apply()
             val infoBook = prefs!!.getString("description", null)
-            Log.e(TAG, " ID BookDetail : $idBook")
 
             resume!!.text = infoBook
             ref!!.document(idBook!!).update("description", resume!!.text.toString())
@@ -108,7 +108,6 @@ class BookDetailActivity : AppCompatActivity() {
             ref!!.document(idBook!!).update("rating", ratingBar!!.rating!!)
             if (chKPrete!!.isChecked) {
                 isLend = true
-                Log.e(TAG, " is lend : $isLend")
                 ref!!.document(idBook!!).update("islend", isLend)
             } else {
                 isLend = false
@@ -116,12 +115,12 @@ class BookDetailActivity : AppCompatActivity() {
             }
             if (chkLu!!.isChecked) {
                 isLu = true
-                Log.e(TAG, " is read : $isLu")
                 ref!!.document(idBook!!).update("isread", isLu)
             } else {
                 isLu = false
                 ref!!.document(idBook!!).update("isread", isLu)
             }
+            Toast.makeText(applicationContext,"Sauvegardé!",Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -44,17 +44,13 @@ private const val TAG = "AccountFragment"
 
 class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickListener {
     private val firebaseStorage = FirebaseStorage.getInstance()
-    private var sp: SharedPreferences? = null
     private var acc_username: TextView? = null
     private var acc_numlist: TextView? = null
-    private val btn_upload: TextView? = null
     private var uID: String? = null
     private var userEmail: String? = null
     private var userPseudo: String? = null
-    private var nbrBooks: String? = null
     private var userPic: ImageView? = null
     private var mAuth: FirebaseAuth? = null
-    private var mAuthListener: AuthStateListener? = null
     private lateinit var user: FirebaseUser
     private lateinit var mFirestore: FirebaseFirestore
     private var imageUri: Uri? = null
@@ -64,10 +60,8 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     private var cloudR: ImageView? = null
     private var cloudTranslate: Animation? = null
     private var mDialog: ProgressDialog? = null
-    private val drawer: DrawerLayout? = null
     private var btnphotoProfil: Button? = null
     private var btnDeconnect: Button? = null
-    private val mAuthListerner: AuthStateListener? = null
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -88,7 +82,6 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         user = mAuth!!.currentUser!!
         mFirestore = Firebase.firestore
         // retrieve number of books in listview firebase
-
         getSnapnumberBook()
 
         downloadAvatar()
@@ -162,7 +155,6 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
                 val downloadUrl = taskSnapshot.result.toString()
                 val users = User(downloadUrl!!)
                 mFirestore.collection("users").document(user.uid).set(users)
-                Log.e(TAG, "downloadUrl : ${downloadUrl.toString()}")
             }
         } else {
             Toast.makeText(activity, "Faut choisir", Toast.LENGTH_SHORT).show()

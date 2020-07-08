@@ -109,10 +109,12 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
 
         val desertRef = storageReference!!.child("couvertures/" + user!!.uid + isbnNumber!!.text + ".jpg")
         desertRef?.downloadUrl?.addOnSuccessListener(OnSuccessListener { uri ->
-            img_uri = uri
-            Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
-        })?.addOnFailureListener { Log.e("BookListHolder", "no image couv : error") }
-
+            if(urlImage != null){
+               // img_uri = uri
+               // Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
+                Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
+            }
+        })?.addOnFailureListener { Log.e(TAG, "no image couv : error") }
     }
 
     override fun onClick(v: View?) {
@@ -124,7 +126,6 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         ref!!.get()
                 .addOnSuccessListener { book ->
                     for (document in book) {
-
                         val datab = document.data["isbn"]
                         if (datab == idb) {
                             idBookitem = document.id
@@ -134,11 +135,11 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                             sharedPref!!.edit().putString("title", title).commit()
                             sharedPref!!.edit().putString("editeur",editeur).commit()
                             sharedPref!!.edit().putString("description", info).commit()
-                            sharedPref!!.edit().putString("urlImage", urlImage).commit()
+                            //sharedPref!!.edit().putString("urlImage", urlImage).commit()
                             sharedPref!!.edit().putFloat("rating", mrating!!).commit()
                             sharedPref!!.edit().putBoolean("isread", isread).commit()
                             sharedPref!!.edit().putBoolean("islend", isprete).commit()
-                            Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
+                           // Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
                             //  Toast.makeText(context, "Ce livre ID : $idBookitem", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -158,7 +159,6 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                         val datab = document.data["isbn"]
                         if (datab == idb) {
                             idBookk = document.id
-                            Log.e(TAG, "ID BookLong : $idBookk")
                         }
                     }
                 }.addOnFailureListener { exception ->

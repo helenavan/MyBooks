@@ -25,6 +25,7 @@
             android:layout_marginLeft="@dimen/fab_margin"
             android:layout_marginTop="5dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_book"
             app:layout_constraintBottom_toTopOf="@+id/ratingbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -54,13 +54,11 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         holder.updateBooks(book)
         val docid = snapshots.getSnapshot(position).id
         val docid2 = mSnapshots!!.getSnapshot(position).id
-        Log.e(TAG, "ID item : $docid + $docid2")
         // Toast.makeText(context,"iD: $docid", Toast.LENGTH_SHORT).show()
     }
 
     override fun getItem(position: Int): BookModel {
         // super.getItem(position)
-        Log.e(TAG, " getItem : ${mSnapshots!![position]} + $position")
         return mSnapshots!![position]
     }
 
@@ -115,7 +113,6 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         // Set up new options
         mOptions = options
         mSnapshots = options.snapshots
-        Log.e(TAG, "mSnapshots updateOptions  : $mSnapshots")
         if (options.owner != null) {
             options.owner!!.lifecycle.addObserver(this)
         }
@@ -142,7 +139,6 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
                         filteredList.add(item)
                     }
                 }
-                Log.e(TAG, "lsit item : $filteredList")
             }
             val results = FilterResults()
             results.count = filteredList.size
@@ -152,7 +148,6 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
         }
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            Log.e(TAG, "1 - publishResult mSnapshots : ${results.values} + count : ${results.count}")
             mSnapshots!!.clear()
 
             try {
@@ -175,7 +170,6 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
             notifyDataSetChanged()*/
         }
     }
-    //TODO
 
 }
 
