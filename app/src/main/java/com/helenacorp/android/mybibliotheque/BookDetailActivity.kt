@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.View
 import android.widget.CheckBox
@@ -26,7 +27,7 @@ private const val TAG = "BookDetailActivity"
 
 class BookDetailActivity : AppCompatActivity() {
 
-    private var title: TextView? = null
+    private var title:TextView? = null
     private var mtitle: String? = null
     private var name: TextView? = null
     private var mname: String? = null
@@ -64,18 +65,21 @@ class BookDetailActivity : AppCompatActivity() {
                 .document(mUser!!.uid).collection("books")
 
         category = findViewById(R.id.category_detail)
-        title = findViewById(R.id.title_detail)
         editeur = findViewById(R.id.publisher_detail)
         resume = findViewById(R.id.info_detail)
         name = findViewById(R.id.author_detail)
         ratingBar = findViewById(R.id.rating_detail)
         chkLu = findViewById(R.id.check_read_detail)
         chKPrete = findViewById(R.id.check_prete_detail)
+        title = findViewById(R.id.toolbar_detail_title)
         toolbar = findViewById<View>(R.id.toolbar_detail) as Toolbar
+        setSupportActionBar(toolbar)
+        toolbar!!.setTitleTextAppearance(this,R.style.skybirdfont)
 
         //retrieve item's values from sharedpreferences
         mcategory = prefs!!.getString("category", null)
         mtitle = prefs!!.getString("title", null)
+        title!!.text = mtitle
         mname = prefs!!.getString("name", null)
         mresume = prefs!!.getString("description", null)
         idBook = prefs!!.getString("idBook", null)
@@ -85,7 +89,6 @@ class BookDetailActivity : AppCompatActivity() {
         isLend = prefs!!.getBoolean("islend", false)
         //set values in layout
         category!!.text = mcategory
-        title!!.text = mtitle
         editeur!!.text = prefs!!.getString("editeur",null)
         resume!!.text = mresume
         name!!.text = mname

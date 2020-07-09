@@ -97,4 +97,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="skybirdfont">
+        <item name="android:fontFamily">@font/font_born</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:foregroundGravity">center_horizontal</item>
+        <item name="maxLines">1</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
