@@ -7,16 +7,14 @@
     android:background="@color/orange_light"
     android:theme="@style/EditTextHint"
     tools:context="com.helenacorp.android.mybibliotheque.MainLoginActivity">
-    <!--
+
     <ImageView
         android:id="@+id/bckgrd"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/fond2"/>
--->
+        android:layout_width="503dp"
+        android:layout_height="319dp"
+        android:src="@drawable/back_mainlogin"
+        app:layout_constraintBottom_toBottomOf="@+id/log_logo"
+        app:layout_constraintTop_toTopOf="@+id/log_logo"/>
 
     <TextView
         android:id="@+id/log_logo"

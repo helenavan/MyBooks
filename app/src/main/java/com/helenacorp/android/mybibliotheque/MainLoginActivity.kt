@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
+import com.helenacorp.android.mybibliotheque.Controllers.Fragments.AccountFragment
 
 private const val TAG = "MainLoginActivity"
 
@@ -55,10 +56,12 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
         btnauth!!.setOnClickListener(this)
         mAuth = FirebaseAuth.getInstance()
         auth = Firebase.auth
+
         mAuthListener = AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
             if (user != null) {
                 val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
+                //val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
                 startActivity(intent)
                 Log.e(TAG, "onAuthStateChanged:signed_in:" + user.uid)
             } else {
@@ -75,10 +78,11 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
           //  user = Firebase.auth!!.currentUser!!
             if (user != null) {
                 // User is signed in
+               // val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
                 val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
                 startActivity(intent)
             } else {
-                Log.e("main","user $user")
+              //  Log.e("main","user $user")
                 // User is signed out
                 // messToast.setText(R.string.mlog_count);
                 // messageToast();
@@ -108,10 +112,10 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         user = mAuth!!.currentUser!!
-                        updateUI(user!!)
+                        mAuthListener
                         // Sign in success, update UI with the signed-in user's information
-                        val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
-                        startActivity(intent)
+                      /*  val intent = Intent(this@MainLoginActivity, AccountActivity::class.java)
+                        startActivity(intent)*/
                         messToast!!.text = "Bonjour " + mAuth!!.currentUser!!.displayName
                         messageToast()
                     } else {
@@ -133,9 +137,7 @@ class MainLoginActivity : AppCompatActivity(), View.OnClickListener {
 
     public override fun onStop() {
         super.onStop()
-        if (mAuthListener != null) {
-            mAuth!!.removeAuthStateListener(mAuthListener!!)
-        }
+        mAuth!!.removeAuthStateListener(mAuthListener!!)
     }
 
     override fun onClick(view: View) {

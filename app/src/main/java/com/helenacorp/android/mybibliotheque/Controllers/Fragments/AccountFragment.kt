@@ -24,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
@@ -32,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
+import com.helenacorp.android.mybibliotheque.MainLoginActivity
 import com.helenacorp.android.mybibliotheque.R
 import com.helenacorp.android.mybibliotheque.model.User
 import java.io.ByteArrayOutputStream
@@ -53,6 +56,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     private var mAuth: FirebaseAuth? = null
     private lateinit var user: FirebaseUser
     private lateinit var mFirestore: FirebaseFirestore
+    private lateinit var mAuthListener: AuthStateListener
     private var imageUri: Uri? = null
     private var bitmap: Bitmap? = null
     private var cloudL: ImageView? = null
@@ -62,6 +66,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     private var mDialog: ProgressDialog? = null
     private var btnphotoProfil: Button? = null
     private var btnDeconnect: Button? = null
+    private var mGoogleApiClient: GoogleApiClient? = null
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -81,16 +86,19 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         mAuth = FirebaseAuth.getInstance()
         user = mAuth!!.currentUser!!
         mFirestore = Firebase.firestore
-        // retrieve number of books in listview firebase
-        getSnapnumberBook()
+        // retrieve number of books in listview firebase in real time
+
+        setupfirebase()
 
         downloadAvatar()
+        getSnapnumberBook()
         // User is signed in
         uID = user!!.uid
         userPseudo = user!!.displayName
         userEmail = user!!.email
-        Log.e(TAG,"email : $userEmail")
         imageUri = user!!.photoUrl
+        Log.e(TAG, "email : $userEmail")
+        Log.e(TAG, "image : ${imageUri.toString()}")
         acc_username!!.text = userPseudo
 
         animateCloud(cloudL)
@@ -102,22 +110,24 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         return view
     }
 
-    private fun getnumberBooks() {
-        val ref = mFirestore!!.collection("users")
-                .document(user!!.uid).collection("books")
-        ref.get().addOnCompleteListener { task->
-            acc_numlist!!.text= task.result!!.count().toString()
-        }.addOnFailureListener { exception ->
-            Log.e(TAG, "Error getting documents: ", exception)
-        }
-
+    override fun onStart() {
+        super.onStart()
+        mAuth!!.addAuthStateListener(mAuthListener!!)
     }
 
-    private fun getSnapnumberBook(){
+    override fun onStop() {
+        super.onStop()
+        if (mAuthListener != null) {
+            mAuth!!.removeAuthStateListener(mAuthListener!!)
+        }
+    }
+
+    private fun getSnapnumberBook() {
         val ref = mFirestore!!.collection("users")
                 .document(user!!.uid).collection("books")
         ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-            acc_numlist!!.text= querySnapshot!!.count().toString()
+            if (querySnapshot != null)
+                acc_numlist!!.text = querySnapshot!!.count().toString()
         }
     }
 
@@ -125,6 +135,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         // Create a storage reference from our app
         val storageRef = firebaseStorage.reference
         storageRef.child("images/${user.uid}.jpg").downloadUrl.addOnSuccessListener { uri ->
+            Log.e(TAG,"uri image : $uri")
             mDialog!!.setMessage("en charge")
             mDialog!!.show()
             Glide.with(activity!!).load(uri).apply(RequestOptions.circleCropTransform()).into(userPic!!)
@@ -144,7 +155,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
             val userPicref = storageReference.child("images/$uID.jpg")
             bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(this.activity)!!.contentResolver, imageUri)
             val baos = ByteArrayOutputStream()
-            bitmap!!.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+            bitmap!!.compress(Bitmap.CompressFormat.JPEG, 10, baos)
             val data = baos.toByteArray()
             val uploadTask = userPicref.putBytes(data)
             uploadTask.addOnFailureListener {
@@ -188,24 +199,24 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(resultCode, requestCode, data)
-            if (requestCode == PICK_IMAGE_REQUEST) {
-                if (resultCode == Activity.RESULT_OK) {
-                    imageUri = data!!.data
-                    Log.e(TAG, " onActivityResult image URI :$imageUri")
-                    try {
-                        //getting image from gallery
-                        Glide.with(Objects.requireNonNull(activity)!!).load(imageUri)
-                                .apply(RequestOptions.circleCropTransform()).into(userPic!!)
-                        uploadImage()
-                        //  userPic!!.setImageURI(imageUri)
-                        //  uploadImage()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        Log.e(TAG, "File not found.")
-                    }
+        super.onActivityResult(resultCode, requestCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                imageUri = data!!.data
+                Log.e(TAG, " onActivityResult image URI :$imageUri")
+                try {
+                    //getting image from gallery
+                    Glide.with(Objects.requireNonNull(activity)!!).load(imageUri)
+                            .apply(RequestOptions.circleCropTransform()).into(userPic!!)
+                    uploadImage()
+                    //  userPic!!.setImageURI(imageUri)
+                    //  uploadImage()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e(TAG, "File not found.")
                 }
             }
+        }
         if (requestCode == LIST_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 val returnValue = data!!.getStringExtra(LIST_BOOKS)
@@ -229,8 +240,20 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
 
     override fun onAnimationRepeat(animation: Animation) {}
 
-    private fun signOut() {
-        mAuth!!.signOut()
+    private fun setupfirebase() {
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+
+            if (user == null) {
+                val intent = Intent(activity, MainLoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+
+                Log.e(TAG, "onAuthStateChanged:signed_out")
+            } else {
+                Log.e(TAG, "onAuthStateChanged:signed_in:" + user!!.uid)
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -239,14 +262,8 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
             showFileChooser()
         } else if (v === btnDeconnect) {
             try {
-                if (user != null) {
-                    signOut()
-                    activity!!.finish()
-                    //  val intent = Intent(activity, MainLoginActivity::class.java)
-                    // startActivity(intent)
-                    // ActivityCompat.finishAffinity(activity!!)
-                    Toast.makeText(activity, "Déconnecté !", Toast.LENGTH_SHORT).show()
-                }
+                mAuth!!.signOut()
+                activity!!.finish()
             } catch (e: Exception) {
                 Log.e("AccountActivity", "onClick: Exception " + e.message, e)
             }
