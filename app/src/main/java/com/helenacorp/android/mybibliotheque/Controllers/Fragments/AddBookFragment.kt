@@ -5,16 +5,16 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
+import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.PixelCopy
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -198,13 +198,27 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 }
     }
 
+    private fun convertViewToDrawable(view: View): Bitmap {
+        val spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        view.measure(spec, spec)
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+        val b = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+        val c = Canvas(b)
+        c.translate((-view.scrollX).toFloat(), (-view.scrollY).toFloat())
+        view.draw(c)
+        return b
+    }
+
     private fun sendImageCover():String {
         //TODO get image from imageview
-
-        mImageBookVisible!!.isDrawingCacheEnabled = true
-        mImageBookVisible!!.buildDrawingCache()
+/*        mImageBookVisible!!.isDrawingCacheEnabled = true
+        mImageBookVisible!!.buildDrawingCache()*/
+        var userPic:StorageReference? = null
+        mImageBookVisible!!.drawingCache
         if (mImageBookVisible!!.drawable != null) {
-            val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
+           // val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
+            val bitmap = convertViewToDrawable(mImageBookVisible!!)
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
 
@@ -212,23 +226,24 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             // val uploadTask = userPic.putBytes(data)
             if (imguri != null) {
                 val storageReference = FirebaseStorage.getInstance().reference
-                var userPic = storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
+                userPic= storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
                 val uploadTask = userPic.putBytes(data)
                 uploadTask.addOnFailureListener() {}
                         .addOnSuccessListener() { task ->
-                            coverUri = task.uploadSessionUri.toString()
+                           // coverUri = task.uploadSessionUri.toString()
                             val img = mDB!!.collection("users").document(user!!.uid)
                                     .collection("book").document().id
                             mDB!!.collection("users").document(user!!.uid)
-                                    .collection("book").document(img).update("imageUrl", coverUri)
+                                    .collection("book").document(img).update("imageUrl", userPic.toString())
                             // addUploadRecordToDb(downloadUri.toString())
                             Log.e(TAG, " image telechargée ! : $img + coverUri : ${userPic.toString()}")
                         }
             } else {
-                Toast.makeText(activity, "pas d\'image", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "pas d\'image")
+               // Toast.makeText(activity, "pas d\'image", Toast.LENGTH_SHORT).show()
             }
         }
-        return coverUri.toString()
+        return userPic.toString()
     }
 
     private fun addBook(model: BookModel) {
