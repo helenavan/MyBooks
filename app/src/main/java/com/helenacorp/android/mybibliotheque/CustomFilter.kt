@@ -23,7 +23,7 @@ open class CustomFilter(var adapter: BookListAdapter, var filterList: ArrayList<
             val filterableBook = ArrayList<BookModel>()
             for (i in filterList!!.indices) {
                 //check
-                if (filterList!![i].title!!.toUpperCase().contains(charSequence) || filterList!![i].author!!.toUpperCase().contains(charSequence)
+                if (filterList!![i].title!!.toUpperCase().contains(charSequence) || filterList!![i].authors!!.toUpperCase().contains(charSequence)
                         || filterList!![i].category!!.toUpperCase().contains(charSequence)) {
                     filterList!!.add(filterList!![i])
                 }

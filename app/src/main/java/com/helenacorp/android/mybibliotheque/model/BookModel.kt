@@ -48,9 +48,9 @@ class BookModel {
     @Expose
     var publisher: String? = null
 
-    @SerializedName("author")
+    @SerializedName("authors")
     @Expose
-    var author: String? = null
+    var authors: String? = null
 
     @SerializedName("idUSER")
     @Expose
@@ -65,7 +65,7 @@ class BookModel {
                 islend:Boolean,isread:Boolean,editeur:String?, description: String, idBookUser:String? ) {
         this.id = id
         this.title = title
-        this.author = author
+        this.authors = author
         this.category = category
         this.isbn = isbn
         this.rating = rating

@@ -19,8 +19,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.helenacorp.android.mybibliotheque.model.BookModel
@@ -35,7 +37,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
     private var txtAutorLastname: TextView? = null
     private var lastname: String? = null
     private var isbnNumber: TextView? = null
-    private var editeur:String? = null
+    private var editeur: String? = null
     private var info: String? = null
     private var category: TextView? = null
     private var categorie: String? = null
@@ -51,6 +53,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
     private var user: FirebaseUser? = null
     private var img_uri: Uri? = null
     private var mFireStore: FirebaseFirestore? = null
+    private val firebaseStorage = FirebaseStorage.getInstance()
     private var storageReference: StorageReference? = null
     private var ref: CollectionReference? = null
     private var idb: String? = null
@@ -67,7 +70,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         mAuth = Firebase.auth
         user = mAuth!!.currentUser
         mFireStore = Firebase.firestore
-        storageReference = Firebase.storage.reference
+        //storageReference = Firebase.storage.reference
         v.setOnLongClickListener(this)
         v.setOnClickListener(this)
     }
@@ -78,7 +81,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         idb = book.isbn
         title = book.title
         txtTitle!!.text = title
-        lastname = book.author
+        lastname = book.authors
         txtAutorLastname!!.text = lastname
         isbnNumber!!.text = book.isbn
         mrating = book.rating
@@ -94,6 +97,19 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
 
         ref = mFireStore!!.collection("users")
                 .document(user!!.uid).collection("books")
+        val query = mFireStore!!.collection("users").document(user!!.uid)
+                .collection("books")
+                .orderBy("title", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener { books ->
+                    for (document in books) {
+                      //  Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents: ", exception)
+                }
+
 
         if (isprete) {
             ic_prete!!.setBackgroundResource(R.drawable.ic_prete_valide)
@@ -106,15 +122,16 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
         } else {
             ic_lu!!.setBackgroundResource(R.drawable.ic_library)
         }
-
-        val desertRef = storageReference!!.child("couvertures/" + user!!.uid + isbnNumber!!.text + ".jpg")
-        desertRef?.downloadUrl?.addOnSuccessListener(OnSuccessListener { uri ->
-            if(urlImage != null){
-               // img_uri = uri
-               // Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
-                Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
-            }
-        })?.addOnFailureListener { Log.e(TAG, "no image couv : error") }
+        val storageRef = firebaseStorage.reference
+        storageRef.child("couvertures/" + user!!.uid + isbnNumber!!.text + ".jpg")
+                .downloadUrl.addOnSuccessListener { uri ->
+                    if (uri != null) {
+                        // img_uri = uri
+                        // Glide.with(itemView.context!!).load(uri).apply(RequestOptions.circleCropTransform()).into(pic!!)
+                        Log.e(TAG,"uri storageref : $uri")
+                        Glide.with(itemView.context!!).load(uri).into(pic!!)
+                    }
+        }.addOnFailureListener { e -> Log.e(TAG, "no image couv : $e")}
     }
 
     override fun onClick(v: View?) {
@@ -123,6 +140,7 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                 "book", Context.MODE_PRIVATE)
 
         var idBookitem: String? = null
+
         ref!!.get()
                 .addOnSuccessListener { book ->
                     for (document in book) {
@@ -133,13 +151,13 @@ class BookListHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener
                             sharedPref!!.edit().putString("name", lastname).commit()
                             sharedPref!!.edit().putString("category", categorie).commit()
                             sharedPref!!.edit().putString("title", title).commit()
-                            sharedPref!!.edit().putString("editeur",editeur).commit()
+                            sharedPref!!.edit().putString("editeur", editeur).commit()
                             sharedPref!!.edit().putString("description", info).commit()
                             //sharedPref!!.edit().putString("urlImage", urlImage).commit()
                             sharedPref!!.edit().putFloat("rating", mrating!!).commit()
                             sharedPref!!.edit().putBoolean("isread", isread).commit()
                             sharedPref!!.edit().putBoolean("islend", isprete).commit()
-                           // Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
+                            // Log.e(TAG, "1 - ID Book : $idBookitem + data : $datab")
                             //  Toast.makeText(context, "Ce livre ID : $idBookitem", Toast.LENGTH_SHORT).show()
                         }
                     }

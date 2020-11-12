@@ -67,7 +67,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var author: EditText? = null
     private var category: EditText? = null
     private var isbn: EditText? = null
-    private var editeur:EditText? = null
+    private var editeur: EditText? = null
     private var pathCover: String? = null
     private var btnClean: Button? = null
     private var btnAdd: Button? = null
@@ -82,7 +82,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     private var coverUri: String? = null
     private var mImageBookVisible: ImageView? = null
     private var imguri: Uri? = null
-    private var pusblisher :String? = null
+    private var pusblisher: String? = null
     // private var isValide:Boolean = true
 
     @SuppressLint("ResourceAsColor")
@@ -111,7 +111,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         ratingBar = view.findViewById<View>(R.id.submit_rating) as RatingBar
         ratingBar!!.numStars
         ratingBar!!.onRatingBarChangeListener = OnRatingBarChangeListener { ratingBar, rating, fromUser ->
-          //  Toast.makeText(context, java.lang.Float.toString(rating), Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(context, java.lang.Float.toString(rating), Toast.LENGTH_SHORT).show()
         }
         btnAdd!!.setOnClickListener(this)
         btnClean!!.setOnClickListener(this)
@@ -145,7 +145,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                 val isbnquery = document.data["isbn"].toString()
                 if (isbnquery == isbnId) {
                     isValide = false
-                    Toast.makeText(activity,"Ce livre existe déjà dans votre bibliothèque",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Ce livre existe déjà dans votre bibliothèque", Toast.LENGTH_SHORT).show()
                     clearAll()
                     break
                 }
@@ -210,27 +210,27 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         return b
     }
 
-    private fun sendImageCover():String {
+    private fun sendImageCover(): String {
         //TODO get image from imageview
 /*        mImageBookVisible!!.isDrawingCacheEnabled = true
         mImageBookVisible!!.buildDrawingCache()*/
-        var userPic:StorageReference? = null
+        var userPic: StorageReference? = null
         mImageBookVisible!!.drawingCache
         if (mImageBookVisible!!.drawable != null) {
-           // val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
+            // val bitmap = (mImageBookVisible!!.drawable as BitmapDrawable).bitmap
             val bitmap = convertViewToDrawable(mImageBookVisible!!)
             val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
 
             val data = baos.toByteArray()
             // val uploadTask = userPic.putBytes(data)
             if (imguri != null) {
                 val storageReference = FirebaseStorage.getInstance().reference
-                userPic= storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
+                userPic = storageReference!!.child("couvertures/" + user!!.uid + isbn!!.text + ".jpg")
                 val uploadTask = userPic.putBytes(data)
                 uploadTask.addOnFailureListener() {}
                         .addOnSuccessListener() { task ->
-                           // coverUri = task.uploadSessionUri.toString()
+                            // coverUri = task.uploadSessionUri.toString()
                             val img = mDB!!.collection("users").document(user!!.uid)
                                     .collection("book").document().id
                             mDB!!.collection("users").document(user!!.uid)
@@ -240,7 +240,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                         }
             } else {
                 Log.e(TAG, "pas d\'image")
-               // Toast.makeText(activity, "pas d\'image", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(activity, "pas d\'image", Toast.LENGTH_SHORT).show()
             }
         }
         return userPic.toString()
@@ -256,7 +256,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         editText!!.setText("")
     }
 
-    private fun clearAll(){
+    private fun clearAll() {
         clearEditText(titleName)
         clearEditText(author)
         clearEditText(isbn)
@@ -265,6 +265,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
         resum!!.text = ""
         cleanCouv(mImageBookVisible)
     }
+
     private fun cleanCouv(img: ImageView?) {
         if (img != null) {
             img.setImageResource(R.drawable.clean_image_submit)
@@ -289,11 +290,10 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
             clearAll()
         }
         if (view === mImageBook) {
-            val checkSelfPermission = ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(activity!!, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            }
-            else{
+            val checkSelfPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            } else {
                 shooseToGallery()
             }
         }
@@ -303,7 +303,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     }
 
     private fun setupPermissions() {
-        val permission = ContextCompat.checkSelfPermission(activity!!,
+        val permission = ContextCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -313,15 +313,15 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     }
 
     private fun makeRequest() {
-        ActivityCompat.requestPermissions(activity!!,
+        ActivityCompat.requestPermissions(requireActivity(),
                 arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_IMAGE_CAPTURE)
     }
 
     private fun launchActivity(clss: Class<*>) {
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(this.context!!), Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(this.requireContext()), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             mClss = clss
-            ActivityCompat.requestPermissions(Objects.requireNonNull(this.activity!!), arrayOf(Manifest.permission.CAMERA), ZXING_CAMERA_PERMISSION)
+            ActivityCompat.requestPermissions(Objects.requireNonNull(this.requireActivity()), arrayOf(Manifest.permission.CAMERA), ZXING_CAMERA_PERMISSION)
         } else {
             val intent = Intent(context, clss)
             startActivityForResult(intent, 2)
@@ -352,10 +352,10 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     }
 
     private fun shooseToGallery() {
-      //  val intent = Intent(Intent.ACTION_PICK)
-      //  intent.type = "image/*"
-      //  startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-       val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        //  val intent = Intent(Intent.ACTION_PICK)
+        //  intent.type = "image/*"
+        //  startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         //change intent.setType("images/*") by ("*/*")
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -374,7 +374,7 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
                     mImageBookVisible!!.adjustViewBounds = true
                     mImageBookVisible!!.scaleType = ImageView.ScaleType.CENTER_CROP
                     val bitmap = BitmapFactory.decodeStream(
-                            activity!!.contentResolver.openInputStream(imguri!!))
+                            requireActivity().contentResolver.openInputStream(imguri!!))
                     // mImageBookVisible!!.setImageURI(imguri)
                     mImageBookVisible!!.setImageBitmap(bitmap)
 
@@ -393,12 +393,12 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
 
     private val iSBN: String
         get() {
-            val isbnField = Objects.requireNonNull(activity!!).findViewById<View>(R.id.isbn) as EditText
+            val isbnField = Objects.requireNonNull(requireActivity()).findViewById<View>(R.id.isbn) as EditText
             return isbnField.text.toString()
         }
 
     private fun showMessage(message: String) {
-        Toast.makeText(this.context!!.applicationContext, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this.requireContext().applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     private fun executeHttpRequestWithRetrofit() {
@@ -410,25 +410,26 @@ class AddBookFragment : Fragment(), View.OnClickListener, BookLookupService.Call
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     override fun onReponse(book: Book?) {
         if (!iSBN.isEmpty()) {
-           // Log.e("AddBookFragment ", "apres book != null " + "TotalItems : " + book!!.totalItems.toString())
+            // Log.e("AddBookFragment ", "apres book != null " + "TotalItems : " + book!!.totalItems.toString())
             if (book!!.items!![0].volumeInfo!!.industryIdentifiers!![1].identifier == iSBN) {
-                if (!book!!.items!![0].volumeInfo!!.title!!.isEmpty() || !book.items!![0].volumeInfo!!.authors!!.isEmpty()) {
-
-                    //  Log.e("AddBookFragment", " totalItems = "+ book.getTotalItems()+" ISBN get : "+book.getItems().get(0).getVolumeInfo()
+                if (book!!.items!![0].volumeInfo!!.title!!.isNotEmpty()) {
                     //  .getIndustryIdentifiers().get(0).getIdentifier());
                     titleName!!.setText(book.items!![0].volumeInfo!!.title)
+                }
+                editeur!!.setText(book.items!![0].volumeInfo!!.publisher)
+                if (book.items!![0].volumeInfo!!.authors != null) {
+                    //Log.e("AddBookFragment", " authors get : " + book.items!!.get(0).volumeInfo!!.authors)
                     author!!.setText(book.items!![0].volumeInfo!!.authors!![0].toString())
-                    editeur!!.setText(book.items!![0].volumeInfo!!.publisher)
-
-                    if (book!!.items!![0].volumeInfo!!.description != null) {
-                        resum!!.text = book.items!![0].volumeInfo!!.description.toString()
-                        if (book!!.items!![0].volumeInfo!!.imageLinks != null) {
-                            Glide.with(Objects.requireNonNull(context!!)).load(book.items!![0].volumeInfo!!.imageLinks!!.thumbnail)
-                                    .apply(RequestOptions.circleCropTransform()).into(mImageBookVisible!!)
-                              Log.e("AddBookFragment ", "img => " + book.items!!.get(0).volumeInfo!!.imageLinks!!.thumbnail);
-                        }
+                }
+                if (book!!.items!![0].volumeInfo!!.description != null) {
+                    resum!!.text = book.items!![0].volumeInfo!!.description.toString()
+                    if (book!!.items!![0].volumeInfo!!.imageLinks != null) {
+                        Glide.with(Objects.requireNonNull(requireContext())).load(book.items!![0].volumeInfo!!.imageLinks!!.thumbnail)
+                                .apply(RequestOptions.circleCropTransform()).into(mImageBookVisible!!)
+                        Log.e("AddBookFragment ", "img => " + book.items!!.get(0).volumeInfo!!.imageLinks!!.thumbnail);
                     }
                 }
+
             }
         } else {
             Toast.makeText(context, " isbn non renseigné ", Toast.LENGTH_LONG).show()

@@ -138,7 +138,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
             Log.e(TAG,"uri image : $uri")
             mDialog!!.setMessage("en charge")
             mDialog!!.show()
-            Glide.with(activity!!).load(uri).apply(RequestOptions.circleCropTransform()).into(userPic!!)
+            Glide.with(requireActivity()).load(uri).apply(RequestOptions.circleCropTransform()).into(userPic!!)
             mDialog!!.dismiss()
         }.addOnFailureListener {
             mDialog!!.dismiss()
@@ -153,7 +153,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         if (imageUri != null) {
             val storageReference = firebaseStorage.reference
             val userPicref = storageReference.child("images/$uID.jpg")
-            bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(this.activity)!!.contentResolver, imageUri)
+            bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(requireActivity())!!.contentResolver, imageUri)
             val baos = ByteArrayOutputStream()
             bitmap!!.compress(Bitmap.CompressFormat.JPEG, 10, baos)
             val data = baos.toByteArray()
@@ -181,7 +181,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val p = imagePhoto.path
-                        Glide.with(Objects.requireNonNull(activity)!!).load(imagePhoto)
+                        Glide.with(Objects.requireNonNull(requireActivity())!!).load(imagePhoto)
                                 .apply(RequestOptions.circleCropTransform()).into(userPic!!)
                         Log.e(TAG, "success update profil")
                     }
@@ -206,7 +206,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
                 Log.e(TAG, " onActivityResult image URI :$imageUri")
                 try {
                     //getting image from gallery
-                    Glide.with(Objects.requireNonNull(activity)!!).load(imageUri)
+                    Glide.with(Objects.requireNonNull(requireActivity())!!).load(imageUri)
                             .apply(RequestOptions.circleCropTransform()).into(userPic!!)
                     uploadImage()
                     //  userPic!!.setImageURI(imageUri)
@@ -263,7 +263,7 @@ class AccountFragment : Fragment(), Animation.AnimationListener, View.OnClickLis
         } else if (v === btnDeconnect) {
             try {
                 mAuth!!.signOut()
-                activity!!.finish()
+                requireActivity()!!.finish()
             } catch (e: Exception) {
                 Log.e("AccountActivity", "onClick: Exception " + e.message, e)
             }

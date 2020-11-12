@@ -44,7 +44,6 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
         // mFireStore = Firebase.firestore
         mFireStore = FirebaseFirestore.getInstance()
 
-
         // retrieve number of books in listview firebase
         query = mFireStore!!.collection("users").document(user!!.uid).collection("books")
         val options = FirestoreRecyclerOptions.Builder<BookModel>()
@@ -91,10 +90,15 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
     private fun updateNote(book: BookModel) {
         val intent = Intent(activity, ListBooksFragment::class.java)
-        intent.putExtra("UpdateNoteId", book.author)
+        intent.putExtra("UpdateNoteId", book.authors)
         intent.putExtra("UpdateNoteTitle", book.title)
         intent.putExtra("UpdateNoteContent", book.category)
         startActivity(intent)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        this.requireActivity().supportFragmentManager.beginTransaction().addToBackStack(null)
     }
 
     override fun onDestroy() {
@@ -116,12 +120,12 @@ class ListBooksFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         Log.e("ListFragment", "onClick :==>")
-        val fragment: Fragment = AddBookFragment()
-        val fragmentManager = activity!!.supportFragmentManager
+        this.requireActivity().supportFragmentManager.beginTransaction().addToBackStack(null)
+        /*val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         //  fragmentTransaction.replace(R.id.activity_account_frame, fragment);
         fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+        fragmentTransaction.commit()*/
     }
 
     companion object {

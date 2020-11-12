@@ -53,6 +53,15 @@ class AccountActivity : AppCompatActivity() {
         pager!!.currentItem = 0
     }
 
+/*    override fun onResume() {
+        super.onResume()
+        val pager = findViewById<View>(R.id.activity_main_viewpager) as ViewPager
+        //Set Adapter PageAdapter and glue it together
+        pager.adapter = SectionsPagerAdapter(this,supportFragmentManager)
+        pager!!.offscreenPageLimit = 3
+        pager!!.currentItem = 2
+    }*/
+
     /*override fun onResume() {
         super.onResume()
         val pager = findViewById<View>(R.id.activity_main_viewpager) as ViewPager

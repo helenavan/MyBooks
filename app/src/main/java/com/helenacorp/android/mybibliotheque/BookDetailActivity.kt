@@ -1,6 +1,7 @@
 package com.helenacorp.android.mybibliotheque
 
 import android.annotation.TargetApi
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -21,6 +24,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.AccountActivity
+import com.helenacorp.android.mybibliotheque.Controllers.Activities.SectionsPagerAdapter
+import com.helenacorp.android.mybibliotheque.Controllers.Fragments.ListBooksFragment
 import kotlinx.android.synthetic.main.activity_detail.*
 
 private const val TAG = "BookDetailActivity"
@@ -50,6 +56,7 @@ class BookDetailActivity : AppCompatActivity() {
     private var isLu: Boolean = false
     private var chKPrete: CheckBox? = null
     private var isLend: Boolean? = false
+    private var mFragment = ListBooksFragment()
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,6 +141,8 @@ class BookDetailActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        val intent = Intent(this, AccountActivity::class.java)
+        startActivity(intent)
         Log.e(TAG, "onbackpressed")
     }
 }

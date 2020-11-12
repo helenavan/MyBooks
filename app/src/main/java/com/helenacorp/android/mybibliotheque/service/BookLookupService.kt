@@ -31,11 +31,12 @@ object BookLookupService {
             override fun onResponse(call: Call<Book?>, response: Response<Book?>) {
                 progressDialog.dismiss()
                 if (response.body() != null && response.body()!!.totalItems!! > 0) {
+                    Log.e("BookLookupService ", "reponse.body => " + response.body()!!.toString())
                     if (callbacksWeakReference.get() != null) callbacksWeakReference.get()!!.onReponse(response.body())
                 } else {
                     Toast.makeText(mContext, "Le livre n'existe pas dans la base ", Toast.LENGTH_LONG).show()
                 }
-                Log.e("BookLooupService ", " => " + response.body()!!.totalItems.toString())
+                Log.e("BookLookupService ", " => " + response.body()!!.totalItems.toString())
             }
 
             override fun onFailure(call: Call<Book?>, t: Throwable) {

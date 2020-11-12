@@ -133,11 +133,16 @@ class BookListAdapter(options: FirestoreRecyclerOptions<BookModel>)
             } else {
                 val filterPattern = constraint.toString().toLowerCase()
                 for (item in mSnapshots!!) {
-                    if (item.title!!.toLowerCase().contains(filterPattern) || item.author!!.toLowerCase().contains(filterPattern)
+                    if (item.title!!.toLowerCase().contains(filterPattern)
                             || item.category!!.toLowerCase().contains(filterPattern)) {
                         Log.e(TAG, "item : $item")
                         filteredList.add(item)
                     }
+                  else  if (item.authors!!.toLowerCase().contains(filterPattern)){
+                        Log.e(TAG, "item else : $item")
+                        filteredList.add(item)
+                    }
+
                 }
             }
             val results = FilterResults()
