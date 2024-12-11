@@ -53,7 +53,6 @@ class SignupActivity : AppCompatActivity(), View.OnClickListener {
     private var messToast: TextView? = null
     private var txtTitle: TextView? = null
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

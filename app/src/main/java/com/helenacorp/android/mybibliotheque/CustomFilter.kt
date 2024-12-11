@@ -44,7 +44,7 @@ open class CustomFilter(var adapter: BookListAdapter, var filterList: ArrayList<
        // filterResults.values = filterList
         filterResults.values = filterList
         Log.e(TAG,"2 _publisresult : $filterList")
-        adapter.notifyDataSetChanged()
+      //  adapter.notifyDataSetChanged()
     }
 
     init {

@@ -78,7 +78,7 @@ class ImageBehavior(private val mContext: Context, attrs: AttributeSet?) : Coord
         if (mStartHeight == 0) mStartHeight = child.height
         if (finalHeight == 0) finalHeight = mContext.resources.getDimensionPixelOffset(R.dimen.image_small_width)
         if (mStartXPosition == 0) mStartXPosition = (child.x + child.width / 2).toInt()
-        if (mFinalXPosition == 0) mFinalXPosition = mContext.resources.getDimensionPixelOffset(R.dimen.abc_action_bar_content_inset_material) + finalHeight / 2
+        if (mFinalXPosition == 0) mFinalXPosition = mContext.resources.getDimensionPixelOffset(R.dimen.fab_margin) + finalHeight / 2
         if (mStartToolbarPosition == 0f) mStartToolbarPosition = dependency.y + dependency.height / 2
     }
 
